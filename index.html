@@ -1017,23 +1017,31 @@ function mostrarResultados(lista) {
 
         <div class="resultado-acciones">
 
-          <button
-            class="btn-azul"
-            onclick="abrirAlumno(${a.fila})">
+  <button
+    class="btn-azul"
+    onclick="abrirAlumno(${a.fila})">
 
-            Editar datos
+    Editar datos
 
-          </button>
+  </button>
 
-          <button
-            class="btn-naranja"
-            onclick="abrirPrevias(${a.fila})">
+  <button
+    class="btn-naranja"
+    onclick="abrirPrevias(${a.fila})">
 
-            Previas / Equivalencias
+    Previas / Equivalencias
 
-          </button>
+  </button>
 
-        </div>
+  <button
+    class="btn-verde"
+    onclick="abrirFichas()">
+
+    📋 Fichas individuales
+
+  </button>
+
+</div>
       `;
 
 
@@ -2682,6 +2690,17 @@ function escapar(valor) {
 
 }
 
+  function abrirFichas() {
+
+  const URL_FICHAS =
+    "https://syncroapp79-hub.github.io/fichas/";
+
+  window.open(
+    URL_FICHAS,
+    "_blank"
+  );
+
+}
 </script>
 
 </body>
