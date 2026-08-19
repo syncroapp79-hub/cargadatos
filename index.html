@@ -2,163 +2,1808 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Prueba Cloudflare</title>
+<meta charset="UTF-8">
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background: #f4f7fb;
-    }
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1">
 
-    .caja {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-    }
+<title>Preceptoría Digital</title>
 
-    button {
-      width: 100%;
-      padding: 14px;
-      background: #1f4e79;
-      color: white;
-      border: 0;
-      border-radius: 7px;
-      font-size: 16px;
-    }
 
-    #estado {
-      margin-top: 20px;
-      padding: 12px;
-      background: #eee;
-      border-radius: 7px;
-      overflow-wrap: anywhere;
-    }
-  </style>
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    Arial,
+    sans-serif;
+  background: #f4f7fb;
+  color: #1f2937;
+}
+
+header {
+  background: #1f4e79;
+  color: white;
+  padding: 17px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+header p {
+  margin:
+    5px 0 0;
+  opacity: .9;
+  font-size: 13px;
+}
+
+.contenedor {
+  max-width: 1050px;
+  margin: auto;
+  padding: 14px;
+}
+
+.tarjeta {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+
+  box-shadow:
+    0 4px 15px
+    rgba(0,0,0,.07);
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 19px;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 16px;
+  color: #334155;
+}
+
+.busqueda {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  min-width: 0;
+  padding: 11px;
+  border:
+    1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 16px;
+  background: white;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.busqueda input {
+  flex: 1;
+  min-width: 220px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+button {
+  padding:
+    11px 16px;
+
+  border: 0;
+  border-radius: 7px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.btn-azul {
+  background: #1f4e79;
+  color: white;
+}
+
+.btn-verde {
+  background: #2e7d32;
+  color: white;
+}
+
+.btn-gris {
+  background: #64748b;
+  color: white;
+}
+
+.resultado {
+  padding: 13px 5px;
+  border-bottom:
+    1px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.resultado:hover {
+  background: #f8fafc;
+}
+
+.resultado strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.resultado small {
+  color: #64748b;
+}
+
+.grupo {
+  margin-top: 25px;
+  padding-top: 17px;
+  border-top:
+    1px solid #e5e7eb;
+}
+
+.grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0,1fr)
+    );
+
+  gap: 13px;
+}
+
+.acciones {
+  margin-top: 25px;
+
+  display: flex;
+  justify-content: center;
+
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.mensaje {
+  display: none;
+
+  padding: 11px;
+  margin-top: 13px;
+
+  border-radius: 7px;
+  text-align: center;
+}
+
+.exito {
+  display: block;
+  background: #dcfce7;
+  color: #166534;
+}
+
+.error {
+  display: block;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.cargando {
+  display: block;
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.oculto {
+  display: none !important;
+}
+
+.nota {
+  color: #64748b;
+  font-size: 13px;
+}
+
+
+@media(max-width:650px) {
+
+  .contenedor {
+    padding: 7px;
+  }
+
+  .tarjeta {
+    padding: 13px;
+  }
+
+  .grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .busqueda {
+    display: block;
+  }
+
+  .busqueda button {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .acciones button {
+    width: 100%;
+  }
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<div class="caja">
 
-  <h2>Prueba Cloudflare Worker</h2>
+<header>
 
-  <button onclick="probar()">
-    Probar conexión
-  </button>
+  <h1>
+    Preceptoría Digital
+  </h1>
 
-  <div id="estado">
-    Esperando prueba...
+  <p>
+    Sistema Integral Digital de Preceptoría 2026
+  </p>
+
+</header>
+
+
+<div class="contenedor">
+
+
+<section class="tarjeta">
+
+  <h2>
+    Buscar alumno
+  </h2>
+
+
+  <div class="busqueda">
+
+    <input
+      id="textoBusqueda"
+      type="text"
+      placeholder="DNI, apellido o nombre"
+
+      onkeydown="
+        if(event.key === 'Enter') {
+          buscar();
+        }
+      "
+    >
+
+
+    <button
+      id="btnBuscar"
+      class="btn-azul"
+      onclick="buscar()">
+
+      Buscar
+
+    </button>
+
+
+    <button
+      class="btn-verde"
+      onclick="nuevoAlumno()">
+
+      + Nuevo alumno
+
+    </button>
+
   </div>
+
+
+  <div
+    id="mensajeBusqueda"
+    class="mensaje">
+  </div>
+
+
+  <div
+    id="resultados">
+  </div>
+
+</section>
+
+
+
+<section
+  id="panelFormulario"
+  class="tarjeta oculto">
+
+
+  <h2 id="tituloFormulario">
+    Datos del alumno
+  </h2>
+
+
+  <p class="nota">
+    Los campos de control interno se actualizan automáticamente.
+  </p>
+
+
+  <input
+    type="hidden"
+    id="filaAlumno">
+
+
+  <div id="formulario"></div>
+
+
+  <div
+    id="mensajeGuardar"
+    class="mensaje">
+  </div>
+
+
+  <div class="acciones">
+
+    <button
+      id="btnGuardar"
+      class="btn-verde"
+      onclick="guardar()">
+
+      Guardar
+
+    </button>
+
+
+    <button
+      class="btn-gris"
+      onclick="nuevoAlumno()">
+
+      Limpiar / Nuevo
+
+    </button>
+
+
+    <button
+      class="btn-gris"
+      onclick="cerrarFormulario()">
+
+      Cerrar
+
+    </button>
+
+  </div>
+
+</section>
+
 
 </div>
 
 
+
 <script>
+
+/************************************************
+ * CLOUDFLARE WORKER
+ ************************************************/
 
 const API_URL =
   "https://plain-voice-2149.syncroapp79.workers.dev";
 
 
-async function probar() {
-
-  const estado =
-    document.getElementById("estado");
+let CAMPOS = [];
 
 
-  estado.textContent =
-    "Conectando a: " + API_URL;
+/************************************************
+ * POR AHORA IDENTIFICAMOS EL ORIGEN
+ ************************************************/
 
+const USUARIO_ACTUAL =
+  "Panel Preceptoría";
+
+
+/************************************************
+ * SECCIONES
+ ************************************************/
+
+const GRUPOS = [
+
+{
+  titulo:
+    "Identificación",
+
+  campos: [
+    "MatriculaNro",
+    "NroLegajo",
+    "AñoLectivo",
+    "DNIAlumno",
+    "ApellidoNombreAlumno",
+    "Sexo",
+    "FechaNacAlumno",
+    "LugarNacAlumno",
+    "NacionalidadAlumno",
+    "CUILAlumno"
+  ]
+},
+
+{
+  titulo:
+    "Situación escolar",
+
+  campos: [
+    "LibroMatriz",
+    "FolioMatriz",
+    "CursoActual",
+    "Division",
+    "Orientacion",
+    "TurnoActual",
+    "EstadoAlumno",
+    "Año_Inicio_Nivel_Sec",
+    "Año_Finaliz_Nivel_Sec"
+  ]
+},
+
+{
+  titulo:
+    "Domicilio",
+
+  campos: [
+    "DomicilioAlumno",
+    "BarrioAlumno",
+    "LocalidadAlumno"
+  ]
+},
+
+{
+  titulo:
+    "Tutor principal",
+
+  campos: [
+    "TutorPrincipal_Nombre",
+    "TutorPrincipal_DNI",
+    "TutorPrincipal_Tel",
+    "VínculoAlumno"
+  ]
+},
+
+{
+  titulo:
+    "Familia",
+
+  campos: [
+    "Madre_ApellidoNombre",
+    "Madre_Tel",
+    "Padre_ApellidoNombre",
+    "Padre_Tel"
+  ]
+},
+
+{
+  titulo:
+    "Salud",
+
+  campos: [
+    "Discapacidad",
+    "TipoDiscapacidad",
+    "Alergias",
+    "ObservacionesSalud"
+  ]
+},
+
+{
+  titulo:
+    "Documentación",
+
+  campos: [
+    "Doc_EstadoGeneral",
+    "Doc_FaltantesCriticos"
+  ]
+},
+
+{
+  titulo:
+    "Observaciones",
+
+  campos: [
+    "Observaciones"
+  ]
+}
+
+];
+
+
+/************************************************
+ * ETIQUETAS
+ ************************************************/
+
+const ETIQUETAS = {
+
+MatriculaNro:
+  "N.º matrícula",
+
+NroLegajo:
+  "N.º legajo",
+
+AñoLectivo:
+  "Año lectivo",
+
+DNIAlumno:
+  "DNI",
+
+ApellidoNombreAlumno:
+  "Apellido y nombre",
+
+Sexo:
+  "Sexo",
+
+FechaNacAlumno:
+  "Fecha de nacimiento",
+
+LugarNacAlumno:
+  "Lugar de nacimiento",
+
+NacionalidadAlumno:
+  "Nacionalidad",
+
+LibroMatriz:
+  "Libro matriz",
+
+FolioMatriz:
+  "Folio matriz",
+
+CUILAlumno:
+  "CUIL",
+
+CursoActual:
+  "Curso actual",
+
+Division:
+  "División",
+
+Orientacion:
+  "Orientación",
+
+TurnoActual:
+  "Turno",
+
+EstadoAlumno:
+  "Estado alumno",
+
+DomicilioAlumno:
+  "Domicilio",
+
+BarrioAlumno:
+  "Barrio",
+
+LocalidadAlumno:
+  "Localidad",
+
+TutorPrincipal_Nombre:
+  "Tutor principal",
+
+TutorPrincipal_DNI:
+  "DNI tutor",
+
+TutorPrincipal_Tel:
+  "Teléfono tutor",
+
+"VínculoAlumno":
+  "Vínculo",
+
+Madre_ApellidoNombre:
+  "Madre",
+
+Madre_Tel:
+  "Teléfono madre",
+
+Padre_ApellidoNombre:
+  "Padre",
+
+Padre_Tel:
+  "Teléfono padre",
+
+Discapacidad:
+  "Discapacidad",
+
+TipoDiscapacidad:
+  "Tipo de discapacidad",
+
+Alergias:
+  "Alergias",
+
+ObservacionesSalud:
+  "Observaciones de salud",
+
+Doc_EstadoGeneral:
+  "Estado documentación",
+
+Doc_FaltantesCriticos:
+  "Faltantes críticos",
+
+Año_Inicio_Nivel_Sec:
+  "Año inicio secundario",
+
+Año_Finaliz_Nivel_Sec:
+  "Año finalización secundario",
+
+Observaciones:
+  "Observaciones"
+
+};
+
+
+/************************************************
+ * INICIO
+ ************************************************/
+
+window.addEventListener(
+  "load",
+  iniciar
+);
+
+
+async function iniciar() {
 
   try {
 
-    const respuesta =
-      await fetch(
-        API_URL,
-        {
-          method: "GET",
-          mode: "cors",
-          cache: "no-store"
-        }
+    const r =
+      await apiGet({
+        accion: "config"
+      });
+
+
+    if (!r.ok) {
+
+      throw new Error(
+        r.mensaje
       );
 
-
-    const texto =
-      await respuesta.text();
-
-
-    console.log(
-      "RESPUESTA CRUDA:",
-      texto
-    );
-
-
-    let datos;
-
-
-    try {
-
-      datos =
-        JSON.parse(texto);
-
-    }
-
-    catch(error) {
-
-      estado.textContent =
-        "La respuesta NO es JSON:\n\n" +
-        texto.substring(0, 500);
-
-      return;
-
     }
 
 
-    if (datos.ok) {
+    CAMPOS =
+      r.campos || [];
 
-      estado.textContent =
-        "✅ CONEXIÓN CORRECTA\n\n" +
-        JSON.stringify(
-          datos,
-          null,
-          2
-        );
 
-    }
-
-    else {
-
-      estado.textContent =
-        "⚠️ Respondió el Worker:\n\n" +
-        JSON.stringify(
-          datos,
-          null,
-          2
-        );
-
-    }
+    construirFormulario();
 
   }
 
   catch(error) {
 
-    estado.textContent =
-      "❌ ERROR FETCH:\n\n" +
-      error.message;
-
-    console.error(error);
+    alert(
+      "No se pudo cargar el sistema: " +
+      error.message
+    );
 
   }
+
+}
+
+
+/************************************************
+ * BUSCAR
+ ************************************************/
+
+async function buscar() {
+
+  const texto =
+    document
+      .getElementById(
+        "textoBusqueda"
+      )
+      .value
+      .trim();
+
+
+  if (!texto) {
+
+    mensaje(
+      "mensajeBusqueda",
+      "Ingresá DNI, apellido o nombre.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  bloquear(
+    "btnBuscar",
+    true,
+    "Buscando..."
+  );
+
+
+  mensaje(
+    "mensajeBusqueda",
+    "Buscando...",
+    "cargando"
+  );
+
+
+  document
+    .getElementById(
+      "resultados"
+    )
+    .innerHTML = "";
+
+
+  try {
+
+    const datos =
+      await apiGet({
+        accion:
+          "buscar",
+
+        q:
+          texto
+      });
+
+
+    if (!datos.ok) {
+
+      throw new Error(
+        datos.mensaje
+      );
+
+    }
+
+
+    limpiarMensaje(
+      "mensajeBusqueda"
+    );
+
+
+    mostrarResultados(
+      datos.resultados ||
+      []
+    );
+
+  }
+
+  catch(error) {
+
+    mensaje(
+      "mensajeBusqueda",
+      error.message,
+      "error"
+    );
+
+  }
+
+  finally {
+
+    bloquear(
+      "btnBuscar",
+      false,
+      "Buscar"
+    );
+
+  }
+
+}
+
+
+/************************************************
+ * RESULTADOS
+ ************************************************/
+
+function mostrarResultados(lista) {
+
+  const cont =
+    document
+      .getElementById(
+        "resultados"
+      );
+
+
+  cont.innerHTML = "";
+
+
+  if (!lista.length) {
+
+    cont.innerHTML =
+      "<p>No se encontraron alumnos.</p>";
+
+    return;
+
+  }
+
+
+  lista.forEach(
+    a => {
+
+      const div =
+        document
+          .createElement(
+            "div"
+          );
+
+
+      div.className =
+        "resultado";
+
+
+      div.innerHTML =
+
+        "<strong>" +
+
+        escapar(
+          a.alumno || ""
+        ) +
+
+        "</strong>" +
+
+        "<small>" +
+
+        "DNI: " +
+
+        escapar(
+          a.dni || ""
+        ) +
+
+        " | " +
+
+        escapar(
+          a.curso || ""
+        ) +
+
+        " " +
+
+        escapar(
+          a.division || ""
+        ) +
+
+        "</small>";
+
+
+      div.onclick =
+        () =>
+          abrirAlumno(
+            a.fila
+          );
+
+
+      cont.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
+
+
+/************************************************
+ * ABRIR
+ ************************************************/
+
+async function abrirAlumno(fila) {
+
+  mensaje(
+    "mensajeBusqueda",
+    "Cargando ficha...",
+    "cargando"
+  );
+
+
+  try {
+
+    const datos =
+      await apiGet({
+
+        accion:
+          "alumno",
+
+        fila:
+          fila
+
+      });
+
+
+    if (!datos.ok) {
+
+      throw new Error(
+        datos.mensaje
+      );
+
+    }
+
+
+    limpiarMensaje(
+      "mensajeBusqueda"
+    );
+
+
+    llenarFormulario(
+      datos.alumno,
+      datos.fila
+    );
+
+  }
+
+  catch(error) {
+
+    mensaje(
+      "mensajeBusqueda",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/************************************************
+ * NUEVO
+ ************************************************/
+
+function nuevoAlumno() {
+
+  limpiarCampos();
+
+
+  document
+    .getElementById(
+      "filaAlumno"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "tituloFormulario"
+    )
+    .textContent =
+      "Nuevo alumno";
+
+
+  document
+    .getElementById(
+      "panelFormulario"
+    )
+    .classList
+    .remove(
+      "oculto"
+    );
+
+
+  limpiarMensaje(
+    "mensajeGuardar"
+  );
+
+
+  document
+    .getElementById(
+      "panelFormulario"
+    )
+    .scrollIntoView({
+      behavior:
+        "smooth",
+      block:
+        "start"
+    });
+
+}
+
+
+/************************************************
+ * FORMULARIO
+ ************************************************/
+
+function construirFormulario() {
+
+  const cont =
+    document
+      .getElementById(
+        "formulario"
+      );
+
+
+  cont.innerHTML = "";
+
+
+  GRUPOS.forEach(
+    grupo => {
+
+      const disponibles =
+        grupo.campos
+          .filter(
+            campo =>
+              CAMPOS.includes(
+                campo
+              )
+          );
+
+
+      if (
+        !disponibles.length
+      ) {
+
+        return;
+
+      }
+
+
+      const bloque =
+        document
+          .createElement(
+            "div"
+          );
+
+
+      bloque.className =
+        "grupo";
+
+
+      const titulo =
+        document
+          .createElement(
+            "h3"
+          );
+
+
+      titulo.textContent =
+        grupo.titulo;
+
+
+      bloque.appendChild(
+        titulo
+      );
+
+
+      const grid =
+        document
+          .createElement(
+            "div"
+          );
+
+
+      grid.className =
+        "grid";
+
+
+      disponibles.forEach(
+        campo => {
+
+          grid.appendChild(
+            crearCampo(
+              campo
+            )
+          );
+
+        }
+      );
+
+
+      bloque.appendChild(
+        grid
+      );
+
+
+      cont.appendChild(
+        bloque
+      );
+
+    }
+  );
+
+}
+
+
+/************************************************
+ * CREAR CAMPO
+ ************************************************/
+
+function crearCampo(nombre) {
+
+  const div =
+    document
+      .createElement(
+        "div"
+      );
+
+
+  const label =
+    document
+      .createElement(
+        "label"
+      );
+
+
+  label.textContent =
+    ETIQUETAS[nombre] ||
+    nombre;
+
+
+  let control;
+
+
+  if (
+    nombre ===
+      "Observaciones"
+    ||
+    nombre ===
+      "ObservacionesSalud"
+  ) {
+
+    control =
+      document
+        .createElement(
+          "textarea"
+        );
+
+  }
+
+  else {
+
+    control =
+      document
+        .createElement(
+          "input"
+        );
+
+
+    control.type =
+      nombre ===
+        "FechaNacAlumno"
+        ? "date"
+        : "text";
+
+  }
+
+
+  if (
+    nombre.endsWith("_Tel")
+    ||
+    nombre ===
+      "TutorPrincipal_Tel"
+  ) {
+
+    control.inputMode =
+      "tel";
+
+  }
+
+
+  if (
+    nombre.includes("DNI")
+    ||
+    nombre === "CUILAlumno"
+  ) {
+
+    control.inputMode =
+      "numeric";
+
+  }
+
+
+  control.id =
+    "campo_" +
+    nombre;
+
+
+  control.dataset.campo =
+    nombre;
+
+
+  div.appendChild(
+    label
+  );
+
+
+  div.appendChild(
+    control
+  );
+
+
+  return div;
+
+}
+
+
+/************************************************
+ * LLENAR
+ ************************************************/
+
+function llenarFormulario(
+  alumno,
+  fila
+) {
+
+  limpiarCampos();
+
+
+  document
+    .getElementById(
+      "filaAlumno"
+    )
+    .value =
+      fila || "";
+
+
+  CAMPOS.forEach(
+    campo => {
+
+      const input =
+        document
+          .getElementById(
+            "campo_" +
+            campo
+          );
+
+
+      if (!input) {
+
+        return;
+
+      }
+
+
+      let valor =
+        alumno[campo] ||
+        "";
+
+
+      if (
+        campo ===
+        "FechaNacAlumno"
+      ) {
+
+        valor =
+          fechaHtml(
+            valor
+          );
+
+      }
+
+
+      input.value =
+        valor;
+
+    }
+  );
+
+
+  document
+    .getElementById(
+      "tituloFormulario"
+    )
+    .textContent =
+      alumno
+        .ApellidoNombreAlumno
+      ||
+      "Datos del alumno";
+
+
+  document
+    .getElementById(
+      "panelFormulario"
+    )
+    .classList
+    .remove(
+      "oculto"
+    );
+
+
+  limpiarMensaje(
+    "mensajeGuardar"
+  );
+
+
+  document
+    .getElementById(
+      "panelFormulario"
+    )
+    .scrollIntoView({
+      behavior:
+        "smooth",
+      block:
+        "start"
+    });
+
+}
+
+
+/************************************************
+ * GUARDAR
+ ************************************************/
+
+async function guardar() {
+
+  const campos = {};
+
+
+  CAMPOS.forEach(
+    nombre => {
+
+      const input =
+        document
+          .getElementById(
+            "campo_" +
+            nombre
+          );
+
+
+      if (!input) {
+
+        return;
+
+      }
+
+
+      campos[nombre] =
+        input.value.trim();
+
+    }
+  );
+
+
+  if (
+    !campos.DNIAlumno
+  ) {
+
+    mensaje(
+      "mensajeGuardar",
+      "El DNI es obligatorio.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !campos
+      .ApellidoNombreAlumno
+  ) {
+
+    mensaje(
+      "mensajeGuardar",
+      "Apellido y nombre es obligatorio.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  bloquear(
+    "btnGuardar",
+    true,
+    "Guardando..."
+  );
+
+
+  mensaje(
+    "mensajeGuardar",
+    "Guardando datos...",
+    "cargando"
+  );
+
+
+  try {
+
+    const respuesta =
+      await apiPost({
+
+        accion:
+          "guardar",
+
+        usuario:
+          USUARIO_ACTUAL,
+
+        fila:
+          document
+            .getElementById(
+              "filaAlumno"
+            )
+            .value,
+
+        campos:
+          campos
+
+      });
+
+
+    if (
+      !respuesta.ok
+    ) {
+
+      throw new Error(
+        respuesta.mensaje
+      );
+
+    }
+
+
+    document
+      .getElementById(
+        "filaAlumno"
+      )
+      .value =
+        respuesta.fila;
+
+
+    document
+      .getElementById(
+        "tituloFormulario"
+      )
+      .textContent =
+        campos
+          .ApellidoNombreAlumno;
+
+
+    mensaje(
+      "mensajeGuardar",
+      respuesta.mensaje,
+      "exito"
+    );
+
+  }
+
+  catch(error) {
+
+    mensaje(
+      "mensajeGuardar",
+      "Error al guardar: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+  finally {
+
+    bloquear(
+      "btnGuardar",
+      false,
+      "Guardar"
+    );
+
+  }
+
+}
+
+
+/************************************************
+ * API GET
+ ************************************************/
+
+async function apiGet(params) {
+
+  const url =
+    new URL(
+      API_URL
+    );
+
+
+  Object.entries(
+    params
+  )
+  .forEach(
+    ([clave, valor]) => {
+
+      url.searchParams
+        .set(
+          clave,
+          valor
+        );
+
+    }
+  );
+
+
+  const respuesta =
+    await fetch(
+      url.toString(),
+      {
+        method:
+          "GET",
+
+        mode:
+          "cors",
+
+        cache:
+          "no-store"
+      }
+    );
+
+
+  const texto =
+    await respuesta.text();
+
+
+  try {
+
+    return JSON.parse(
+      texto
+    );
+
+  }
+
+  catch (_) {
+
+    throw new Error(
+      "El servidor devolvió una respuesta inválida."
+    );
+
+  }
+
+}
+
+
+/************************************************
+ * API POST
+ ************************************************/
+
+async function apiPost(datos) {
+
+  const respuesta =
+    await fetch(
+      API_URL,
+      {
+
+        method:
+          "POST",
+
+        mode:
+          "cors",
+
+        headers: {
+
+          "Content-Type":
+            "application/json"
+
+        },
+
+        body:
+          JSON.stringify(
+            datos
+          )
+
+      }
+    );
+
+
+  const texto =
+    await respuesta.text();
+
+
+  try {
+
+    return JSON.parse(
+      texto
+    );
+
+  }
+
+  catch (_) {
+
+    throw new Error(
+      "El servidor devolvió una respuesta inválida."
+    );
+
+  }
+
+}
+
+
+/************************************************
+ * UTILIDADES UI
+ ************************************************/
+
+function cerrarFormulario() {
+
+  document
+    .getElementById(
+      "panelFormulario"
+    )
+    .classList
+    .add(
+      "oculto"
+    );
+
+}
+
+
+function limpiarCampos() {
+
+  document
+    .querySelectorAll(
+      "[data-campo]"
+    )
+    .forEach(
+      el =>
+        el.value = ""
+    );
+
+}
+
+
+function mensaje(
+  id,
+  texto,
+  tipo
+) {
+
+  const el =
+    document
+      .getElementById(id);
+
+
+  el.textContent =
+    texto;
+
+
+  el.className =
+    "mensaje " +
+    tipo;
+
+}
+
+
+function limpiarMensaje(id) {
+
+  const el =
+    document
+      .getElementById(id);
+
+
+  el.textContent = "";
+
+  el.className =
+    "mensaje";
+
+}
+
+
+function bloquear(
+  id,
+  estado,
+  texto
+) {
+
+  const boton =
+    document
+      .getElementById(id);
+
+
+  if (!boton) {
+
+    return;
+
+  }
+
+
+  boton.disabled =
+    estado;
+
+
+  boton.textContent =
+    texto;
+
+}
+
+
+/************************************************
+ * FECHA
+ ************************************************/
+
+function fechaHtml(valor) {
+
+  const s =
+    String(
+      valor || ""
+    ).trim();
+
+
+  let m =
+    s.match(
+      /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
+    );
+
+
+  if (m) {
+
+    return (
+      m[3]
+      + "-"
+      + m[2]
+        .padStart(
+          2,
+          "0"
+        )
+      + "-"
+      + m[1]
+        .padStart(
+          2,
+          "0"
+        )
+    );
+
+  }
+
+
+  if (
+    /^\d{4}-\d{2}-\d{2}$/
+      .test(s)
+  ) {
+
+    return s;
+
+  }
+
+
+  return "";
+
+}
+
+
+/************************************************
+ * ESCAPAR HTML
+ ************************************************/
+
+function escapar(valor) {
+
+  return String(
+    valor || ""
+  )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
 
 }
 
 </script>
 
 </body>
-
 </html>
