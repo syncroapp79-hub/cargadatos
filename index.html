@@ -1,20 +1,63 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prueba Preceptoría</title>
+
+  <title>Prueba Cloudflare</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f4f7fb;
+    }
+
+    .caja {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #1f4e79;
+      color: white;
+      border: 0;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    #estado {
+      margin-top: 20px;
+      padding: 12px;
+      background: #eee;
+      border-radius: 7px;
+      overflow-wrap: anywhere;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>Prueba Cloudflare</h2>
+<div class="caja">
 
-<button onclick="probar()">
-  Probar conexión
-</button>
+  <h2>Prueba Cloudflare Worker</h2>
 
-<p id="estado"></p>
+  <button onclick="probar()">
+    Probar conexión
+  </button>
+
+  <div id="estado">
+    Esperando prueba...
+  </div>
+
+</div>
+
 
 <script>
 
@@ -27,28 +70,76 @@ async function probar() {
   const estado =
     document.getElementById("estado");
 
+
   estado.textContent =
-    "Conectando...";
+    "Conectando a: " + API_URL;
 
 
   try {
 
     const respuesta =
-      await fetch(API_URL);
+      await fetch(
+        API_URL,
+        {
+          method: "GET",
+          mode: "cors",
+          cache: "no-store"
+        }
+      );
 
-    const datos =
-      await respuesta.json();
+
+    const texto =
+      await respuesta.text();
+
+
+    console.log(
+      "RESPUESTA CRUDA:",
+      texto
+    );
+
+
+    let datos;
+
+
+    try {
+
+      datos =
+        JSON.parse(texto);
+
+    }
+
+    catch(error) {
+
+      estado.textContent =
+        "La respuesta NO es JSON:\n\n" +
+        texto.substring(0, 500);
+
+      return;
+
+    }
 
 
     if (datos.ok) {
 
       estado.textContent =
-        "✅ Conexión correcta con Cloudflare Worker";
+        "✅ CONEXIÓN CORRECTA\n\n" +
+        JSON.stringify(
+          datos,
+          null,
+          2
+        );
 
-    } else {
+    }
+
+    else {
 
       estado.textContent =
-        "⚠️ El servidor respondió pero informó un error";
+        "⚠️ Respondió el Worker:\n\n" +
+        JSON.stringify(
+          datos,
+          null,
+          2
+        );
 
     }
 
@@ -57,8 +148,10 @@ async function probar() {
   catch(error) {
 
     estado.textContent =
-      "❌ Error: " +
+      "❌ ERROR FETCH:\n\n" +
       error.message;
+
+    console.error(error);
 
   }
 
@@ -67,4 +160,5 @@ async function probar() {
 </script>
 
 </body>
+
 </html>
