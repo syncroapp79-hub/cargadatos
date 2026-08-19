@@ -692,6 +692,7 @@ async function iniciar() {
 
 
     construirFormulario();
+    recuperarBorradorLocal();
 
   }
 
@@ -1398,7 +1399,7 @@ async function guardar() {
 
   }
 
-
+  guardarBorradorLocal();
   bloquear(
     "btnGuardar",
     true,
@@ -1470,7 +1471,7 @@ async function guardar() {
       respuesta.mensaje,
       "exito"
     );
-
+   borrarBorradorLocal();
   }
 
   catch(error) {
@@ -1802,7 +1803,184 @@ function escapar(valor) {
   );
 
 }
+/************************************************
+ * BORRADOR TEMPORAL DEL FORMULARIO
+ ************************************************/
 
+const BORRADOR_KEY =
+  "preceptoria_borrador_alumno";
+
+
+function guardarBorradorLocal() {
+
+  const campos = {};
+
+
+  CAMPOS.forEach(
+    nombre => {
+
+      const input =
+        document.getElementById(
+          "campo_" + nombre
+        );
+
+
+      if (!input) return;
+
+
+      campos[nombre] =
+        input.value;
+
+    }
+  );
+
+
+  const borrador = {
+
+    fila:
+      document
+        .getElementById(
+          "filaAlumno"
+        )
+        .value,
+
+    campos:
+      campos,
+
+    fecha:
+      new Date()
+        .toISOString()
+
+  };
+
+
+  sessionStorage.setItem(
+    BORRADOR_KEY,
+    JSON.stringify(
+      borrador
+    )
+  );
+
+}
+
+
+function recuperarBorradorLocal() {
+
+  const texto =
+    sessionStorage.getItem(
+      BORRADOR_KEY
+    );
+
+
+  if (!texto) {
+
+    return;
+
+  }
+
+
+  try {
+
+    const borrador =
+      JSON.parse(texto);
+
+
+    if (
+      !borrador ||
+      !borrador.campos
+    ) {
+
+      return;
+
+    }
+
+
+    CAMPOS.forEach(
+      nombre => {
+
+        const input =
+          document.getElementById(
+            "campo_" + nombre
+          );
+
+
+        if (!input) return;
+
+
+        if (
+          Object.prototype
+            .hasOwnProperty
+            .call(
+              borrador.campos,
+              nombre
+            )
+        ) {
+
+          input.value =
+            borrador.campos[nombre] || "";
+
+        }
+
+      }
+    );
+
+
+    document
+      .getElementById(
+        "filaAlumno"
+      )
+      .value =
+        borrador.fila || "";
+
+
+    document
+      .getElementById(
+        "panelFormulario"
+      )
+      .classList
+      .remove(
+        "oculto"
+      );
+
+
+    document
+      .getElementById(
+        "tituloFormulario"
+      )
+      .textContent =
+        borrador.campos
+          .ApellidoNombreAlumno
+        ||
+        "Borrador recuperado";
+
+
+    mensaje(
+      "mensajeGuardar",
+      "Se recuperó una carga que no había sido guardada.",
+      "cargando"
+    );
+
+  }
+
+  catch(error) {
+
+    console.error(
+      "Error al recuperar borrador:",
+      error
+    );
+
+  }
+
+}
+
+
+function borrarBorradorLocal() {
+
+  sessionStorage.removeItem(
+    BORRADOR_KEY
+  );
+
+}
 </script>
 
 </body>
