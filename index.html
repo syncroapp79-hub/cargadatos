@@ -1,630 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1">
-
-  <title>Preceptoría Digital</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 12px;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #1f2937;
-    }
-
-    .contenedor {
-      max-width: 850px;
-      margin: auto;
-    }
-
-    .tarjeta {
-      background: white;
-      border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 15px;
-
-      box-shadow:
-        0 4px 15px rgba(0,0,0,.08);
-    }
-
-    h1 {
-      margin: 0 0 5px;
-      color: #1f4e79;
-      font-size: 24px;
-    }
-
-    h2 {
-      font-size: 19px;
-      margin-top: 0;
-    }
-
-    .subtitulo {
-      margin-top: 0;
-      color: #64748b;
-    }
-
-    .busqueda {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    input {
-      flex: 1;
-      min-width: 220px;
-
-      padding: 12px;
-
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-
-      font-size: 16px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 8px;
-
-      padding: 12px 18px;
-
-      font-size: 15px;
-      font-weight: bold;
-
-      cursor: pointer;
-    }
-
-    .btn-principal {
-      background: #1f4e79;
-      color: white;
-    }
-
-    .btn-prueba {
-      background: #64748b;
-      color: white;
-    }
-
-    .mensaje {
-      display: none;
-
-      margin-top: 14px;
-      padding: 12px;
-
-      border-radius: 8px;
-
-      line-height: 1.4;
-    }
-
-    .exito {
-      display: block;
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .error {
-      display: block;
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .cargando {
-      display: block;
-      background: #dbeafe;
-      color: #1e3a8a;
-    }
-
-    .resultado {
-      padding: 13px 4px;
-
-      border-bottom:
-        1px solid #e5e7eb;
-    }
-
-    .resultado strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .resultado small {
-      color: #64748b;
-    }
-
-    @media(max-width:600px) {
-
-      body {
-        padding: 7px;
-      }
-
-      .tarjeta {
-        padding: 14px;
-      }
-
-      .busqueda {
-        display: block;
-      }
-
-      input,
-      button {
-        width: 100%;
-      }
-
-      button {
-        margin-top: 8px;
-      }
-    }
-  </style>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prueba Preceptoría</title>
 </head>
-
 
 <body>
 
-<div class="contenedor">
+<h2>Prueba Cloudflare</h2>
 
-  <div class="tarjeta">
+<button onclick="probar()">
+  Probar conexión
+</button>
 
-    <h1>
-      Preceptoría Digital
-    </h1>
-
-    <p class="subtitulo">
-      Prueba de conexión con BASE_ALUMNOS
-    </p>
-
-
-    <button
-      class="btn-prueba"
-      onclick="probarConexion()">
-
-      Probar conexión
-
-    </button>
-
-
-    <div
-      id="mensajeConexion"
-      class="mensaje">
-    </div>
-
-  </div>
-
-
-
-  <div class="tarjeta">
-
-    <h2>
-      Buscar alumno
-    </h2>
-
-
-    <div class="busqueda">
-
-      <input
-        id="textoBusqueda"
-        type="text"
-        placeholder="DNI, apellido o nombre"
-
-        onkeydown="
-          if(event.key === 'Enter') {
-            buscarAlumno();
-          }
-        "
-      >
-
-
-      <button
-        class="btn-principal"
-        onclick="buscarAlumno()">
-
-        Buscar
-
-      </button>
-
-    </div>
-
-
-    <div
-      id="mensajeBusqueda"
-      class="mensaje">
-    </div>
-
-
-    <div
-      id="resultados">
-    </div>
-
-  </div>
-
-</div>
-
-
+<p id="estado"></p>
 
 <script>
 
-/*********************************************************
- * PEGAR ACÁ LA URL NUEVA DE APPS SCRIPT
- *********************************************************/
-
-const URL_GOOGLE_WEB_APP =
-  "https://script.google.com/macros/s/AKfycbwidaS3OAd0kNT8SKLsN9X_a4P-Vk27biAwCSeLj2acKBOBYyByM59WGTInLwC1sCjwRg/exec";
+const API_URL =
+  "PEGAR_ACA_LA_URL_DEL_WORKER";
 
 
-/*********************************************************
- * PRUEBA DE CONEXIÓN
- *********************************************************/
+async function probar() {
 
-function probarConexion() {
+  const estado =
+    document.getElementById("estado");
 
-  mostrarMensaje(
-    "mensajeConexion",
-    "Conectando con Apps Script...",
-    "cargando"
-  );
+  estado.textContent =
+    "Conectando...";
 
 
-  const url =
-    URL_GOOGLE_WEB_APP +
-    "?accion=ping";
+  try {
+
+    const respuesta =
+      await fetch(API_URL);
+
+    const datos =
+      await respuesta.json();
 
 
-  fetch(
-    url,
-    {
-      redirect: "follow"
-    }
-  )
+    if (datos.ok) {
 
-  .then(res => {
+      estado.textContent =
+        "✅ Conexión correcta con Cloudflare Worker";
 
-    if (!res.ok) {
+    } else {
 
-      throw new Error(
-        "HTTP " + res.status
-      );
+      estado.textContent =
+        "⚠️ El servidor respondió pero informó un error";
 
     }
-
-    return res.json();
-
-  })
-
-  .then(data => {
-
-    console.log(
-      "PING:",
-      data
-    );
-
-
-    if (data && data.ok) {
-
-      mostrarMensaje(
-        "mensajeConexion",
-        "Conexión correcta con Apps Script.",
-        "exito"
-      );
-
-    }
-
-    else {
-
-      mostrarMensaje(
-        "mensajeConexion",
-        data.mensaje ||
-        "Apps Script respondió, pero informó un error.",
-        "error"
-      );
-
-    }
-
-  })
-
-  .catch(error => {
-
-    console.error(error);
-
-
-    mostrarMensaje(
-      "mensajeConexion",
-      "No se pudo conectar con Apps Script. " +
-      error.message,
-      "error"
-    );
-
-  });
-
-}
-
-
-/*********************************************************
- * BUSCAR
- *********************************************************/
-
-function buscarAlumno() {
-
-  const texto =
-    document
-      .getElementById(
-        "textoBusqueda"
-      )
-      .value
-      .trim();
-
-
-  if (!texto) {
-
-    mostrarMensaje(
-      "mensajeBusqueda",
-      "Ingresá un DNI, apellido o nombre.",
-      "error"
-    );
-
-    return;
 
   }
 
+  catch(error) {
 
-  mostrarMensaje(
-    "mensajeBusqueda",
-    "Buscando alumno...",
-    "cargando"
-  );
-
-
-  document
-    .getElementById(
-      "resultados"
-    )
-    .innerHTML = "";
-
-
-  const url =
-    URL_GOOGLE_WEB_APP +
-
-    "?accion=buscar&q=" +
-
-    encodeURIComponent(
-      texto
-    );
-
-
-  fetch(
-    url,
-    {
-      redirect: "follow"
-    }
-  )
-
-  .then(res => {
-
-    if (!res.ok) {
-
-      throw new Error(
-        "HTTP " + res.status
-      );
-
-    }
-
-
-    return res.json();
-
-  })
-
-  .then(data => {
-
-    console.log(
-      "BÚSQUEDA:",
-      data
-    );
-
-
-    if (!data.ok) {
-
-      throw new Error(
-        data.mensaje ||
-        "Error al buscar."
-      );
-
-    }
-
-
-    limpiarMensaje(
-      "mensajeBusqueda"
-    );
-
-
-    mostrarResultados(
-      data.resultados || []
-    );
-
-  })
-
-  .catch(error => {
-
-    console.error(error);
-
-
-    mostrarMensaje(
-      "mensajeBusqueda",
-      "Error de conexión: " +
-      error.message,
-      "error"
-    );
-
-  });
-
-}
-
-
-/*********************************************************
- * MOSTRAR RESULTADOS
- *********************************************************/
-
-function mostrarResultados(
-  lista
-) {
-
-  const contenedor =
-    document
-      .getElementById(
-        "resultados"
-      );
-
-
-  contenedor.innerHTML = "";
-
-
-  if (!lista.length) {
-
-    contenedor.innerHTML =
-      "<p>No se encontraron alumnos.</p>";
-
-    return;
+    estado.textContent =
+      "❌ Error: " +
+      error.message;
 
   }
-
-
-  lista.forEach(
-    alumno => {
-
-      const div =
-        document
-          .createElement(
-            "div"
-          );
-
-
-      div.className =
-        "resultado";
-
-
-      div.innerHTML =
-
-        "<strong>" +
-
-        escapar(
-          alumno.alumno || ""
-        ) +
-
-        "</strong>" +
-
-
-        "<small>" +
-
-        "DNI: " +
-
-        escapar(
-          alumno.dni || ""
-        ) +
-
-        " | " +
-
-        escapar(
-          alumno.curso || ""
-        ) +
-
-        " " +
-
-        escapar(
-          alumno.division || ""
-        ) +
-
-        "</small>";
-
-
-      contenedor
-        .appendChild(div);
-
-    }
-  );
-
-}
-
-
-/*********************************************************
- * MENSAJES
- *********************************************************/
-
-function mostrarMensaje(
-  id,
-  texto,
-  tipo
-) {
-
-  const elemento =
-    document
-      .getElementById(id);
-
-
-  elemento.textContent =
-    texto;
-
-
-  elemento.className =
-    "mensaje " + tipo;
-
-}
-
-
-function limpiarMensaje(id) {
-
-  const elemento =
-    document
-      .getElementById(id);
-
-
-  elemento.textContent = "";
-
-  elemento.className =
-    "mensaje";
-
-}
-
-
-/*********************************************************
- * SEGURIDAD HTML
- *********************************************************/
-
-function escapar(valor) {
-
-  return String(
-    valor || ""
-  )
-
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-
-  .replace(
-    /</g,
-    "&lt;"
-  )
-
-  .replace(
-    />/g,
-    "&gt;"
-  )
-
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-
-  .replace(
-    /'/g,
-    "&#039;"
-  );
 
 }
 
