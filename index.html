@@ -1,25 +1,21 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <base target="_top">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1">
+  <title>Preceptoría Digital</title>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f6f8;
-      color: #222;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f5f7;
+      color: #263238;
     }
 
     .header {
@@ -28,19 +24,33 @@
       padding: 18px 20px;
     }
 
+    .header-contenido {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
     .header h1 {
       margin: 0;
       font-size: 22px;
     }
 
     .header p {
-      margin: 5px 0 0 0;
+      margin: 4px 0 0;
+      font-size: 13px;
       opacity: .85;
+    }
+
+    .usuario-header {
+      text-align: right;
       font-size: 13px;
     }
 
     .container {
-      max-width: 1050px;
+      max-width: 1100px;
       margin: auto;
       padding: 18px;
     }
@@ -48,15 +58,98 @@
     .card {
       background: white;
       border-radius: 10px;
-      padding: 18px;
+      padding: 20px;
       margin-bottom: 18px;
-      box-shadow:
-        0 1px 5px rgba(0,0,0,.10);
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
     }
 
     h2 {
       margin-top: 0;
-      font-size: 18px;
+      font-size: 19px;
+    }
+
+    h3 {
+      margin-top: 0;
+      font-size: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #b0bec5;
+      border-radius: 6px;
+      font-size: 15px;
+      background: white;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid #90caf9;
+      border-color: #1976d2;
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    button {
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 17px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: #1565c0;
+      color: white;
+    }
+
+    .btn-success {
+      background: #2e7d32;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #263238;
+    }
+
+    .btn-danger {
+      background: #c62828;
+      color: white;
+    }
+
+    .login-box {
+      max-width: 430px;
+      margin: 50px auto;
+    }
+
+    .campo {
+      margin-bottom: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grupo {
+      margin-top: 25px;
+      padding-top: 18px;
+      border-top: 1px solid #e0e0e0;
     }
 
     .busqueda {
@@ -65,62 +158,22 @@
       flex-wrap: wrap;
     }
 
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #bbb;
-      border-radius: 6px;
-      font-size: 15px;
-      background: white;
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    button {
-      border: none;
-      border-radius: 6px;
-      padding: 10px 16px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    button.primary {
-      background: #1565c0;
-      color: white;
-    }
-
-    button.success {
-      background: #2e7d32;
-      color: white;
-    }
-
-    button.secondary {
-      background: #e0e0e0;
-      color: #222;
-    }
-
-    button.danger {
-      background: #c62828;
-      color: white;
-    }
-
     .busqueda input {
       flex: 1;
-      min-width: 220px;
+      min-width: 230px;
     }
 
-    .resultados {
-      margin-top: 15px;
+    .acciones {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 24px;
     }
 
     .resultado {
-      border-bottom: 1px solid #eee;
-      padding: 10px 4px;
+      padding: 12px 5px;
+      border-bottom: 1px solid #eeeeee;
       cursor: pointer;
     }
 
@@ -130,43 +183,11 @@
 
     .resultado strong {
       display: block;
+      margin-bottom: 3px;
     }
 
     .resultado small {
-      color: #666;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .campo label {
-      display: block;
-      font-weight: bold;
-      font-size: 13px;
-      margin-bottom: 5px;
-    }
-
-    .grupo {
-      margin-top: 24px;
-      border-top: 1px solid #ddd;
-      padding-top: 16px;
-    }
-
-    .grupo h3 {
-      font-size: 16px;
-      margin-top: 0;
-    }
-
-    .acciones {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 22px;
+      color: #607d8b;
     }
 
     .estado {
@@ -190,166 +211,267 @@
       color: #b71c1c;
     }
 
-    .cargando {
-      opacity: .6;
-      pointer-events: none;
+    .estado.info {
+      display: block;
+      background: #e3f2fd;
+      color: #0d47a1;
     }
 
-    #formCard {
-      display: none;
+    .oculto {
+      display: none !important;
     }
 
-    @media(max-width: 700px) {
+    .barra-modulos {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
 
+    .modulo-activo {
+      background: #263238;
+      color: white;
+    }
+
+    .nota {
+      color: #607d8b;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
       .container {
         padding: 10px;
       }
 
       .card {
-        padding: 14px;
+        padding: 15px;
       }
 
       .grid {
         grid-template-columns: 1fr;
       }
 
-      button {
+      .busqueda button {
+        flex: 1;
+      }
+
+      .acciones button {
         width: 100%;
       }
+
+      .header-contenido {
+        align-items: flex-start;
+      }
     }
-
   </style>
-
 </head>
-
 
 <body>
 
+  <header class="header">
+    <div class="header-contenido">
+      <div>
+        <h1>Preceptoría Digital</h1>
+        <p>Sistema Integral Digital de Preceptoría 2026</p>
+      </div>
 
-<div class="header">
+      <div id="usuarioHeader" class="usuario-header oculto">
+        <div id="nombreUsuario"></div>
+        <button
+          class="btn-secondary"
+          onclick="cerrarSesion()"
+          style="margin-top:5px;padding:6px 10px;">
+          Salir
+        </button>
+      </div>
+    </div>
+  </header>
 
-  <h1>Preceptoría Digital</h1>
 
-  <p>
-    Alta y actualización de datos de alumnos
-  </p>
+  <!-- LOGIN -->
 
-</div>
+  <main id="pantallaLogin" class="container">
 
+    <div class="card login-box">
 
-<div class="container">
+      <h2>Ingreso al sistema</h2>
 
+      <div class="campo">
+        <label>Preceptor</label>
+        <input
+          id="loginUsuario"
+          type="text"
+          autocomplete="name"
+          placeholder="Nombre y apellido">
+      </div>
 
-  <!-- BUSCADOR -->
-
-  <div class="card">
-
-    <h2>Buscar alumno</h2>
-
-    <div class="busqueda">
-
-      <input
-        id="textoBusqueda"
-        placeholder="Ingresar DNI, apellido o nombre">
+      <div class="campo">
+        <label>Clave</label>
+        <input
+          id="loginClave"
+          type="password"
+          autocomplete="current-password">
+      </div>
 
       <button
-        class="primary"
-        onclick="buscar()">
+        class="btn-primary"
+        style="width:100%;"
+        onclick="iniciarSesion()">
+        Ingresar
+      </button>
 
-        Buscar
+      <div id="estadoLogin" class="estado"></div>
 
+    </div>
+
+  </main>
+
+
+  <!-- PANEL -->
+
+  <main id="pantallaPanel" class="container oculto">
+
+    <div class="barra-modulos">
+
+      <button class="modulo-activo">
+        Alumnos
       </button>
 
       <button
-        class="success"
-        onclick="nuevoAlumno()">
-
-        Nuevo alumno
-
-      </button>
-
-    </div>
-
-
-    <div
-      id="estadoBusqueda"
-      class="estado">
-    </div>
-
-
-    <div
-      id="resultados"
-      class="resultados">
-    </div>
-
-  </div>
-
-
-  <!-- FORMULARIO -->
-
-  <div
-    id="formCard"
-    class="card">
-
-    <h2 id="tituloFormulario">
-      Datos del alumno
-    </h2>
-
-    <input
-      type="hidden"
-      id="filaAlumno">
-
-
-    <div id="formulario"></div>
-
-
-    <div
-      id="estadoGuardar"
-      class="estado">
-    </div>
-
-
-    <div class="acciones">
-
-      <button
-        class="success"
-        onclick="guardar()">
-
-        Guardar
-
+        class="btn-secondary"
+        disabled
+        title="Se incorporará posteriormente">
+        Previas / Equivalencias
       </button>
 
       <button
-        class="secondary"
-        onclick="limpiarFormulario()">
+        class="btn-secondary"
+        disabled>
+        Procesar faltas
+      </button>
 
-        Limpiar
+      <button
+        class="btn-secondary"
+        disabled>
+        Procesar calificaciones
+      </button>
 
+      <button
+        class="btn-secondary"
+        disabled>
+        Reportes
       </button>
 
     </div>
 
-  </div>
+
+    <!-- BUSCAR -->
+
+    <div class="card">
+
+      <h2>Alumnos</h2>
+
+      <div class="busqueda">
+
+        <input
+          id="textoBusqueda"
+          type="text"
+          placeholder="DNI, apellido o nombre"
+          onkeydown="if(event.key==='Enter') buscarAlumno();">
+
+        <button
+          class="btn-primary"
+          onclick="buscarAlumno()">
+          Buscar
+        </button>
+
+        <button
+          class="btn-success"
+          onclick="nuevoAlumno()">
+          + Nuevo alumno
+        </button>
+
+      </div>
+
+      <div id="estadoBusqueda" class="estado"></div>
+
+      <div id="resultados"></div>
+
+    </div>
 
 
-</div>
+    <!-- FORMULARIO -->
+
+    <div id="cardFormulario" class="card oculto">
+
+      <h2 id="tituloFormulario">
+        Datos del alumno
+      </h2>
+
+      <p class="nota">
+        Los cambios se guardan directamente en BASE_ALUMNOS.
+      </p>
+
+      <input type="hidden" id="filaAlumno">
+
+      <div id="formulario"></div>
+
+      <div id="estadoGuardar" class="estado"></div>
+
+      <div class="acciones">
+
+        <button
+          class="btn-success"
+          onclick="guardarAlumno()">
+          Guardar
+        </button>
+
+        <button
+          class="btn-secondary"
+          onclick="limpiarFormulario()">
+          Limpiar
+        </button>
+
+        <button
+          class="btn-secondary"
+          onclick="cerrarFormulario()">
+          Cerrar
+        </button>
+
+      </div>
+
+    </div>
+
+  </main>
 
 
 <script>
-// ============================================================
-    // ⚠️ CONFIGURACIÓN - PON AQUÍ LA URL DE TU WEB APP
-    // ============================================================
-    // 👇 REEMPLAZA ESTA URL CON LA QUE COPIASSTE AL PUBLICAR
-    const URL_API = "https://script.google.com/macros/s/AKfycbx8i6CfAFUmhBE_j0-HIjDKt0fPywGVWMqYXVIJXX4TJ6m2Ce3YivxAcYG6n2wL_8nekw/exec";
 
-/*******************************************************
- * DEFINICIÓN DE GRUPOS
- *******************************************************/
+/**********************************************************
+ * CONFIGURACIÓN
+ **********************************************************/
+
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbw27IUr4wx0NAL2_VuoIbt16LHV6GCb1KbhH0vWsd8PkNtajq28PcKj7FgovDTVWTpMlg/exec';
+
+
+/**********************************************************
+ * ESTADO
+ **********************************************************/
+
+let TOKEN = '';
+let USUARIO = '';
+let CAMPOS = [];
+
+
+/**********************************************************
+ * GRUPOS DEL FORMULARIO
+ **********************************************************/
 
 const GRUPOS = [
 
   {
-    titulo: 'Identificación',
+    titulo: 'Identificación del alumno',
     campos: [
       'MatriculaNro',
       'NroLegajo',
@@ -399,7 +521,7 @@ const GRUPOS = [
   },
 
   {
-    titulo: 'Familia',
+    titulo: 'Madre y padre',
     campos: [
       'Madre_ApellidoNombre',
       'Madre_Tel',
@@ -436,72 +558,561 @@ const GRUPOS = [
 ];
 
 
-let CAMPOS_DISPONIBLES = [];
+/**********************************************************
+ * ETIQUETAS
+ **********************************************************/
+
+const ETIQUETAS = {
+
+  MatriculaNro: 'N.º de matrícula',
+  NroLegajo: 'N.º de legajo',
+  AñoLectivo: 'Año lectivo',
+  DNIAlumno: 'DNI',
+  ApellidoNombreAlumno: 'Apellido y nombre',
+
+  Sexo: 'Sexo',
+  FechaNacAlumno: 'Fecha de nacimiento',
+  LugarNacAlumno: 'Lugar de nacimiento',
+  NacionalidadAlumno: 'Nacionalidad',
+
+  LibroMatriz: 'Libro matriz',
+  FolioMatriz: 'Folio matriz',
+  CUILAlumno: 'CUIL',
+
+  CursoActual: 'Curso actual',
+  Division: 'División',
+  Orientacion: 'Orientación',
+  TurnoActual: 'Turno',
+  EstadoAlumno: 'Estado del alumno',
+
+  DomicilioAlumno: 'Domicilio',
+  BarrioAlumno: 'Barrio',
+  LocalidadAlumno: 'Localidad',
+
+  TutorPrincipal_Nombre: 'Tutor principal',
+  TutorPrincipal_DNI: 'DNI tutor',
+  TutorPrincipal_Tel: 'Teléfono tutor',
+  'VínculoAlumno': 'Vínculo',
+
+  Madre_ApellidoNombre: 'Madre',
+  Madre_Tel: 'Teléfono madre',
+
+  Padre_ApellidoNombre: 'Padre',
+  Padre_Tel: 'Teléfono padre',
+
+  Discapacidad: 'Discapacidad',
+  TipoDiscapacidad: 'Tipo de discapacidad',
+
+  Alergias: 'Alergias',
+  ObservacionesSalud: 'Observaciones de salud',
+
+  Doc_EstadoGeneral: 'Estado general de documentación',
+  Doc_FaltantesCriticos: 'Documentación faltante crítica',
+
+  Año_Inicio_Nivel_Sec: 'Año inicio nivel secundario',
+  Año_Finaliz_Nivel_Sec: 'Año finalización nivel secundario',
+
+  Observaciones: 'Observaciones'
+};
 
 
-/*******************************************************
+/**********************************************************
  * INICIO
- *******************************************************/
+ **********************************************************/
 
-window.addEventListener(
-  'load',
-  cargarConfiguracion
-);
+window.addEventListener('load', () => {
+
+  const tokenGuardado =
+    sessionStorage.getItem('preceptoriaToken');
+
+  const usuarioGuardado =
+    sessionStorage.getItem('preceptoriaUsuario');
+
+  if (tokenGuardado && usuarioGuardado) {
+
+    TOKEN = tokenGuardado;
+    USUARIO = usuarioGuardado;
+
+    cargarPanel();
+
+  }
+
+});
 
 
-function cargarConfiguracion() {
+/**********************************************************
+ * LOGIN
+ **********************************************************/
 
-  google.script.run
+async function iniciarSesion() {
 
-    .withSuccessHandler(cfg => {
+  const usuario =
+    document
+      .getElementById('loginUsuario')
+      .value
+      .trim();
 
-      CAMPOS_DISPONIBLES = cfg.campos || [];
+  const clave =
+    document
+      .getElementById('loginClave')
+      .value
+      .trim();
 
-      construirFormulario();
+  if (!usuario || !clave) {
 
-    })
+    estado(
+      'estadoLogin',
+      'Completá usuario y clave.',
+      'error'
+    );
 
-    .withFailureHandler(mostrarErrorGeneral)
+    return;
+  }
 
-    .obtenerConfiguracion();
+
+  estado(
+    'estadoLogin',
+    'Ingresando...',
+    'info'
+  );
+
+
+  try {
+
+    const resp =
+      await postConResultado({
+        action: 'login',
+        usuario,
+        clave
+      });
+
+
+    if (!resp.ok) {
+      throw new Error(
+        resp.mensaje || 'No se pudo ingresar.'
+      );
+    }
+
+
+    TOKEN = resp.token;
+    USUARIO = resp.usuario;
+
+
+    sessionStorage.setItem(
+      'preceptoriaToken',
+      TOKEN
+    );
+
+    sessionStorage.setItem(
+      'preceptoriaUsuario',
+      USUARIO
+    );
+
+
+    document
+      .getElementById('loginClave')
+      .value = '';
+
+
+    cargarPanel();
+
+  }
+
+  catch (err) {
+
+    estado(
+      'estadoLogin',
+      err.message || String(err),
+      'error'
+    );
+
+  }
 
 }
 
 
-/*******************************************************
+/**********************************************************
+ * PANEL
+ **********************************************************/
+
+async function cargarPanel() {
+
+  document
+    .getElementById('pantallaLogin')
+    .classList.add('oculto');
+
+  document
+    .getElementById('pantallaPanel')
+    .classList.remove('oculto');
+
+  document
+    .getElementById('usuarioHeader')
+    .classList.remove('oculto');
+
+  document
+    .getElementById('nombreUsuario')
+    .textContent = USUARIO;
+
+
+  try {
+
+    const resp =
+      await jsonp({
+        action: 'config',
+        token: TOKEN
+      });
+
+
+    if (!resp.ok) {
+      throw new Error(
+        resp.mensaje || 'No se pudo cargar la configuración.'
+      );
+    }
+
+
+    CAMPOS =
+      Array.isArray(resp.campos)
+        ? resp.campos
+        : [];
+
+
+    construirFormulario();
+
+  }
+
+  catch (err) {
+
+    if (
+      String(err.message || err)
+        .toLowerCase()
+        .includes('sesión')
+    ) {
+
+      cerrarSesion();
+
+      return;
+    }
+
+
+    alert(
+      'Error al cargar el panel: ' +
+      (err.message || err)
+    );
+
+  }
+
+}
+
+
+/**********************************************************
+ * CERRAR SESIÓN
+ **********************************************************/
+
+function cerrarSesion() {
+
+  TOKEN = '';
+  USUARIO = '';
+  CAMPOS = [];
+
+  sessionStorage.removeItem(
+    'preceptoriaToken'
+  );
+
+  sessionStorage.removeItem(
+    'preceptoriaUsuario'
+  );
+
+
+  document
+    .getElementById('pantallaPanel')
+    .classList.add('oculto');
+
+  document
+    .getElementById('usuarioHeader')
+    .classList.add('oculto');
+
+  document
+    .getElementById('pantallaLogin')
+    .classList.remove('oculto');
+
+}
+
+
+/**********************************************************
+ * BUSCAR ALUMNO
+ **********************************************************/
+
+async function buscarAlumno() {
+
+  const q =
+    document
+      .getElementById('textoBusqueda')
+      .value
+      .trim();
+
+
+  if (!q) {
+
+    estado(
+      'estadoBusqueda',
+      'Ingresá un DNI, apellido o nombre.',
+      'error'
+    );
+
+    return;
+  }
+
+
+  estado(
+    'estadoBusqueda',
+    'Buscando...',
+    'info'
+  );
+
+
+  document
+    .getElementById('resultados')
+    .innerHTML = '';
+
+
+  try {
+
+    const resp =
+      await jsonp({
+        action: 'buscar',
+        token: TOKEN,
+        q: q
+      });
+
+
+    if (!resp.ok) {
+      throw new Error(resp.mensaje);
+    }
+
+
+    ocultarEstado(
+      'estadoBusqueda'
+    );
+
+
+    mostrarResultados(
+      resp.resultados || []
+    );
+
+  }
+
+  catch (err) {
+
+    estado(
+      'estadoBusqueda',
+      err.message || String(err),
+      'error'
+    );
+
+  }
+
+}
+
+
+/**********************************************************
+ * RESULTADOS
+ **********************************************************/
+
+function mostrarResultados(lista) {
+
+  const cont =
+    document
+      .getElementById('resultados');
+
+  cont.innerHTML = '';
+
+
+  if (!lista.length) {
+
+    cont.innerHTML =
+      '<p>No se encontraron alumnos.</p>';
+
+    return;
+  }
+
+
+  lista.forEach(a => {
+
+    const div =
+      document.createElement('div');
+
+    div.className = 'resultado';
+
+
+    const curso =
+      [
+        a.CursoActual || '',
+        a.Division || ''
+      ]
+      .filter(Boolean)
+      .join(' ');
+
+
+    div.innerHTML = `
+      <strong>
+        ${escapeHtml(
+          a.ApellidoNombreAlumno || ''
+        )}
+      </strong>
+
+      <small>
+        DNI: ${escapeHtml(a.DNIAlumno || '')}
+        ${curso
+          ? ' | ' + escapeHtml(curso)
+          : ''}
+      </small>
+    `;
+
+
+    div.onclick =
+      () => abrirAlumno(a.fila);
+
+
+    cont.appendChild(div);
+
+  });
+
+}
+
+
+/**********************************************************
+ * ABRIR ALUMNO
+ **********************************************************/
+
+async function abrirAlumno(fila) {
+
+  estado(
+    'estadoBusqueda',
+    'Cargando alumno...',
+    'info'
+  );
+
+
+  try {
+
+    const resp =
+      await jsonp({
+        action: 'alumno',
+        token: TOKEN,
+        fila: fila
+      });
+
+
+    if (!resp.ok) {
+      throw new Error(resp.mensaje);
+    }
+
+
+    ocultarEstado(
+      'estadoBusqueda'
+    );
+
+
+    llenarFormulario(
+      resp.alumno,
+      resp.fila
+    );
+
+  }
+
+  catch (err) {
+
+    estado(
+      'estadoBusqueda',
+      err.message || String(err),
+      'error'
+    );
+
+  }
+
+}
+
+
+/**********************************************************
+ * NUEVO ALUMNO
+ **********************************************************/
+
+function nuevoAlumno() {
+
+  limpiarCampos();
+
+
+  document
+    .getElementById('filaAlumno')
+    .value = '';
+
+
+  document
+    .getElementById('tituloFormulario')
+    .textContent = 'Nuevo alumno';
+
+
+  document
+    .getElementById('cardFormulario')
+    .classList.remove('oculto');
+
+
+  ocultarEstado(
+    'estadoGuardar'
+  );
+
+
+  document
+    .getElementById('cardFormulario')
+    .scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+
+}
+
+
+/**********************************************************
  * CONSTRUIR FORMULARIO
- *******************************************************/
+ **********************************************************/
 
 function construirFormulario() {
 
-  const contenedor =
-    document.getElementById('formulario');
+  const cont =
+    document
+      .getElementById('formulario');
 
-  contenedor.innerHTML = '';
+  cont.innerHTML = '';
 
 
   GRUPOS.forEach(grupo => {
 
     const camposGrupo =
       grupo.campos.filter(
-        c => CAMPOS_DISPONIBLES.includes(c)
+        campo =>
+          CAMPOS.includes(campo)
       );
 
-    if (!camposGrupo.length) return;
+
+    if (!camposGrupo.length) {
+      return;
+    }
 
 
     const bloque =
-      document.createElement('div');
+      document.createElement('section');
 
     bloque.className = 'grupo';
 
 
-    const titulo =
+    const h3 =
       document.createElement('h3');
 
-    titulo.textContent = grupo.titulo;
+    h3.textContent =
+      grupo.titulo;
 
-    bloque.appendChild(titulo);
+
+    bloque.appendChild(h3);
 
 
     const grid =
@@ -510,10 +1121,10 @@ function construirFormulario() {
     grid.className = 'grid';
 
 
-    camposGrupo.forEach(nombre => {
+    camposGrupo.forEach(campo => {
 
       grid.appendChild(
-        crearCampo(nombre)
+        crearControl(campo)
       );
 
     });
@@ -521,30 +1132,30 @@ function construirFormulario() {
 
     bloque.appendChild(grid);
 
-    contenedor.appendChild(bloque);
+    cont.appendChild(bloque);
 
   });
 
 }
 
 
-/*******************************************************
- * CREAR CAMPO
- *******************************************************/
+/**********************************************************
+ * CREAR CONTROL
+ **********************************************************/
 
-function crearCampo(nombre) {
+function crearControl(nombre) {
 
-  const wrapper =
+  const div =
     document.createElement('div');
 
-  wrapper.className = 'campo';
+  div.className = 'campo';
 
 
   const label =
     document.createElement('label');
 
   label.textContent =
-    etiquetaCampo(nombre);
+    ETIQUETAS[nombre] || nombre;
 
 
   let input;
@@ -565,320 +1176,37 @@ function crearCampo(nombre) {
     input =
       document.createElement('input');
 
-  }
-
-
-  input.id = 'campo_' + nombre;
-
-  input.dataset.campo = nombre;
-
-
-  if (nombre === 'FechaNacAlumno') {
-
-    input.type = 'date';
-
-  }
-
-  else {
-
-    input.type = 'text';
+    input.type =
+      nombre === 'FechaNacAlumno'
+        ? 'date'
+        : 'text';
 
   }
 
 
-  wrapper.appendChild(label);
-  wrapper.appendChild(input);
+  input.id =
+    'campo_' + nombre;
 
-  return wrapper;
+  input.dataset.campo =
+    nombre;
+
+
+  div.appendChild(label);
+  div.appendChild(input);
+
+  return div;
 
 }
 
 
-/*******************************************************
- * ETIQUETAS MÁS LEGIBLES
- *******************************************************/
-
-function etiquetaCampo(nombre) {
-
-  const etiquetas = {
-
-    MatriculaNro: 'N.º de matrícula',
-    NroLegajo: 'N.º de legajo',
-    AñoLectivo: 'Año lectivo',
-    DNIAlumno: 'DNI',
-    ApellidoNombreAlumno:
-      'Apellido y nombre',
-
-    Sexo: 'Sexo',
-    FechaNacAlumno:
-      'Fecha de nacimiento',
-
-    LugarNacAlumno:
-      'Lugar de nacimiento',
-
-    NacionalidadAlumno:
-      'Nacionalidad',
-
-    LibroMatriz:
-      'Libro matriz',
-
-    FolioMatriz:
-      'Folio matriz',
-
-    CUILAlumno:
-      'CUIL',
-
-    CursoActual:
-      'Curso',
-
-    Division:
-      'División',
-
-    Orientacion:
-      'Orientación',
-
-    TurnoActual:
-      'Turno',
-
-    EstadoAlumno:
-      'Estado del alumno',
-
-    DomicilioAlumno:
-      'Domicilio',
-
-    BarrioAlumno:
-      'Barrio',
-
-    LocalidadAlumno:
-      'Localidad',
-
-    TutorPrincipal_Nombre:
-      'Tutor principal',
-
-    TutorPrincipal_DNI:
-      'DNI del tutor',
-
-    TutorPrincipal_Tel:
-      'Teléfono del tutor',
-
-    'VínculoAlumno':
-      'Vínculo',
-
-    Madre_ApellidoNombre:
-      'Madre',
-
-    Madre_Tel:
-      'Teléfono madre',
-
-    Padre_ApellidoNombre:
-      'Padre',
-
-    Padre_Tel:
-      'Teléfono padre',
-
-    Discapacidad:
-      'Discapacidad',
-
-    TipoDiscapacidad:
-      'Tipo de discapacidad',
-
-    Alergias:
-      'Alergias',
-
-    ObservacionesSalud:
-      'Observaciones de salud',
-
-    Doc_EstadoGeneral:
-      'Estado general de documentación',
-
-    Doc_FaltantesCriticos:
-      'Documentación faltante crítica',
-
-    Año_Inicio_Nivel_Sec:
-      'Año de inicio nivel secundario',
-
-    Año_Finaliz_Nivel_Sec:
-      'Año de finalización nivel secundario',
-
-    Observaciones:
-      'Observaciones'
-
-  };
-
-
-  return etiquetas[nombre] || nombre;
-
-}
-
-
-/*******************************************************
- * BUSCAR
- *******************************************************/
-
-function buscar() {
-
-  const texto =
-    document
-      .getElementById('textoBusqueda')
-      .value
-      .trim();
-
-
-  if (!texto) {
-
-    mostrarEstado(
-      'estadoBusqueda',
-      'Ingresá un DNI o apellido.',
-      false
-    );
-
-    return;
-  }
-
-
-  document
-    .getElementById('resultados')
-    .innerHTML = 'Buscando...';
-
-
-  ocultarEstado('estadoBusqueda');
-
-
-  google.script.run
-
-    .withSuccessHandler(mostrarResultados)
-
-    .withFailureHandler(err => {
-
-      document
-        .getElementById('resultados')
-        .innerHTML = '';
-
-      mostrarEstado(
-        'estadoBusqueda',
-        err.message || err,
-        false
-      );
-
-    })
-
-    .buscarAlumnos(texto);
-
-}
-
-
-/*******************************************************
- * MOSTRAR RESULTADOS
- *******************************************************/
-
-function mostrarResultados(resp) {
-
-  const cont =
-    document.getElementById('resultados');
-
-  cont.innerHTML = '';
-
-
-  if (!resp.ok) {
-
-    mostrarEstado(
-      'estadoBusqueda',
-      resp.mensaje,
-      false
-    );
-
-    return;
-  }
-
-
-  if (!resp.resultados.length) {
-
-    cont.innerHTML =
-      '<p>No se encontraron alumnos.</p>';
-
-    return;
-  }
-
-
-  resp.resultados.forEach(a => {
-
-    const div =
-      document.createElement('div');
-
-    div.className = 'resultado';
-
-
-    div.innerHTML = `
-      <strong>${escapeHtml(
-        a.ApellidoNombreAlumno
-      )}</strong>
-
-      <small>
-        DNI: ${escapeHtml(a.DNIAlumno)}
-        &nbsp; | &nbsp;
-        ${escapeHtml(a.CursoActual || '')}
-        ${escapeHtml(a.Division || '')}
-      </small>
-    `;
-
-
-    div.onclick =
-      () => cargarAlumno(a.fila);
-
-
-    cont.appendChild(div);
-
-  });
-
-}
-
-
-/*******************************************************
- * CARGAR ALUMNO
- *******************************************************/
-
-function cargarAlumno(fila) {
-
-  mostrarEstado(
-    'estadoBusqueda',
-    'Cargando alumno...',
-    true
-  );
-
-
-  google.script.run
-
-    .withSuccessHandler(resp => {
-
-      ocultarEstado('estadoBusqueda');
-
-      llenarFormulario(
-        resp.alumno,
-        resp.fila
-      );
-
-    })
-
-    .withFailureHandler(err => {
-
-      mostrarEstado(
-        'estadoBusqueda',
-        err.message || err,
-        false
-      );
-
-    })
-
-    .obtenerAlumnoPorFila(fila);
-
-}
-
-
-/*******************************************************
+/**********************************************************
  * LLENAR FORMULARIO
- *******************************************************/
+ **********************************************************/
 
-function llenarFormulario(alumno, fila) {
+function llenarFormulario(
+  alumno,
+  fila
+) {
 
   limpiarCampos();
 
@@ -888,27 +1216,28 @@ function llenarFormulario(alumno, fila) {
     .value = fila || '';
 
 
-  CAMPOS_DISPONIBLES.forEach(nombre => {
+  CAMPOS.forEach(campo => {
 
     const input =
-      document.getElementById(
-        'campo_' + nombre
-      );
+      document
+        .getElementById(
+          'campo_' + campo
+        );
+
 
     if (!input) return;
 
 
     let valor =
-      alumno[nombre] ?? '';
+      alumno[campo] ?? '';
 
 
     if (
-      nombre === 'FechaNacAlumno' &&
-      valor
+      campo === 'FechaNacAlumno'
     ) {
 
       valor =
-        fechaParaInput(valor);
+        fechaHTML(valor);
 
     }
 
@@ -921,21 +1250,22 @@ function llenarFormulario(alumno, fila) {
   document
     .getElementById('tituloFormulario')
     .textContent =
-      alumno.ApellidoNombreAlumno
-        ? alumno.ApellidoNombreAlumno
-        : 'Datos del alumno';
+      alumno.ApellidoNombreAlumno ||
+      'Datos del alumno';
 
 
   document
-    .getElementById('formCard')
-    .style.display = 'block';
+    .getElementById('cardFormulario')
+    .classList.remove('oculto');
 
 
-  ocultarEstado('estadoGuardar');
+  ocultarEstado(
+    'estadoGuardar'
+  );
 
 
   document
-    .getElementById('formCard')
+    .getElementById('cardFormulario')
     .scrollIntoView({
       behavior: 'smooth',
       block: 'start'
@@ -944,62 +1274,25 @@ function llenarFormulario(alumno, fila) {
 }
 
 
-/*******************************************************
- * NUEVO ALUMNO
- *******************************************************/
-
-function nuevoAlumno() {
-
-  limpiarCampos();
-
-  document
-    .getElementById('filaAlumno')
-    .value = '';
-
-
-  document
-    .getElementById('tituloFormulario')
-    .textContent =
-      'Nuevo alumno';
-
-
-  document
-    .getElementById('formCard')
-    .style.display = 'block';
-
-
-  ocultarEstado('estadoGuardar');
-
-
-  window.scrollTo({
-    top:
-      document
-        .getElementById('formCard')
-        .offsetTop,
-
-    behavior: 'smooth'
-  });
-
-}
-
-
-/*******************************************************
+/**********************************************************
  * GUARDAR
- *******************************************************/
+ **********************************************************/
 
-function guardar() {
+async function guardarAlumno() {
 
   const campos = {};
 
 
-  CAMPOS_DISPONIBLES.forEach(nombre => {
+  CAMPOS.forEach(nombre => {
 
     const input =
-      document.getElementById(
-        'campo_' + nombre
-      );
+      document
+        .getElementById(
+          'campo_' + nombre
+        );
 
     if (!input) return;
+
 
     campos[nombre] =
       input.value.trim();
@@ -1009,81 +1302,96 @@ function guardar() {
 
   if (!campos.DNIAlumno) {
 
-    mostrarEstado(
+    estado(
       'estadoGuardar',
-      'El DNI es obligatorio.',
-      false
+      'El DNI del alumno es obligatorio.',
+      'error'
     );
 
     return;
   }
 
 
-  if (!campos.ApellidoNombreAlumno) {
+  if (
+    !campos.ApellidoNombreAlumno
+  ) {
 
-    mostrarEstado(
+    estado(
       'estadoGuardar',
       'Apellido y nombre es obligatorio.',
-      false
+      'error'
     );
 
     return;
   }
 
 
-  const payload = {
-
-    fila:
-      document
-        .getElementById('filaAlumno')
-        .value,
-
-    campos: campos
-
-  };
-
-
-  mostrarEstado(
+  estado(
     'estadoGuardar',
     'Guardando...',
-    true
+    'info'
   );
 
 
-  google.script.run
+  try {
 
-    .withSuccessHandler(resp => {
+    const resp =
+      await postConResultado({
 
-      mostrarEstado(
-        'estadoGuardar',
-        resp.mensaje,
-        true
-      );
+        action: 'guardar',
 
-      document
-        .getElementById('filaAlumno')
-        .value = resp.fila;
+        token: TOKEN,
 
-    })
+        fila:
+          document
+            .getElementById('filaAlumno')
+            .value,
 
-    .withFailureHandler(err => {
+        campos: campos
+      });
 
-      mostrarEstado(
-        'estadoGuardar',
-        err.message || err,
-        false
-      );
 
-    })
+    if (!resp.ok) {
+      throw new Error(resp.mensaje);
+    }
 
-    .guardarAlumno(payload);
+
+    document
+      .getElementById('filaAlumno')
+      .value = resp.fila;
+
+
+    estado(
+      'estadoGuardar',
+      resp.mensaje ||
+        'Datos guardados correctamente.',
+      'ok'
+    );
+
+
+    document
+      .getElementById('tituloFormulario')
+      .textContent =
+        campos.ApellidoNombreAlumno;
+
+  }
+
+  catch (err) {
+
+    estado(
+      'estadoGuardar',
+      err.message || String(err),
+      'error'
+    );
+
+  }
 
 }
 
 
-/*******************************************************
- * LIMPIAR
- *******************************************************/
+/**********************************************************
+ * LIMPIAR / CERRAR
+ **********************************************************/
 
 function limpiarFormulario() {
 
@@ -1098,7 +1406,9 @@ function limpiarFormulario() {
     .textContent =
       'Nuevo alumno';
 
-  ocultarEstado('estadoGuardar');
+  ocultarEstado(
+    'estadoGuardar'
+  );
 
 }
 
@@ -1106,26 +1416,270 @@ function limpiarFormulario() {
 function limpiarCampos() {
 
   document
-    .querySelectorAll('[data-campo]')
-    .forEach(el => el.value = '');
+    .querySelectorAll(
+      '[data-campo]'
+    )
+    .forEach(
+      el => el.value = ''
+    );
 
 }
 
 
-/*******************************************************
- * ESTADOS
- *******************************************************/
+function cerrarFormulario() {
 
-function mostrarEstado(id, mensaje, ok) {
+  document
+    .getElementById('cardFormulario')
+    .classList.add('oculto');
+
+}
+
+
+/**********************************************************
+ * POST A APPS SCRIPT
+ *
+ * Se manda sin depender de leer la respuesta directa.
+ * Luego consultamos "status" por JSONP.
+ **********************************************************/
+
+async function postConResultado(datos) {
+
+  const requestId =
+    crearId();
+
+  datos.requestId =
+    requestId;
+
+
+  await fetch(
+    API_URL,
+    {
+      method: 'POST',
+
+      mode: 'no-cors',
+
+      headers: {
+        'Content-Type':
+          'text/plain;charset=utf-8'
+      },
+
+      body:
+        JSON.stringify(datos)
+    }
+  );
+
+
+  return esperarResultado(
+    requestId
+  );
+
+}
+
+
+/**********************************************************
+ * POLLING DEL RESULTADO
+ **********************************************************/
+
+async function esperarResultado(
+  requestId
+) {
+
+  for (
+    let intento = 0;
+    intento < 30;
+    intento++
+  ) {
+
+    await esperar(400);
+
+
+    const resp =
+      await jsonp({
+        action: 'status',
+        requestId: requestId
+      });
+
+
+    if (
+      resp.ok &&
+      !resp.pendiente
+    ) {
+
+      return resp.resultado;
+    }
+
+  }
+
+
+  throw new Error(
+    'No se recibió respuesta del servidor.'
+  );
+
+}
+
+
+/**********************************************************
+ * JSONP
+ **********************************************************/
+
+function jsonp(params) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const callback =
+        '__jsonp_' +
+        Date.now() +
+        '_' +
+        Math.floor(
+          Math.random() * 100000
+        );
+
+
+      params.callback =
+        callback;
+
+
+      const script =
+        document.createElement(
+          'script'
+        );
+
+
+      const qs =
+        new URLSearchParams();
+
+
+      Object.entries(params)
+        .forEach(([k, v]) => {
+
+          qs.append(
+            k,
+            v == null
+              ? ''
+              : String(v)
+          );
+
+        });
+
+
+      const timeout =
+        setTimeout(() => {
+
+          limpiar();
+
+          reject(
+            new Error(
+              'El servidor no respondió.'
+            )
+          );
+
+        }, 15000);
+
+
+      function limpiar() {
+
+        clearTimeout(timeout);
+
+        try {
+          delete window[callback];
+        } catch (_) {}
+
+        if (script.parentNode) {
+          script.parentNode
+            .removeChild(script);
+        }
+
+      }
+
+
+      window[callback] =
+        function(data) {
+
+          limpiar();
+          resolve(data);
+
+        };
+
+
+      script.onerror =
+        function() {
+
+          limpiar();
+
+          reject(
+            new Error(
+              'No se pudo comunicar con Apps Script.'
+            )
+          );
+
+        };
+
+
+      script.src =
+        API_URL +
+        '?' +
+        qs.toString();
+
+
+      document.body
+        .appendChild(script);
+
+    }
+  );
+
+}
+
+
+/**********************************************************
+ * UTILIDADES
+ **********************************************************/
+
+function crearId() {
+
+  if (
+    window.crypto &&
+    crypto.randomUUID
+  ) {
+
+    return crypto.randomUUID();
+  }
+
+
+  return (
+    Date.now() +
+    '-' +
+    Math.random()
+      .toString(36)
+      .substring(2)
+  );
+
+}
+
+
+function esperar(ms) {
+
+  return new Promise(
+    resolve =>
+      setTimeout(resolve, ms)
+  );
+
+}
+
+
+function estado(
+  id,
+  texto,
+  tipo
+) {
 
   const el =
     document.getElementById(id);
 
   el.className =
-    'estado ' +
-    (ok ? 'ok' : 'error');
+    'estado ' + tipo;
 
-  el.textContent = mensaje;
+  el.textContent = texto;
 
 }
 
@@ -1136,58 +1690,52 @@ function ocultarEstado(id) {
     document.getElementById(id);
 
   el.className = 'estado';
-
   el.textContent = '';
 
 }
 
 
-/*******************************************************
- * FECHAS
- *******************************************************/
+function fechaHTML(valor) {
 
-function fechaParaInput(valor) {
+  const s =
+    String(valor || '').trim();
 
-  valor = String(valor || '').trim();
 
-  if (!valor) return '';
+  if (!s) return '';
 
 
   // dd/MM/yyyy
-  const m =
-    valor.match(
+  let m =
+    s.match(
       /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
     );
 
 
   if (m) {
 
-    const dd =
-      m[1].padStart(2, '0');
-
-    const mm =
-      m[2].padStart(2, '0');
-
-    return `${m[3]}-${mm}-${dd}`;
+    return (
+      m[3] +
+      '-' +
+      m[2].padStart(2, '0') +
+      '-' +
+      m[1].padStart(2, '0')
+    );
   }
 
 
   // yyyy-MM-dd
   if (
-    /^\d{4}-\d{2}-\d{2}$/.test(valor)
+    /^\d{4}-\d{2}-\d{2}$/
+      .test(s)
   ) {
-    return valor;
+
+    return s;
   }
 
 
   return '';
-
 }
 
-
-/*******************************************************
- * HTML SEGURO
- *******************************************************/
 
 function escapeHtml(texto) {
 
@@ -1200,23 +1748,7 @@ function escapeHtml(texto) {
 
 }
 
-
-/*******************************************************
- * ERROR GENERAL
- *******************************************************/
-
-function mostrarErrorGeneral(err) {
-
-  alert(
-    'Error: ' +
-    (err.message || err)
-  );
-
-}
-
 </script>
 
-
 </body>
-
 </html>
