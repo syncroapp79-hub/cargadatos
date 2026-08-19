@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
 
   <title>Preceptoría Digital</title>
 
@@ -13,143 +17,41 @@
 
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f3f5f7;
-      color: #263238;
+      padding: 12px;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
     }
 
-    .header {
-      background: #263238;
-      color: white;
-      padding: 18px 20px;
-    }
-
-    .header-contenido {
-      max-width: 1100px;
+    .contenedor {
+      max-width: 850px;
       margin: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    .header p {
-      margin: 4px 0 0;
-      font-size: 13px;
-      opacity: .85;
-    }
-
-    .usuario-header {
-      text-align: right;
-      font-size: 13px;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 18px;
-    }
-
-    .card {
+    .tarjeta {
       background: white;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 15px;
+
+      box-shadow:
+        0 4px 15px rgba(0,0,0,.08);
+    }
+
+    h1 {
+      margin: 0 0 5px;
+      color: #1f4e79;
+      font-size: 24px;
     }
 
     h2 {
-      margin-top: 0;
       font-size: 19px;
-    }
-
-    h3 {
       margin-top: 0;
-      font-size: 16px;
     }
 
-    label {
-      display: block;
-      font-weight: bold;
-      font-size: 13px;
-      margin-bottom: 5px;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #b0bec5;
-      border-radius: 6px;
-      font-size: 15px;
-      background: white;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: 2px solid #90caf9;
-      border-color: #1976d2;
-    }
-
-    textarea {
-      min-height: 85px;
-      resize: vertical;
-    }
-
-    button {
-      border: 0;
-      border-radius: 6px;
-      padding: 10px 17px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .btn-primary {
-      background: #1565c0;
-      color: white;
-    }
-
-    .btn-success {
-      background: #2e7d32;
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #e0e0e0;
-      color: #263238;
-    }
-
-    .btn-danger {
-      background: #c62828;
-      color: white;
-    }
-
-    .login-box {
-      max-width: 430px;
-      margin: 50px auto;
-    }
-
-    .campo {
-      margin-bottom: 14px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .grupo {
-      margin-top: 25px;
-      padding-top: 18px;
-      border-top: 1px solid #e0e0e0;
+    .subtitulo {
+      margin-top: 0;
+      color: #64748b;
     }
 
     .busqueda {
@@ -158,1472 +60,490 @@
       flex-wrap: wrap;
     }
 
-    .busqueda input {
+    input {
       flex: 1;
-      min-width: 230px;
+      min-width: 220px;
+
+      padding: 12px;
+
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+
+      font-size: 16px;
     }
 
-    .acciones {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 24px;
-    }
+    button {
+      border: 0;
+      border-radius: 8px;
 
-    .resultado {
-      padding: 12px 5px;
-      border-bottom: 1px solid #eeeeee;
+      padding: 12px 18px;
+
+      font-size: 15px;
+      font-weight: bold;
+
       cursor: pointer;
     }
 
-    .resultado:hover {
-      background: #f4f7fa;
+    .btn-principal {
+      background: #1f4e79;
+      color: white;
+    }
+
+    .btn-prueba {
+      background: #64748b;
+      color: white;
+    }
+
+    .mensaje {
+      display: none;
+
+      margin-top: 14px;
+      padding: 12px;
+
+      border-radius: 8px;
+
+      line-height: 1.4;
+    }
+
+    .exito {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .cargando {
+      display: block;
+      background: #dbeafe;
+      color: #1e3a8a;
+    }
+
+    .resultado {
+      padding: 13px 4px;
+
+      border-bottom:
+        1px solid #e5e7eb;
     }
 
     .resultado strong {
       display: block;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
 
     .resultado small {
-      color: #607d8b;
+      color: #64748b;
     }
 
-    .estado {
-      display: none;
-      padding: 12px;
-      border-radius: 7px;
-      margin-top: 14px;
-      text-align: center;
-      font-weight: bold;
-    }
+    @media(max-width:600px) {
 
-    .estado.ok {
-      display: block;
-      background: #e8f5e9;
-      color: #1b5e20;
-    }
-
-    .estado.error {
-      display: block;
-      background: #ffebee;
-      color: #b71c1c;
-    }
-
-    .estado.info {
-      display: block;
-      background: #e3f2fd;
-      color: #0d47a1;
-    }
-
-    .oculto {
-      display: none !important;
-    }
-
-    .barra-modulos {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .modulo-activo {
-      background: #263238;
-      color: white;
-    }
-
-    .nota {
-      color: #607d8b;
-      font-size: 13px;
-    }
-
-    @media (max-width: 700px) {
-      .container {
-        padding: 10px;
+      body {
+        padding: 7px;
       }
 
-      .card {
-        padding: 15px;
+      .tarjeta {
+        padding: 14px;
       }
 
-      .grid {
-        grid-template-columns: 1fr;
+      .busqueda {
+        display: block;
       }
 
-      .busqueda button {
-        flex: 1;
-      }
-
-      .acciones button {
+      input,
+      button {
         width: 100%;
       }
 
-      .header-contenido {
-        align-items: flex-start;
+      button {
+        margin-top: 8px;
       }
     }
   </style>
+
 </head>
+
 
 <body>
 
-  <header class="header">
-    <div class="header-contenido">
-      <div>
-        <h1>Preceptoría Digital</h1>
-        <p>Sistema Integral Digital de Preceptoría 2026</p>
-      </div>
+<div class="contenedor">
 
-      <div id="usuarioHeader" class="usuario-header oculto">
-        <div id="nombreUsuario"></div>
-        <button
-          class="btn-secondary"
-          onclick="cerrarSesion()"
-          style="margin-top:5px;padding:6px 10px;">
-          Salir
-        </button>
-      </div>
-    </div>
-  </header>
+  <div class="tarjeta">
+
+    <h1>
+      Preceptoría Digital
+    </h1>
+
+    <p class="subtitulo">
+      Prueba de conexión con BASE_ALUMNOS
+    </p>
 
 
-  <!-- LOGIN -->
+    <button
+      class="btn-prueba"
+      onclick="probarConexion()">
 
-  <main id="pantallaLogin" class="container">
+      Probar conexión
 
-    <div class="card login-box">
+    </button>
 
-      <h2>Ingreso al sistema</h2>
 
-      <div class="campo">
-        <label>Preceptor</label>
-        <input
-          id="loginUsuario"
-          type="text"
-          autocomplete="name"
-          placeholder="Nombre y apellido">
-      </div>
-
-      <div class="campo">
-        <label>Clave</label>
-        <input
-          id="loginClave"
-          type="password"
-          autocomplete="current-password">
-      </div>
-
-      <button
-        class="btn-primary"
-        style="width:100%;"
-        onclick="iniciarSesion()">
-        Ingresar
-      </button>
-
-      <div id="estadoLogin" class="estado"></div>
-
+    <div
+      id="mensajeConexion"
+      class="mensaje">
     </div>
 
-  </main>
+  </div>
 
 
-  <!-- PANEL -->
 
-  <main id="pantallaPanel" class="container oculto">
+  <div class="tarjeta">
 
-    <div class="barra-modulos">
+    <h2>
+      Buscar alumno
+    </h2>
 
-      <button class="modulo-activo">
-        Alumnos
-      </button>
+
+    <div class="busqueda">
+
+      <input
+        id="textoBusqueda"
+        type="text"
+        placeholder="DNI, apellido o nombre"
+
+        onkeydown="
+          if(event.key === 'Enter') {
+            buscarAlumno();
+          }
+        "
+      >
+
 
       <button
-        class="btn-secondary"
-        disabled
-        title="Se incorporará posteriormente">
-        Previas / Equivalencias
-      </button>
+        class="btn-principal"
+        onclick="buscarAlumno()">
 
-      <button
-        class="btn-secondary"
-        disabled>
-        Procesar faltas
-      </button>
+        Buscar
 
-      <button
-        class="btn-secondary"
-        disabled>
-        Procesar calificaciones
-      </button>
-
-      <button
-        class="btn-secondary"
-        disabled>
-        Reportes
       </button>
 
     </div>
 
 
-    <!-- BUSCAR -->
-
-    <div class="card">
-
-      <h2>Alumnos</h2>
-
-      <div class="busqueda">
-
-        <input
-          id="textoBusqueda"
-          type="text"
-          placeholder="DNI, apellido o nombre"
-          onkeydown="if(event.key==='Enter') buscarAlumno();">
-
-        <button
-          class="btn-primary"
-          onclick="buscarAlumno()">
-          Buscar
-        </button>
-
-        <button
-          class="btn-success"
-          onclick="nuevoAlumno()">
-          + Nuevo alumno
-        </button>
-
-      </div>
-
-      <div id="estadoBusqueda" class="estado"></div>
-
-      <div id="resultados"></div>
-
+    <div
+      id="mensajeBusqueda"
+      class="mensaje">
     </div>
 
 
-    <!-- FORMULARIO -->
-
-    <div id="cardFormulario" class="card oculto">
-
-      <h2 id="tituloFormulario">
-        Datos del alumno
-      </h2>
-
-      <p class="nota">
-        Los cambios se guardan directamente en BASE_ALUMNOS.
-      </p>
-
-      <input type="hidden" id="filaAlumno">
-
-      <div id="formulario"></div>
-
-      <div id="estadoGuardar" class="estado"></div>
-
-      <div class="acciones">
-
-        <button
-          class="btn-success"
-          onclick="guardarAlumno()">
-          Guardar
-        </button>
-
-        <button
-          class="btn-secondary"
-          onclick="limpiarFormulario()">
-          Limpiar
-        </button>
-
-        <button
-          class="btn-secondary"
-          onclick="cerrarFormulario()">
-          Cerrar
-        </button>
-
-      </div>
-
+    <div
+      id="resultados">
     </div>
 
-  </main>
+  </div>
+
+</div>
+
 
 
 <script>
 
-/**********************************************************
- * CONFIGURACIÓN
- **********************************************************/
+/*********************************************************
+ * PEGAR ACÁ LA URL NUEVA DE APPS SCRIPT
+ *********************************************************/
 
-const API_URL =
-  'https://script.google.com/macros/s/AKfycbwidaS3OAd0kNT8SKLsN9X_a4P-Vk27biAwCSeLj2acKBOBYyByM59WGTInLwC1sCjwRg/exec';
-
-
-/**********************************************************
- * ESTADO
- **********************************************************/
-
-let TOKEN = '';
-let USUARIO = '';
-let CAMPOS = [];
+const URL_GOOGLE_WEB_APP =
+  "https://script.google.com/macros/s/AKfycbwidaS3OAd0kNT8SKLsN9X_a4P-Vk27biAwCSeLj2acKBOBYyByM59WGTInLwC1sCjwRg/exec";
 
 
-/**********************************************************
- * GRUPOS DEL FORMULARIO
- **********************************************************/
+/*********************************************************
+ * PRUEBA DE CONEXIÓN
+ *********************************************************/
 
-const GRUPOS = [
+function probarConexion() {
 
-  {
-    titulo: 'Identificación del alumno',
-    campos: [
-      'MatriculaNro',
-      'NroLegajo',
-      'AñoLectivo',
-      'DNIAlumno',
-      'ApellidoNombreAlumno',
-      'Sexo',
-      'FechaNacAlumno',
-      'LugarNacAlumno',
-      'NacionalidadAlumno',
-      'CUILAlumno'
-    ]
-  },
-
-  {
-    titulo: 'Situación escolar',
-    campos: [
-      'LibroMatriz',
-      'FolioMatriz',
-      'CursoActual',
-      'Division',
-      'Orientacion',
-      'TurnoActual',
-      'EstadoAlumno',
-      'Año_Inicio_Nivel_Sec',
-      'Año_Finaliz_Nivel_Sec'
-    ]
-  },
-
-  {
-    titulo: 'Domicilio',
-    campos: [
-      'DomicilioAlumno',
-      'BarrioAlumno',
-      'LocalidadAlumno'
-    ]
-  },
-
-  {
-    titulo: 'Tutor principal',
-    campos: [
-      'TutorPrincipal_Nombre',
-      'TutorPrincipal_DNI',
-      'TutorPrincipal_Tel',
-      'VínculoAlumno'
-    ]
-  },
-
-  {
-    titulo: 'Madre y padre',
-    campos: [
-      'Madre_ApellidoNombre',
-      'Madre_Tel',
-      'Padre_ApellidoNombre',
-      'Padre_Tel'
-    ]
-  },
-
-  {
-    titulo: 'Salud',
-    campos: [
-      'Discapacidad',
-      'TipoDiscapacidad',
-      'Alergias',
-      'ObservacionesSalud'
-    ]
-  },
-
-  {
-    titulo: 'Documentación',
-    campos: [
-      'Doc_EstadoGeneral',
-      'Doc_FaltantesCriticos'
-    ]
-  },
-
-  {
-    titulo: 'Observaciones',
-    campos: [
-      'Observaciones'
-    ]
-  }
-
-];
+  mostrarMensaje(
+    "mensajeConexion",
+    "Conectando con Apps Script...",
+    "cargando"
+  );
 
 
-/**********************************************************
- * ETIQUETAS
- **********************************************************/
-
-const ETIQUETAS = {
-
-  MatriculaNro: 'N.º de matrícula',
-  NroLegajo: 'N.º de legajo',
-  AñoLectivo: 'Año lectivo',
-  DNIAlumno: 'DNI',
-  ApellidoNombreAlumno: 'Apellido y nombre',
-
-  Sexo: 'Sexo',
-  FechaNacAlumno: 'Fecha de nacimiento',
-  LugarNacAlumno: 'Lugar de nacimiento',
-  NacionalidadAlumno: 'Nacionalidad',
-
-  LibroMatriz: 'Libro matriz',
-  FolioMatriz: 'Folio matriz',
-  CUILAlumno: 'CUIL',
-
-  CursoActual: 'Curso actual',
-  Division: 'División',
-  Orientacion: 'Orientación',
-  TurnoActual: 'Turno',
-  EstadoAlumno: 'Estado del alumno',
-
-  DomicilioAlumno: 'Domicilio',
-  BarrioAlumno: 'Barrio',
-  LocalidadAlumno: 'Localidad',
-
-  TutorPrincipal_Nombre: 'Tutor principal',
-  TutorPrincipal_DNI: 'DNI tutor',
-  TutorPrincipal_Tel: 'Teléfono tutor',
-  'VínculoAlumno': 'Vínculo',
-
-  Madre_ApellidoNombre: 'Madre',
-  Madre_Tel: 'Teléfono madre',
-
-  Padre_ApellidoNombre: 'Padre',
-  Padre_Tel: 'Teléfono padre',
-
-  Discapacidad: 'Discapacidad',
-  TipoDiscapacidad: 'Tipo de discapacidad',
-
-  Alergias: 'Alergias',
-  ObservacionesSalud: 'Observaciones de salud',
-
-  Doc_EstadoGeneral: 'Estado general de documentación',
-  Doc_FaltantesCriticos: 'Documentación faltante crítica',
-
-  Año_Inicio_Nivel_Sec: 'Año inicio nivel secundario',
-  Año_Finaliz_Nivel_Sec: 'Año finalización nivel secundario',
-
-  Observaciones: 'Observaciones'
-};
+  const url =
+    URL_GOOGLE_WEB_APP +
+    "?accion=ping";
 
 
-/**********************************************************
- * INICIO
- **********************************************************/
+  fetch(
+    url,
+    {
+      redirect: "follow"
+    }
+  )
 
-window.addEventListener('load', () => {
+  .then(res => {
 
-  const tokenGuardado =
-    sessionStorage.getItem('preceptoriaToken');
+    if (!res.ok) {
 
-  const usuarioGuardado =
-    sessionStorage.getItem('preceptoriaUsuario');
+      throw new Error(
+        "HTTP " + res.status
+      );
 
-  if (tokenGuardado && usuarioGuardado) {
+    }
 
-    TOKEN = tokenGuardado;
-    USUARIO = usuarioGuardado;
+    return res.json();
 
-    cargarPanel();
+  })
 
-  }
+  .then(data => {
 
-});
+    console.log(
+      "PING:",
+      data
+    );
 
 
-/**********************************************************
- * LOGIN
- **********************************************************/
+    if (data && data.ok) {
 
-async function iniciarSesion() {
+      mostrarMensaje(
+        "mensajeConexion",
+        "Conexión correcta con Apps Script.",
+        "exito"
+      );
 
-  const usuario =
+    }
+
+    else {
+
+      mostrarMensaje(
+        "mensajeConexion",
+        data.mensaje ||
+        "Apps Script respondió, pero informó un error.",
+        "error"
+      );
+
+    }
+
+  })
+
+  .catch(error => {
+
+    console.error(error);
+
+
+    mostrarMensaje(
+      "mensajeConexion",
+      "No se pudo conectar con Apps Script. " +
+      error.message,
+      "error"
+    );
+
+  });
+
+}
+
+
+/*********************************************************
+ * BUSCAR
+ *********************************************************/
+
+function buscarAlumno() {
+
+  const texto =
     document
-      .getElementById('loginUsuario')
+      .getElementById(
+        "textoBusqueda"
+      )
       .value
       .trim();
 
-  const clave =
-    document
-      .getElementById('loginClave')
-      .value
-      .trim();
 
-  if (!usuario || !clave) {
+  if (!texto) {
 
-    estado(
-      'estadoLogin',
-      'Completá usuario y clave.',
-      'error'
+    mostrarMensaje(
+      "mensajeBusqueda",
+      "Ingresá un DNI, apellido o nombre.",
+      "error"
     );
 
     return;
+
   }
 
 
-  estado(
-    'estadoLogin',
-    'Ingresando...',
-    'info'
+  mostrarMensaje(
+    "mensajeBusqueda",
+    "Buscando alumno...",
+    "cargando"
   );
 
 
-  try {
-
-    const resp =
-      await postConResultado({
-        action: 'login',
-        usuario,
-        clave
-      });
+  document
+    .getElementById(
+      "resultados"
+    )
+    .innerHTML = "";
 
 
-    if (!resp.ok) {
+  const url =
+    URL_GOOGLE_WEB_APP +
+
+    "?accion=buscar&q=" +
+
+    encodeURIComponent(
+      texto
+    );
+
+
+  fetch(
+    url,
+    {
+      redirect: "follow"
+    }
+  )
+
+  .then(res => {
+
+    if (!res.ok) {
+
       throw new Error(
-        resp.mensaje || 'No se pudo ingresar.'
+        "HTTP " + res.status
       );
+
     }
 
 
-    TOKEN = resp.token;
-    USUARIO = resp.usuario;
+    return res.json();
 
+  })
 
-    sessionStorage.setItem(
-      'preceptoriaToken',
-      TOKEN
-    );
+  .then(data => {
 
-    sessionStorage.setItem(
-      'preceptoriaUsuario',
-      USUARIO
+    console.log(
+      "BÚSQUEDA:",
+      data
     );
 
 
-    document
-      .getElementById('loginClave')
-      .value = '';
+    if (!data.ok) {
 
-
-    cargarPanel();
-
-  }
-
-  catch (err) {
-
-    estado(
-      'estadoLogin',
-      err.message || String(err),
-      'error'
-    );
-
-  }
-
-}
-
-
-/**********************************************************
- * PANEL
- **********************************************************/
-
-async function cargarPanel() {
-
-  document
-    .getElementById('pantallaLogin')
-    .classList.add('oculto');
-
-  document
-    .getElementById('pantallaPanel')
-    .classList.remove('oculto');
-
-  document
-    .getElementById('usuarioHeader')
-    .classList.remove('oculto');
-
-  document
-    .getElementById('nombreUsuario')
-    .textContent = USUARIO;
-
-
-  try {
-
-    const resp =
-      await jsonp({
-        action: 'config',
-        token: TOKEN
-      });
-
-
-    if (!resp.ok) {
       throw new Error(
-        resp.mensaje || 'No se pudo cargar la configuración.'
+        data.mensaje ||
+        "Error al buscar."
       );
+
     }
 
 
-    CAMPOS =
-      Array.isArray(resp.campos)
-        ? resp.campos
-        : [];
-
-
-    construirFormulario();
-
-  }
-
-  catch (err) {
-
-    if (
-      String(err.message || err)
-        .toLowerCase()
-        .includes('sesión')
-    ) {
-
-      cerrarSesion();
-
-      return;
-    }
-
-
-    alert(
-      'Error al cargar el panel: ' +
-      (err.message || err)
-    );
-
-  }
-
-}
-
-
-/**********************************************************
- * CERRAR SESIÓN
- **********************************************************/
-
-function cerrarSesion() {
-
-  TOKEN = '';
-  USUARIO = '';
-  CAMPOS = [];
-
-  sessionStorage.removeItem(
-    'preceptoriaToken'
-  );
-
-  sessionStorage.removeItem(
-    'preceptoriaUsuario'
-  );
-
-
-  document
-    .getElementById('pantallaPanel')
-    .classList.add('oculto');
-
-  document
-    .getElementById('usuarioHeader')
-    .classList.add('oculto');
-
-  document
-    .getElementById('pantallaLogin')
-    .classList.remove('oculto');
-
-}
-
-
-/**********************************************************
- * BUSCAR ALUMNO
- **********************************************************/
-
-async function buscarAlumno() {
-
-  const q =
-    document
-      .getElementById('textoBusqueda')
-      .value
-      .trim();
-
-
-  if (!q) {
-
-    estado(
-      'estadoBusqueda',
-      'Ingresá un DNI, apellido o nombre.',
-      'error'
-    );
-
-    return;
-  }
-
-
-  estado(
-    'estadoBusqueda',
-    'Buscando...',
-    'info'
-  );
-
-
-  document
-    .getElementById('resultados')
-    .innerHTML = '';
-
-
-  try {
-
-    const resp =
-      await jsonp({
-        action: 'buscar',
-        token: TOKEN,
-        q: q
-      });
-
-
-    if (!resp.ok) {
-      throw new Error(resp.mensaje);
-    }
-
-
-    ocultarEstado(
-      'estadoBusqueda'
+    limpiarMensaje(
+      "mensajeBusqueda"
     );
 
 
     mostrarResultados(
-      resp.resultados || []
+      data.resultados || []
     );
 
-  }
+  })
 
-  catch (err) {
+  .catch(error => {
 
-    estado(
-      'estadoBusqueda',
-      err.message || String(err),
-      'error'
+    console.error(error);
+
+
+    mostrarMensaje(
+      "mensajeBusqueda",
+      "Error de conexión: " +
+      error.message,
+      "error"
     );
 
-  }
+  });
 
 }
 
 
-/**********************************************************
- * RESULTADOS
- **********************************************************/
+/*********************************************************
+ * MOSTRAR RESULTADOS
+ *********************************************************/
 
-function mostrarResultados(lista) {
+function mostrarResultados(
+  lista
+) {
 
-  const cont =
+  const contenedor =
     document
-      .getElementById('resultados');
+      .getElementById(
+        "resultados"
+      );
 
-  cont.innerHTML = '';
+
+  contenedor.innerHTML = "";
 
 
   if (!lista.length) {
 
-    cont.innerHTML =
-      '<p>No se encontraron alumnos.</p>';
+    contenedor.innerHTML =
+      "<p>No se encontraron alumnos.</p>";
 
     return;
-  }
-
-
-  lista.forEach(a => {
-
-    const div =
-      document.createElement('div');
-
-    div.className = 'resultado';
-
-
-    const curso =
-      [
-        a.CursoActual || '',
-        a.Division || ''
-      ]
-      .filter(Boolean)
-      .join(' ');
-
-
-    div.innerHTML = `
-      <strong>
-        ${escapeHtml(
-          a.ApellidoNombreAlumno || ''
-        )}
-      </strong>
-
-      <small>
-        DNI: ${escapeHtml(a.DNIAlumno || '')}
-        ${curso
-          ? ' | ' + escapeHtml(curso)
-          : ''}
-      </small>
-    `;
-
-
-    div.onclick =
-      () => abrirAlumno(a.fila);
-
-
-    cont.appendChild(div);
-
-  });
-
-}
-
-
-/**********************************************************
- * ABRIR ALUMNO
- **********************************************************/
-
-async function abrirAlumno(fila) {
-
-  estado(
-    'estadoBusqueda',
-    'Cargando alumno...',
-    'info'
-  );
-
-
-  try {
-
-    const resp =
-      await jsonp({
-        action: 'alumno',
-        token: TOKEN,
-        fila: fila
-      });
-
-
-    if (!resp.ok) {
-      throw new Error(resp.mensaje);
-    }
-
-
-    ocultarEstado(
-      'estadoBusqueda'
-    );
-
-
-    llenarFormulario(
-      resp.alumno,
-      resp.fila
-    );
 
   }
 
-  catch (err) {
 
-    estado(
-      'estadoBusqueda',
-      err.message || String(err),
-      'error'
-    );
+  lista.forEach(
+    alumno => {
 
-  }
-
-}
-
-
-/**********************************************************
- * NUEVO ALUMNO
- **********************************************************/
-
-function nuevoAlumno() {
-
-  limpiarCampos();
-
-
-  document
-    .getElementById('filaAlumno')
-    .value = '';
-
-
-  document
-    .getElementById('tituloFormulario')
-    .textContent = 'Nuevo alumno';
-
-
-  document
-    .getElementById('cardFormulario')
-    .classList.remove('oculto');
-
-
-  ocultarEstado(
-    'estadoGuardar'
-  );
-
-
-  document
-    .getElementById('cardFormulario')
-    .scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
-
-}
-
-
-/**********************************************************
- * CONSTRUIR FORMULARIO
- **********************************************************/
-
-function construirFormulario() {
-
-  const cont =
-    document
-      .getElementById('formulario');
-
-  cont.innerHTML = '';
-
-
-  GRUPOS.forEach(grupo => {
-
-    const camposGrupo =
-      grupo.campos.filter(
-        campo =>
-          CAMPOS.includes(campo)
-      );
-
-
-    if (!camposGrupo.length) {
-      return;
-    }
-
-
-    const bloque =
-      document.createElement('section');
-
-    bloque.className = 'grupo';
-
-
-    const h3 =
-      document.createElement('h3');
-
-    h3.textContent =
-      grupo.titulo;
-
-
-    bloque.appendChild(h3);
-
-
-    const grid =
-      document.createElement('div');
-
-    grid.className = 'grid';
-
-
-    camposGrupo.forEach(campo => {
-
-      grid.appendChild(
-        crearControl(campo)
-      );
-
-    });
-
-
-    bloque.appendChild(grid);
-
-    cont.appendChild(bloque);
-
-  });
-
-}
-
-
-/**********************************************************
- * CREAR CONTROL
- **********************************************************/
-
-function crearControl(nombre) {
-
-  const div =
-    document.createElement('div');
-
-  div.className = 'campo';
-
-
-  const label =
-    document.createElement('label');
-
-  label.textContent =
-    ETIQUETAS[nombre] || nombre;
-
-
-  let input;
-
-
-  if (
-    nombre === 'Observaciones' ||
-    nombre === 'ObservacionesSalud'
-  ) {
-
-    input =
-      document.createElement('textarea');
-
-  }
-
-  else {
-
-    input =
-      document.createElement('input');
-
-    input.type =
-      nombre === 'FechaNacAlumno'
-        ? 'date'
-        : 'text';
-
-  }
-
-
-  input.id =
-    'campo_' + nombre;
-
-  input.dataset.campo =
-    nombre;
-
-
-  div.appendChild(label);
-  div.appendChild(input);
-
-  return div;
-
-}
-
-
-/**********************************************************
- * LLENAR FORMULARIO
- **********************************************************/
-
-function llenarFormulario(
-  alumno,
-  fila
-) {
-
-  limpiarCampos();
-
-
-  document
-    .getElementById('filaAlumno')
-    .value = fila || '';
-
-
-  CAMPOS.forEach(campo => {
-
-    const input =
-      document
-        .getElementById(
-          'campo_' + campo
-        );
-
-
-    if (!input) return;
-
-
-    let valor =
-      alumno[campo] ?? '';
-
-
-    if (
-      campo === 'FechaNacAlumno'
-    ) {
-
-      valor =
-        fechaHTML(valor);
-
-    }
-
-
-    input.value = valor;
-
-  });
-
-
-  document
-    .getElementById('tituloFormulario')
-    .textContent =
-      alumno.ApellidoNombreAlumno ||
-      'Datos del alumno';
-
-
-  document
-    .getElementById('cardFormulario')
-    .classList.remove('oculto');
-
-
-  ocultarEstado(
-    'estadoGuardar'
-  );
-
-
-  document
-    .getElementById('cardFormulario')
-    .scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
-
-}
-
-
-/**********************************************************
- * GUARDAR
- **********************************************************/
-
-async function guardarAlumno() {
-
-  const campos = {};
-
-
-  CAMPOS.forEach(nombre => {
-
-    const input =
-      document
-        .getElementById(
-          'campo_' + nombre
-        );
-
-    if (!input) return;
-
-
-    campos[nombre] =
-      input.value.trim();
-
-  });
-
-
-  if (!campos.DNIAlumno) {
-
-    estado(
-      'estadoGuardar',
-      'El DNI del alumno es obligatorio.',
-      'error'
-    );
-
-    return;
-  }
-
-
-  if (
-    !campos.ApellidoNombreAlumno
-  ) {
-
-    estado(
-      'estadoGuardar',
-      'Apellido y nombre es obligatorio.',
-      'error'
-    );
-
-    return;
-  }
-
-
-  estado(
-    'estadoGuardar',
-    'Guardando...',
-    'info'
-  );
-
-
-  try {
-
-    const resp =
-      await postConResultado({
-
-        action: 'guardar',
-
-        token: TOKEN,
-
-        fila:
-          document
-            .getElementById('filaAlumno')
-            .value,
-
-        campos: campos
-      });
-
-
-    if (!resp.ok) {
-      throw new Error(resp.mensaje);
-    }
-
-
-    document
-      .getElementById('filaAlumno')
-      .value = resp.fila;
-
-
-    estado(
-      'estadoGuardar',
-      resp.mensaje ||
-        'Datos guardados correctamente.',
-      'ok'
-    );
-
-
-    document
-      .getElementById('tituloFormulario')
-      .textContent =
-        campos.ApellidoNombreAlumno;
-
-  }
-
-  catch (err) {
-
-    estado(
-      'estadoGuardar',
-      err.message || String(err),
-      'error'
-    );
-
-  }
-
-}
-
-
-/**********************************************************
- * LIMPIAR / CERRAR
- **********************************************************/
-
-function limpiarFormulario() {
-
-  limpiarCampos();
-
-  document
-    .getElementById('filaAlumno')
-    .value = '';
-
-  document
-    .getElementById('tituloFormulario')
-    .textContent =
-      'Nuevo alumno';
-
-  ocultarEstado(
-    'estadoGuardar'
-  );
-
-}
-
-
-function limpiarCampos() {
-
-  document
-    .querySelectorAll(
-      '[data-campo]'
-    )
-    .forEach(
-      el => el.value = ''
-    );
-
-}
-
-
-function cerrarFormulario() {
-
-  document
-    .getElementById('cardFormulario')
-    .classList.add('oculto');
-
-}
-
-
-/**********************************************************
- * POST A APPS SCRIPT
- *
- * Se manda sin depender de leer la respuesta directa.
- * Luego consultamos "status" por JSONP.
- **********************************************************/
-
-async function postConResultado(datos) {
-
-  const requestId =
-    crearId();
-
-  datos.requestId =
-    requestId;
-
-
-  await fetch(
-    API_URL,
-    {
-      method: 'POST',
-
-      mode: 'no-cors',
-
-      headers: {
-        'Content-Type':
-          'text/plain;charset=utf-8'
-      },
-
-      body:
-        JSON.stringify(datos)
-    }
-  );
-
-
-  return esperarResultado(
-    requestId
-  );
-
-}
-
-
-/**********************************************************
- * POLLING DEL RESULTADO
- **********************************************************/
-
-async function esperarResultado(
-  requestId
-) {
-
-  for (
-    let intento = 0;
-    intento < 30;
-    intento++
-  ) {
-
-    await esperar(400);
-
-
-    const resp =
-      await jsonp({
-        action: 'status',
-        requestId: requestId
-      });
-
-
-    if (
-      resp.ok &&
-      !resp.pendiente
-    ) {
-
-      return resp.resultado;
-    }
-
-  }
-
-
-  throw new Error(
-    'No se recibió respuesta del servidor.'
-  );
-
-}
-
-
-/**********************************************************
- * JSONP
- **********************************************************/
-
-function jsonp(params) {
-
-  return new Promise(
-    (resolve, reject) => {
-
-      const callback =
-        '__jsonp_' +
-        Date.now() +
-        '_' +
-        Math.floor(
-          Math.random() * 100000
-        );
-
-
-      params.callback =
-        callback;
-
-
-      const script =
-        document.createElement(
-          'script'
-        );
-
-
-      const qs =
-        new URLSearchParams();
-
-
-      Object.entries(params)
-        .forEach(([k, v]) => {
-
-          qs.append(
-            k,
-            v == null
-              ? ''
-              : String(v)
+      const div =
+        document
+          .createElement(
+            "div"
           );
 
-        });
+
+      div.className =
+        "resultado";
 
 
-      const timeout =
-        setTimeout(() => {
+      div.innerHTML =
 
-          limpiar();
+        "<strong>" +
 
-          reject(
-            new Error(
-              'El servidor no respondió.'
-            )
-          );
+        escapar(
+          alumno.alumno || ""
+        ) +
 
-        }, 15000);
+        "</strong>" +
 
 
-      function limpiar() {
+        "<small>" +
 
-        clearTimeout(timeout);
+        "DNI: " +
 
-        try {
-          delete window[callback];
-        } catch (_) {}
+        escapar(
+          alumno.dni || ""
+        ) +
 
-        if (script.parentNode) {
-          script.parentNode
-            .removeChild(script);
-        }
+        " | " +
 
-      }
+        escapar(
+          alumno.curso || ""
+        ) +
 
+        " " +
 
-      window[callback] =
-        function(data) {
+        escapar(
+          alumno.division || ""
+        ) +
 
-          limpiar();
-          resolve(data);
-
-        };
+        "</small>";
 
 
-      script.onerror =
-        function() {
-
-          limpiar();
-
-          reject(
-            new Error(
-              'No se pudo comunicar con Apps Script.'
-            )
-          );
-
-        };
-
-
-      script.src =
-        API_URL +
-        '?' +
-        qs.toString();
-
-
-      document.body
-        .appendChild(script);
+      contenedor
+        .appendChild(div);
 
     }
   );
@@ -1631,120 +551,80 @@ function jsonp(params) {
 }
 
 
-/**********************************************************
- * UTILIDADES
- **********************************************************/
+/*********************************************************
+ * MENSAJES
+ *********************************************************/
 
-function crearId() {
-
-  if (
-    window.crypto &&
-    crypto.randomUUID
-  ) {
-
-    return crypto.randomUUID();
-  }
-
-
-  return (
-    Date.now() +
-    '-' +
-    Math.random()
-      .toString(36)
-      .substring(2)
-  );
-
-}
-
-
-function esperar(ms) {
-
-  return new Promise(
-    resolve =>
-      setTimeout(resolve, ms)
-  );
-
-}
-
-
-function estado(
+function mostrarMensaje(
   id,
   texto,
   tipo
 ) {
 
-  const el =
-    document.getElementById(id);
-
-  el.className =
-    'estado ' + tipo;
-
-  el.textContent = texto;
-
-}
+  const elemento =
+    document
+      .getElementById(id);
 
 
-function ocultarEstado(id) {
+  elemento.textContent =
+    texto;
 
-  const el =
-    document.getElementById(id);
 
-  el.className = 'estado';
-  el.textContent = '';
+  elemento.className =
+    "mensaje " + tipo;
 
 }
 
 
-function fechaHTML(valor) {
+function limpiarMensaje(id) {
 
-  const s =
-    String(valor || '').trim();
-
-
-  if (!s) return '';
+  const elemento =
+    document
+      .getElementById(id);
 
 
-  // dd/MM/yyyy
-  let m =
-    s.match(
-      /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
-    );
+  elemento.textContent = "";
 
+  elemento.className =
+    "mensaje";
 
-  if (m) {
-
-    return (
-      m[3] +
-      '-' +
-      m[2].padStart(2, '0') +
-      '-' +
-      m[1].padStart(2, '0')
-    );
-  }
-
-
-  // yyyy-MM-dd
-  if (
-    /^\d{4}-\d{2}-\d{2}$/
-      .test(s)
-  ) {
-
-    return s;
-  }
-
-
-  return '';
 }
 
 
-function escapeHtml(texto) {
+/*********************************************************
+ * SEGURIDAD HTML
+ *********************************************************/
 
-  return String(texto ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+function escapar(valor) {
+
+  return String(
+    valor || ""
+  )
+
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+
+  .replace(
+    /</g,
+    "&lt;"
+  )
+
+  .replace(
+    />/g,
+    "&gt;"
+  )
+
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+
+  .replace(
+    /'/g,
+    "&#039;"
+  );
 
 }
 
