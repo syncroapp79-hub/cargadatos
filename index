@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <base target="_top">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1">
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f6f8;
+      color: #222;
+    }
+
+    .header {
+      background: #263238;
+      color: white;
+      padding: 18px 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .header p {
+      margin: 5px 0 0 0;
+      opacity: .85;
+      font-size: 13px;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow:
+        0 1px 5px rgba(0,0,0,.10);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    .busqueda {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      font-size: 15px;
+      background: white;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    button {
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      background: #1565c0;
+      color: white;
+    }
+
+    button.success {
+      background: #2e7d32;
+      color: white;
+    }
+
+    button.secondary {
+      background: #e0e0e0;
+      color: #222;
+    }
+
+    button.danger {
+      background: #c62828;
+      color: white;
+    }
+
+    .busqueda input {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .resultados {
+      margin-top: 15px;
+    }
+
+    .resultado {
+      border-bottom: 1px solid #eee;
+      padding: 10px 4px;
+      cursor: pointer;
+    }
+
+    .resultado:hover {
+      background: #f4f7fa;
+    }
+
+    .resultado strong {
+      display: block;
+    }
+
+    .resultado small {
+      color: #666;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .campo label {
+      display: block;
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .grupo {
+      margin-top: 24px;
+      border-top: 1px solid #ddd;
+      padding-top: 16px;
+    }
+
+    .grupo h3 {
+      font-size: 16px;
+      margin-top: 0;
+    }
+
+    .acciones {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .estado {
+      display: none;
+      padding: 12px;
+      border-radius: 7px;
+      margin-top: 14px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .estado.ok {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+    }
+
+    .estado.error {
+      display: block;
+      background: #ffebee;
+      color: #b71c1c;
+    }
+
+    .cargando {
+      opacity: .6;
+      pointer-events: none;
+    }
+
+    #formCard {
+      display: none;
+    }
+
+    @media(max-width: 700px) {
+
+      .container {
+        padding: 10px;
+      }
+
+      .card {
+        padding: 14px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+  <h1>Preceptoría Digital</h1>
+
+  <p>
+    Alta y actualización de datos de alumnos
+  </p>
+
+</div>
+
+
+<div class="container">
+
+
+  <!-- BUSCADOR -->
+
+  <div class="card">
+
+    <h2>Buscar alumno</h2>
+
+    <div class="busqueda">
+
+      <input
+        id="textoBusqueda"
+        placeholder="Ingresar DNI, apellido o nombre">
+
+      <button
+        class="primary"
+        onclick="buscar()">
+
+        Buscar
+
+      </button>
+
+      <button
+        class="success"
+        onclick="nuevoAlumno()">
+
+        Nuevo alumno
+
+      </button>
+
+    </div>
+
+
+    <div
+      id="estadoBusqueda"
+      class="estado">
+    </div>
+
+
+    <div
+      id="resultados"
+      class="resultados">
+    </div>
+
+  </div>
+
+
+  <!-- FORMULARIO -->
+
+  <div
+    id="formCard"
+    class="card">
+
+    <h2 id="tituloFormulario">
+      Datos del alumno
+    </h2>
+
+    <input
+      type="hidden"
+      id="filaAlumno">
+
+
+    <div id="formulario"></div>
+
+
+    <div
+      id="estadoGuardar"
+      class="estado">
+    </div>
+
+
+    <div class="acciones">
+
+      <button
+        class="success"
+        onclick="guardar()">
+
+        Guardar
+
+      </button>
+
+      <button
+        class="secondary"
+        onclick="limpiarFormulario()">
+
+        Limpiar
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<script>
+
+
+/*******************************************************
+ * DEFINICIÓN DE GRUPOS
+ *******************************************************/
+
+const GRUPOS = [
+
+  {
+    titulo: 'Identificación',
+    campos: [
+      'MatriculaNro',
+      'NroLegajo',
+      'AñoLectivo',
+      'DNIAlumno',
+      'ApellidoNombreAlumno',
+      'Sexo',
+      'FechaNacAlumno',
+      'LugarNacAlumno',
+      'NacionalidadAlumno',
+      'CUILAlumno'
+    ]
+  },
+
+  {
+    titulo: 'Situación escolar',
+    campos: [
+      'LibroMatriz',
+      'FolioMatriz',
+      'CursoActual',
+      'Division',
+      'Orientacion',
+      'TurnoActual',
+      'EstadoAlumno',
+      'Año_Inicio_Nivel_Sec',
+      'Año_Finaliz_Nivel_Sec'
+    ]
+  },
+
+  {
+    titulo: 'Domicilio',
+    campos: [
+      'DomicilioAlumno',
+      'BarrioAlumno',
+      'LocalidadAlumno'
+    ]
+  },
+
+  {
+    titulo: 'Tutor principal',
+    campos: [
+      'TutorPrincipal_Nombre',
+      'TutorPrincipal_DNI',
+      'TutorPrincipal_Tel',
+      'VínculoAlumno'
+    ]
+  },
+
+  {
+    titulo: 'Familia',
+    campos: [
+      'Madre_ApellidoNombre',
+      'Madre_Tel',
+      'Padre_ApellidoNombre',
+      'Padre_Tel'
+    ]
+  },
+
+  {
+    titulo: 'Salud',
+    campos: [
+      'Discapacidad',
+      'TipoDiscapacidad',
+      'Alergias',
+      'ObservacionesSalud'
+    ]
+  },
+
+  {
+    titulo: 'Documentación',
+    campos: [
+      'Doc_EstadoGeneral',
+      'Doc_FaltantesCriticos'
+    ]
+  },
+
+  {
+    titulo: 'Observaciones',
+    campos: [
+      'Observaciones'
+    ]
+  }
+
+];
+
+
+let CAMPOS_DISPONIBLES = [];
+
+
+/*******************************************************
+ * INICIO
+ *******************************************************/
+
+window.addEventListener(
+  'load',
+  cargarConfiguracion
+);
+
+
+function cargarConfiguracion() {
+
+  google.script.run
+
+    .withSuccessHandler(cfg => {
+
+      CAMPOS_DISPONIBLES = cfg.campos || [];
+
+      construirFormulario();
+
+    })
+
+    .withFailureHandler(mostrarErrorGeneral)
+
+    .obtenerConfiguracion();
+
+}
+
+
+/*******************************************************
+ * CONSTRUIR FORMULARIO
+ *******************************************************/
+
+function construirFormulario() {
+
+  const contenedor =
+    document.getElementById('formulario');
+
+  contenedor.innerHTML = '';
+
+
+  GRUPOS.forEach(grupo => {
+
+    const camposGrupo =
+      grupo.campos.filter(
+        c => CAMPOS_DISPONIBLES.includes(c)
+      );
+
+    if (!camposGrupo.length) return;
+
+
+    const bloque =
+      document.createElement('div');
+
+    bloque.className = 'grupo';
+
+
+    const titulo =
+      document.createElement('h3');
+
+    titulo.textContent = grupo.titulo;
+
+    bloque.appendChild(titulo);
+
+
+    const grid =
+      document.createElement('div');
+
+    grid.className = 'grid';
+
+
+    camposGrupo.forEach(nombre => {
+
+      grid.appendChild(
+        crearCampo(nombre)
+      );
+
+    });
+
+
+    bloque.appendChild(grid);
+
+    contenedor.appendChild(bloque);
+
+  });
+
+}
+
+
+/*******************************************************
+ * CREAR CAMPO
+ *******************************************************/
+
+function crearCampo(nombre) {
+
+  const wrapper =
+    document.createElement('div');
+
+  wrapper.className = 'campo';
+
+
+  const label =
+    document.createElement('label');
+
+  label.textContent =
+    etiquetaCampo(nombre);
+
+
+  let input;
+
+
+  if (
+    nombre === 'Observaciones' ||
+    nombre === 'ObservacionesSalud'
+  ) {
+
+    input =
+      document.createElement('textarea');
+
+  }
+
+  else {
+
+    input =
+      document.createElement('input');
+
+  }
+
+
+  input.id = 'campo_' + nombre;
+
+  input.dataset.campo = nombre;
+
+
+  if (nombre === 'FechaNacAlumno') {
+
+    input.type = 'date';
+
+  }
+
+  else {
+
+    input.type = 'text';
+
+  }
+
+
+  wrapper.appendChild(label);
+  wrapper.appendChild(input);
+
+  return wrapper;
+
+}
+
+
+/*******************************************************
+ * ETIQUETAS MÁS LEGIBLES
+ *******************************************************/
+
+function etiquetaCampo(nombre) {
+
+  const etiquetas = {
+
+    MatriculaNro: 'N.º de matrícula',
+    NroLegajo: 'N.º de legajo',
+    AñoLectivo: 'Año lectivo',
+    DNIAlumno: 'DNI',
+    ApellidoNombreAlumno:
+      'Apellido y nombre',
+
+    Sexo: 'Sexo',
+    FechaNacAlumno:
+      'Fecha de nacimiento',
+
+    LugarNacAlumno:
+      'Lugar de nacimiento',
+
+    NacionalidadAlumno:
+      'Nacionalidad',
+
+    LibroMatriz:
+      'Libro matriz',
+
+    FolioMatriz:
+      'Folio matriz',
+
+    CUILAlumno:
+      'CUIL',
+
+    CursoActual:
+      'Curso',
+
+    Division:
+      'División',
+
+    Orientacion:
+      'Orientación',
+
+    TurnoActual:
+      'Turno',
+
+    EstadoAlumno:
+      'Estado del alumno',
+
+    DomicilioAlumno:
+      'Domicilio',
+
+    BarrioAlumno:
+      'Barrio',
+
+    LocalidadAlumno:
+      'Localidad',
+
+    TutorPrincipal_Nombre:
+      'Tutor principal',
+
+    TutorPrincipal_DNI:
+      'DNI del tutor',
+
+    TutorPrincipal_Tel:
+      'Teléfono del tutor',
+
+    'VínculoAlumno':
+      'Vínculo',
+
+    Madre_ApellidoNombre:
+      'Madre',
+
+    Madre_Tel:
+      'Teléfono madre',
+
+    Padre_ApellidoNombre:
+      'Padre',
+
+    Padre_Tel:
+      'Teléfono padre',
+
+    Discapacidad:
+      'Discapacidad',
+
+    TipoDiscapacidad:
+      'Tipo de discapacidad',
+
+    Alergias:
+      'Alergias',
+
+    ObservacionesSalud:
+      'Observaciones de salud',
+
+    Doc_EstadoGeneral:
+      'Estado general de documentación',
+
+    Doc_FaltantesCriticos:
+      'Documentación faltante crítica',
+
+    Año_Inicio_Nivel_Sec:
+      'Año de inicio nivel secundario',
+
+    Año_Finaliz_Nivel_Sec:
+      'Año de finalización nivel secundario',
+
+    Observaciones:
+      'Observaciones'
+
+  };
+
+
+  return etiquetas[nombre] || nombre;
+
+}
+
+
+/*******************************************************
+ * BUSCAR
+ *******************************************************/
+
+function buscar() {
+
+  const texto =
+    document
+      .getElementById('textoBusqueda')
+      .value
+      .trim();
+
+
+  if (!texto) {
+
+    mostrarEstado(
+      'estadoBusqueda',
+      'Ingresá un DNI o apellido.',
+      false
+    );
+
+    return;
+  }
+
+
+  document
+    .getElementById('resultados')
+    .innerHTML = 'Buscando...';
+
+
+  ocultarEstado('estadoBusqueda');
+
+
+  google.script.run
+
+    .withSuccessHandler(mostrarResultados)
+
+    .withFailureHandler(err => {
+
+      document
+        .getElementById('resultados')
+        .innerHTML = '';
+
+      mostrarEstado(
+        'estadoBusqueda',
+        err.message || err,
+        false
+      );
+
+    })
+
+    .buscarAlumnos(texto);
+
+}
+
+
+/*******************************************************
+ * MOSTRAR RESULTADOS
+ *******************************************************/
+
+function mostrarResultados(resp) {
+
+  const cont =
+    document.getElementById('resultados');
+
+  cont.innerHTML = '';
+
+
+  if (!resp.ok) {
+
+    mostrarEstado(
+      'estadoBusqueda',
+      resp.mensaje,
+      false
+    );
+
+    return;
+  }
+
+
+  if (!resp.resultados.length) {
+
+    cont.innerHTML =
+      '<p>No se encontraron alumnos.</p>';
+
+    return;
+  }
+
+
+  resp.resultados.forEach(a => {
+
+    const div =
+      document.createElement('div');
+
+    div.className = 'resultado';
+
+
+    div.innerHTML = `
+      <strong>${escapeHtml(
+        a.ApellidoNombreAlumno
+      )}</strong>
+
+      <small>
+        DNI: ${escapeHtml(a.DNIAlumno)}
+        &nbsp; | &nbsp;
+        ${escapeHtml(a.CursoActual || '')}
+        ${escapeHtml(a.Division || '')}
+      </small>
+    `;
+
+
+    div.onclick =
+      () => cargarAlumno(a.fila);
+
+
+    cont.appendChild(div);
+
+  });
+
+}
+
+
+/*******************************************************
+ * CARGAR ALUMNO
+ *******************************************************/
+
+function cargarAlumno(fila) {
+
+  mostrarEstado(
+    'estadoBusqueda',
+    'Cargando alumno...',
+    true
+  );
+
+
+  google.script.run
+
+    .withSuccessHandler(resp => {
+
+      ocultarEstado('estadoBusqueda');
+
+      llenarFormulario(
+        resp.alumno,
+        resp.fila
+      );
+
+    })
+
+    .withFailureHandler(err => {
+
+      mostrarEstado(
+        'estadoBusqueda',
+        err.message || err,
+        false
+      );
+
+    })
+
+    .obtenerAlumnoPorFila(fila);
+
+}
+
+
+/*******************************************************
+ * LLENAR FORMULARIO
+ *******************************************************/
+
+function llenarFormulario(alumno, fila) {
+
+  limpiarCampos();
+
+
+  document
+    .getElementById('filaAlumno')
+    .value = fila || '';
+
+
+  CAMPOS_DISPONIBLES.forEach(nombre => {
+
+    const input =
+      document.getElementById(
+        'campo_' + nombre
+      );
+
+    if (!input) return;
+
+
+    let valor =
+      alumno[nombre] ?? '';
+
+
+    if (
+      nombre === 'FechaNacAlumno' &&
+      valor
+    ) {
+
+      valor =
+        fechaParaInput(valor);
+
+    }
+
+
+    input.value = valor;
+
+  });
+
+
+  document
+    .getElementById('tituloFormulario')
+    .textContent =
+      alumno.ApellidoNombreAlumno
+        ? alumno.ApellidoNombreAlumno
+        : 'Datos del alumno';
+
+
+  document
+    .getElementById('formCard')
+    .style.display = 'block';
+
+
+  ocultarEstado('estadoGuardar');
+
+
+  document
+    .getElementById('formCard')
+    .scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+
+}
+
+
+/*******************************************************
+ * NUEVO ALUMNO
+ *******************************************************/
+
+function nuevoAlumno() {
+
+  limpiarCampos();
+
+  document
+    .getElementById('filaAlumno')
+    .value = '';
+
+
+  document
+    .getElementById('tituloFormulario')
+    .textContent =
+      'Nuevo alumno';
+
+
+  document
+    .getElementById('formCard')
+    .style.display = 'block';
+
+
+  ocultarEstado('estadoGuardar');
+
+
+  window.scrollTo({
+    top:
+      document
+        .getElementById('formCard')
+        .offsetTop,
+
+    behavior: 'smooth'
+  });
+
+}
+
+
+/*******************************************************
+ * GUARDAR
+ *******************************************************/
+
+function guardar() {
+
+  const campos = {};
+
+
+  CAMPOS_DISPONIBLES.forEach(nombre => {
+
+    const input =
+      document.getElementById(
+        'campo_' + nombre
+      );
+
+    if (!input) return;
+
+    campos[nombre] =
+      input.value.trim();
+
+  });
+
+
+  if (!campos.DNIAlumno) {
+
+    mostrarEstado(
+      'estadoGuardar',
+      'El DNI es obligatorio.',
+      false
+    );
+
+    return;
+  }
+
+
+  if (!campos.ApellidoNombreAlumno) {
+
+    mostrarEstado(
+      'estadoGuardar',
+      'Apellido y nombre es obligatorio.',
+      false
+    );
+
+    return;
+  }
+
+
+  const payload = {
+
+    fila:
+      document
+        .getElementById('filaAlumno')
+        .value,
+
+    campos: campos
+
+  };
+
+
+  mostrarEstado(
+    'estadoGuardar',
+    'Guardando...',
+    true
+  );
+
+
+  google.script.run
+
+    .withSuccessHandler(resp => {
+
+      mostrarEstado(
+        'estadoGuardar',
+        resp.mensaje,
+        true
+      );
+
+      document
+        .getElementById('filaAlumno')
+        .value = resp.fila;
+
+    })
+
+    .withFailureHandler(err => {
+
+      mostrarEstado(
+        'estadoGuardar',
+        err.message || err,
+        false
+      );
+
+    })
+
+    .guardarAlumno(payload);
+
+}
+
+
+/*******************************************************
+ * LIMPIAR
+ *******************************************************/
+
+function limpiarFormulario() {
+
+  limpiarCampos();
+
+  document
+    .getElementById('filaAlumno')
+    .value = '';
+
+  document
+    .getElementById('tituloFormulario')
+    .textContent =
+      'Nuevo alumno';
+
+  ocultarEstado('estadoGuardar');
+
+}
+
+
+function limpiarCampos() {
+
+  document
+    .querySelectorAll('[data-campo]')
+    .forEach(el => el.value = '');
+
+}
+
+
+/*******************************************************
+ * ESTADOS
+ *******************************************************/
+
+function mostrarEstado(id, mensaje, ok) {
+
+  const el =
+    document.getElementById(id);
+
+  el.className =
+    'estado ' +
+    (ok ? 'ok' : 'error');
+
+  el.textContent = mensaje;
+
+}
+
+
+function ocultarEstado(id) {
+
+  const el =
+    document.getElementById(id);
+
+  el.className = 'estado';
+
+  el.textContent = '';
+
+}
+
+
+/*******************************************************
+ * FECHAS
+ *******************************************************/
+
+function fechaParaInput(valor) {
+
+  valor = String(valor || '').trim();
+
+  if (!valor) return '';
+
+
+  // dd/MM/yyyy
+  const m =
+    valor.match(
+      /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
+    );
+
+
+  if (m) {
+
+    const dd =
+      m[1].padStart(2, '0');
+
+    const mm =
+      m[2].padStart(2, '0');
+
+    return `${m[3]}-${mm}-${dd}`;
+  }
+
+
+  // yyyy-MM-dd
+  if (
+    /^\d{4}-\d{2}-\d{2}$/.test(valor)
+  ) {
+    return valor;
+  }
+
+
+  return '';
+
+}
+
+
+/*******************************************************
+ * HTML SEGURO
+ *******************************************************/
+
+function escapeHtml(texto) {
+
+  return String(texto ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+}
+
+
+/*******************************************************
+ * ERROR GENERAL
+ *******************************************************/
+
+function mostrarErrorGeneral(err) {
+
+  alert(
+    'Error: ' +
+    (err.message || err)
+  );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
