@@ -2,6 +2,7 @@
 <html lang="es">
 
 <head>
+
 <meta charset="UTF-8">
 
 <meta
@@ -99,8 +100,8 @@ button {
 }
 
 button:disabled {
-  opacity: .6;
-  cursor: wait;
+  opacity: .45;
+  cursor: not-allowed;
 }
 
 .btn-azul {
@@ -123,6 +124,28 @@ button:disabled {
   color: white;
 }
 
+
+/* ======================================================
+   MÓDULOS PRINCIPALES
+====================================================== */
+
+.accesos-principales {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.accesos-principales button {
+  min-height: 62px;
+  font-size: 14px;
+}
+
+
+/* ======================================================
+   BUSCADOR
+====================================================== */
+
 .busqueda {
   display: flex;
   gap: 8px;
@@ -133,6 +156,11 @@ button:disabled {
   flex: 1;
   min-width: 220px;
 }
+
+
+/* ======================================================
+   RESULTADOS
+====================================================== */
 
 .resultado {
   padding: 13px 5px;
@@ -160,6 +188,11 @@ button:disabled {
   font-size: 13px;
 }
 
+
+/* ======================================================
+   FORMULARIOS
+====================================================== */
+
 .grupo {
   margin-top: 25px;
   padding-top: 17px;
@@ -180,6 +213,19 @@ button:disabled {
   gap: 9px;
   flex-wrap: wrap;
 }
+
+.planilla-destino {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #e2e8f0;
+}
+
+
+/* ======================================================
+   MENSAJES
+====================================================== */
 
 .mensaje {
   display: none;
@@ -211,6 +257,11 @@ button:disabled {
   display: none !important;
 }
 
+
+/* ======================================================
+   PREVIAS
+====================================================== */
+
 .alumno-seleccionado {
   background: #eff6ff;
   padding: 12px;
@@ -234,6 +285,11 @@ button:disabled {
   color: #64748b;
 }
 
+
+/* ======================================================
+   CELULAR
+====================================================== */
+
 @media(max-width:650px) {
 
   .contenedor {
@@ -242,6 +298,10 @@ button:disabled {
 
   .tarjeta {
     padding: 13px;
+  }
+
+  .accesos-principales {
+    grid-template-columns: 1fr 1fr;
   }
 
   .grid {
@@ -267,11 +327,21 @@ button:disabled {
 
 }
 
+@media(max-width:420px) {
+
+  .accesos-principales {
+    grid-template-columns: 1fr;
+  }
+
+}
+
 </style>
+
 </head>
 
 
 <body>
+
 
 <header>
 
@@ -288,14 +358,93 @@ button:disabled {
 
 
 <!-- ======================================================
-     BUSCADOR
+     MÓDULOS PRINCIPALES
 ====================================================== -->
 
 <section class="tarjeta">
 
+  <h2>Módulos</h2>
+
+  <div class="accesos-principales">
+
+
+    <button
+      class="btn-azul"
+      onclick="irAlumnos()">
+
+      👤 Alumnos
+
+    </button>
+
+
+    <button
+      class="btn-naranja"
+      onclick="abrirModuloPrevias()">
+
+      📚 Previas / Equivalencias
+
+    </button>
+
+
+    <button
+      class="btn-verde"
+      onclick="abrirFichas()">
+
+      📋 Fichas individuales
+
+    </button>
+
+
+    <!-- ==================================================
+         MÓDULOS FUTUROS
+    =================================================== -->
+
+    <button
+      class="btn-gris"
+      disabled>
+
+      📝 Incidencias
+
+    </button>
+
+
+    <button
+      class="btn-gris"
+      disabled>
+
+      📄 Actas / Citaciones
+
+    </button>
+
+
+    <button
+      class="btn-gris"
+      disabled>
+
+      📊 Reportes
+
+    </button>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- ======================================================
+     BUSCADOR
+====================================================== -->
+
+<section
+  id="seccionAlumnos"
+  class="tarjeta">
+
   <h2>Buscar alumno</h2>
 
+
   <div class="busqueda">
+
 
     <input
       id="textoBusqueda"
@@ -308,6 +457,7 @@ button:disabled {
       "
     >
 
+
     <button
       id="btnBuscar"
       class="btn-azul"
@@ -317,6 +467,7 @@ button:disabled {
 
     </button>
 
+
     <button
       class="btn-verde"
       onclick="nuevoAlumno()">
@@ -324,6 +475,7 @@ button:disabled {
       + Nuevo alumno
 
     </button>
+
 
   </div>
 
@@ -335,6 +487,7 @@ button:disabled {
 
 
   <div id="resultados"></div>
+
 
 </section>
 
@@ -348,13 +501,47 @@ button:disabled {
   id="panelFormulario"
   class="tarjeta oculto">
 
+
   <h2 id="tituloFormulario">
     Datos del alumno
   </h2>
 
+
   <input
     type="hidden"
     id="filaAlumno">
+
+
+  <input
+    type="hidden"
+    id="sheetIdAlumno">
+
+
+  <!-- ==================================================
+       SOLO PARA ALUMNOS NUEVOS
+  =================================================== -->
+
+  <div
+    id="bloquePlanillaDestino"
+    class="planilla-destino oculto">
+
+
+    <label>
+      Planilla / Preceptor destino
+    </label>
+
+
+    <select id="selectorPlanilla">
+
+      <option value="">
+        Seleccionar...
+      </option>
+
+    </select>
+
+
+  </div>
+
 
   <div id="formulario"></div>
 
@@ -367,6 +554,7 @@ button:disabled {
 
   <div class="acciones">
 
+
     <button
       id="btnGuardar"
       class="btn-verde"
@@ -376,6 +564,7 @@ button:disabled {
 
     </button>
 
+
     <button
       class="btn-gris"
       onclick="nuevoAlumno()">
@@ -383,6 +572,7 @@ button:disabled {
       Limpiar / Nuevo
 
     </button>
+
 
     <button
       class="btn-gris"
@@ -392,7 +582,9 @@ button:disabled {
 
     </button>
 
+
   </div>
+
 
 </section>
 
@@ -405,6 +597,7 @@ button:disabled {
 <section
   id="panelPrevias"
   class="tarjeta oculto">
+
 
   <h2>
     Previas / Equivalencias
@@ -447,6 +640,7 @@ button:disabled {
 
   </div>
 
+
 </section>
 
 
@@ -458,6 +652,7 @@ button:disabled {
 <section
   id="panelFormularioPrevia"
   class="tarjeta oculto">
+
 
   <h2 id="tituloPrevia">
     Nueva Previa / Equivalencia
@@ -471,63 +666,103 @@ button:disabled {
 
   <div class="grid">
 
+
     <div>
-      <label>DNI alumno</label>
+
+      <label>
+        DNI alumno
+      </label>
+
       <input
         id="previaDni"
         readonly>
+
     </div>
 
 
     <div>
-      <label>Alumno</label>
+
+      <label>
+        Alumno
+      </label>
+
       <input
         id="previaAlumno"
         readonly>
+
     </div>
 
 
     <div>
-      <label>Curso actual</label>
+
+      <label>
+        Curso actual
+      </label>
+
       <input
         id="previaCursoActual"
         readonly>
+
     </div>
 
 
     <div>
-      <label>División actual</label>
+
+      <label>
+        División actual
+      </label>
+
       <input
         id="previaDivisionActual"
         readonly>
+
     </div>
 
 
     <div>
-      <label>Orientación actual</label>
+
+      <label>
+        Orientación actual
+      </label>
+
       <input
         id="previaOrientacionActual"
         readonly>
+
     </div>
 
 
     <div>
-      <label>Materia *</label>
+
+      <label>
+        Materia *
+      </label>
+
       <input
         id="previaMateria">
+
     </div>
 
 
     <div>
-      <label>Curso de la materia</label>
+
+      <label>
+        Curso de la materia
+      </label>
+
       <input
         id="previaCursoMateria"
         placeholder="Ej.: 3ero">
+
     </div>
 
 
     <div>
-      <label>Condición *</label>
+
+      <label>
+        Condición *
+      </label>
+
 
       <select id="previaCondicion">
 
@@ -549,23 +784,31 @@ button:disabled {
 
 
     <div>
-      <label>Estado *</label>
+
+      <label>
+        Estado *
+      </label>
+
 
       <select
         id="previaEstado"
         onchange="actualizarEstadoPrevia()">
 
+
         <option value="">
           Seleccionar
         </option>
+
 
         <option value="Pendiente">
           Pendiente
         </option>
 
+
         <option value="Aprobada">
           Aprobada
         </option>
+
 
       </select>
 
@@ -573,7 +816,10 @@ button:disabled {
 
 
     <div>
-      <label>Fecha de aprobación</label>
+
+      <label>
+        Fecha de aprobación
+      </label>
 
       <input
         id="previaFecha"
@@ -583,7 +829,10 @@ button:disabled {
 
 
     <div>
-      <label>Nota</label>
+
+      <label>
+        Nota
+      </label>
 
       <input
         id="previaNota"
@@ -594,7 +843,10 @@ button:disabled {
 
 
     <div>
-      <label>Libro</label>
+
+      <label>
+        Libro
+      </label>
 
       <input
         id="previaLibro">
@@ -603,7 +855,10 @@ button:disabled {
 
 
     <div>
-      <label>Folio</label>
+
+      <label>
+        Folio
+      </label>
 
       <input
         id="previaFolio">
@@ -611,15 +866,19 @@ button:disabled {
     </div>
 
 
-    <div style="grid-column:1/-1;">
+    <div
+      style="grid-column:1/-1;">
 
-      <label>Observaciones</label>
+      <label>
+        Observaciones
+      </label>
 
       <textarea
         id="previaObservaciones">
       </textarea>
 
     </div>
+
 
   </div>
 
@@ -632,6 +891,7 @@ button:disabled {
 
   <div class="acciones">
 
+
     <button
       id="btnGuardarPrevia"
       class="btn-verde"
@@ -641,6 +901,7 @@ button:disabled {
 
     </button>
 
+
     <button
       class="btn-gris"
       onclick="cerrarFormularioPrevia()">
@@ -649,7 +910,9 @@ button:disabled {
 
     </button>
 
+
   </div>
+
 
 </section>
 
@@ -657,8 +920,8 @@ button:disabled {
 </div>
 
 
-
 <script>
+
 
 /*********************************************************
  * CLOUDFLARE WORKER
@@ -668,9 +931,20 @@ const API_URL =
   "https://plain-voice-2149.syncroapp79.workers.dev";
 
 
+/*********************************************************
+ * FICHAS INDIVIDUALES
+ *********************************************************/
+
+const URL_FICHAS =
+  "https://syncroapp79-hub.github.io/fichas/";
+
+
 let CAMPOS = [];
 
+let PLANILLAS = [];
+
 let ALUMNO_ACTUAL = null;
+
 
 
 /*********************************************************
@@ -678,6 +952,7 @@ let ALUMNO_ACTUAL = null;
  *********************************************************/
 
 const GRUPOS = [
+
 
 {
   titulo: "Identificación",
@@ -696,6 +971,7 @@ const GRUPOS = [
   ]
 },
 
+
 {
   titulo: "Situación escolar",
 
@@ -712,6 +988,7 @@ const GRUPOS = [
   ]
 },
 
+
 {
   titulo: "Domicilio",
 
@@ -721,6 +998,7 @@ const GRUPOS = [
     "LocalidadAlumno"
   ]
 },
+
 
 {
   titulo: "Tutor principal",
@@ -733,6 +1011,7 @@ const GRUPOS = [
   ]
 },
 
+
 {
   titulo: "Familia",
 
@@ -743,6 +1022,7 @@ const GRUPOS = [
     "Padre_Tel"
   ]
 },
+
 
 {
   titulo: "Salud",
@@ -755,6 +1035,7 @@ const GRUPOS = [
   ]
 },
 
+
 {
   titulo: "Documentación",
 
@@ -764,6 +1045,7 @@ const GRUPOS = [
   ]
 },
 
+
 {
   titulo: "Observaciones",
 
@@ -772,50 +1054,126 @@ const GRUPOS = [
   ]
 }
 
+
 ];
+
 
 
 const ETIQUETAS = {
 
-MatriculaNro: "N.º matrícula",
-NroLegajo: "N.º legajo",
-AñoLectivo: "Año lectivo",
-DNIAlumno: "DNI",
-ApellidoNombreAlumno: "Apellido y nombre",
-Sexo: "Sexo",
-FechaNacAlumno: "Fecha de nacimiento",
-LugarNacAlumno: "Lugar de nacimiento",
-NacionalidadAlumno: "Nacionalidad",
-LibroMatriz: "Libro matriz",
-FolioMatriz: "Folio matriz",
-CUILAlumno: "CUIL",
-CursoActual: "Curso actual",
-Division: "División",
-Orientacion: "Orientación",
-TurnoActual: "Turno",
-EstadoAlumno: "Estado alumno",
-DomicilioAlumno: "Domicilio",
-BarrioAlumno: "Barrio",
-LocalidadAlumno: "Localidad",
-TutorPrincipal_Nombre: "Tutor principal",
-TutorPrincipal_DNI: "DNI tutor",
-TutorPrincipal_Tel: "Teléfono tutor",
-"VínculoAlumno": "Vínculo",
-Madre_ApellidoNombre: "Madre",
-Madre_Tel: "Teléfono madre",
-Padre_ApellidoNombre: "Padre",
-Padre_Tel: "Teléfono padre",
-Discapacidad: "Discapacidad",
-TipoDiscapacidad: "Tipo discapacidad",
-Alergias: "Alergias",
-ObservacionesSalud: "Observaciones salud",
-Doc_EstadoGeneral: "Estado documentación",
-Doc_FaltantesCriticos: "Faltantes críticos",
-Año_Inicio_Nivel_Sec: "Año inicio secundario",
-Año_Finaliz_Nivel_Sec: "Año finalización secundario",
-Observaciones: "Observaciones"
+  MatriculaNro:
+    "N.º matrícula",
+
+  NroLegajo:
+    "N.º legajo",
+
+  AñoLectivo:
+    "Año lectivo",
+
+  DNIAlumno:
+    "DNI",
+
+  ApellidoNombreAlumno:
+    "Apellido y nombre",
+
+  Sexo:
+    "Sexo",
+
+  FechaNacAlumno:
+    "Fecha de nacimiento",
+
+  LugarNacAlumno:
+    "Lugar de nacimiento",
+
+  NacionalidadAlumno:
+    "Nacionalidad",
+
+  LibroMatriz:
+    "Libro matriz",
+
+  FolioMatriz:
+    "Folio matriz",
+
+  CUILAlumno:
+    "CUIL",
+
+  CursoActual:
+    "Curso actual",
+
+  Division:
+    "División",
+
+  Orientacion:
+    "Orientación",
+
+  TurnoActual:
+    "Turno",
+
+  EstadoAlumno:
+    "Estado alumno",
+
+  DomicilioAlumno:
+    "Domicilio",
+
+  BarrioAlumno:
+    "Barrio",
+
+  LocalidadAlumno:
+    "Localidad",
+
+  TutorPrincipal_Nombre:
+    "Tutor principal",
+
+  TutorPrincipal_DNI:
+    "DNI tutor",
+
+  TutorPrincipal_Tel:
+    "Teléfono tutor",
+
+  "VínculoAlumno":
+    "Vínculo",
+
+  Madre_ApellidoNombre:
+    "Madre",
+
+  Madre_Tel:
+    "Teléfono madre",
+
+  Padre_ApellidoNombre:
+    "Padre",
+
+  Padre_Tel:
+    "Teléfono padre",
+
+  Discapacidad:
+    "Discapacidad",
+
+  TipoDiscapacidad:
+    "Tipo discapacidad",
+
+  Alergias:
+    "Alergias",
+
+  ObservacionesSalud:
+    "Observaciones salud",
+
+  Doc_EstadoGeneral:
+    "Estado documentación",
+
+  Doc_FaltantesCriticos:
+    "Faltantes críticos",
+
+  Año_Inicio_Nivel_Sec:
+    "Año inicio secundario",
+
+  Año_Finaliz_Nivel_Sec:
+    "Año finalización secundario",
+
+  Observaciones:
+    "Observaciones"
 
 };
+
 
 
 /*********************************************************
@@ -834,7 +1192,8 @@ async function iniciar() {
 
     const r =
       await apiGet({
-        accion: "config"
+        accion:
+          "config"
       });
 
 
@@ -851,7 +1210,13 @@ async function iniciar() {
       r.campos || [];
 
 
+    PLANILLAS =
+      r.planillas || [];
+
+
     construirFormulario();
+
+    cargarSelectorPlanillas();
 
   }
 
@@ -865,6 +1230,139 @@ async function iniciar() {
   }
 
 }
+
+
+
+/*********************************************************
+ * SELECTOR DE PLANILLAS
+ *********************************************************/
+
+function cargarSelectorPlanillas() {
+
+  const sel =
+    document.getElementById(
+      "selectorPlanilla"
+    );
+
+
+  sel.innerHTML =
+    '<option value="">Seleccionar...</option>';
+
+
+  PLANILLAS.forEach(
+    p => {
+
+      const op =
+        document.createElement(
+          "option"
+        );
+
+
+      op.value =
+        p.id;
+
+
+      op.textContent =
+        p.preceptor ||
+        p.nombre ||
+        p.id;
+
+
+      sel.appendChild(
+        op
+      );
+
+    }
+  );
+
+}
+
+
+
+/*********************************************************
+ * BOTONES PRINCIPALES
+ *********************************************************/
+
+function irAlumnos() {
+
+  const seccion =
+    document.getElementById(
+      "seccionAlumnos"
+    );
+
+
+  seccion.scrollIntoView({
+    behavior:
+      "smooth",
+    block:
+      "start"
+  });
+
+
+  setTimeout(
+    () => {
+
+      document
+        .getElementById(
+          "textoBusqueda"
+        )
+        .focus();
+
+    },
+    300
+  );
+
+}
+
+
+
+function abrirModuloPrevias() {
+
+  mensaje(
+    "mensajeBusqueda",
+    "Buscá el alumno para consultar, agregar o editar sus Previas / Equivalencias.",
+    "cargando"
+  );
+
+
+  document
+    .getElementById(
+      "seccionAlumnos"
+    )
+    .scrollIntoView({
+      behavior:
+        "smooth",
+      block:
+        "start"
+    });
+
+
+  setTimeout(
+    () => {
+
+      document
+        .getElementById(
+          "textoBusqueda"
+        )
+        .focus();
+
+    },
+    300
+  );
+
+}
+
+
+
+function abrirFichas() {
+
+  window.open(
+    URL_FICHAS,
+    "_blank"
+  );
+
+}
+
 
 
 /*********************************************************
@@ -914,8 +1412,11 @@ async function buscar() {
     const datos =
       await apiGet({
 
-        accion: "buscar",
-        q: texto
+        accion:
+          "buscar",
+
+        q:
+          texto
 
       });
 
@@ -963,11 +1464,14 @@ async function buscar() {
 }
 
 
+
 /*********************************************************
  * RESULTADOS
  *********************************************************/
 
-function mostrarResultados(lista) {
+function mostrarResultados(
+  lista
+) {
 
   const cont =
     document.getElementById(
@@ -975,7 +1479,8 @@ function mostrarResultados(lista) {
     );
 
 
-  cont.innerHTML = "";
+  cont.innerHTML =
+    "";
 
 
   if (!lista.length) {
@@ -1004,44 +1509,94 @@ function mostrarResultados(lista) {
       div.innerHTML = `
 
         <strong>
-          ${escapar(a.alumno || "")}
+          ${escapar(
+            a.alumno || ""
+          )}
         </strong>
 
+
         <small>
+
           DNI:
-          ${escapar(a.dni || "")}
+          ${escapar(
+            a.dni || ""
+          )}
+
           |
-          ${escapar(a.curso || "")}
-          ${escapar(a.division || "")}
+
+          ${escapar(
+            a.curso || ""
+          )}
+
+          ${escapar(
+            a.division || ""
+          )}
+
         </small>
 
-        <div class="resultado-acciones">
 
-  <button
-    class="btn-azul"
-    onclick="abrirAlumno(${a.fila})">
+        <br>
 
-    Editar datos
 
-  </button>
+        <small>
 
-  <button
-    class="btn-naranja"
-    onclick="abrirPrevias(${a.fila})">
+          Preceptor:
+          ${escapar(
+            a.preceptor ||
+            a.planilla ||
+            ""
+          )}
 
-    Previas / Equivalencias
+        </small>
 
-  </button>
 
-  <button
-    class="btn-verde"
-    onclick="abrirFichas()">
+        <div
+          class="resultado-acciones">
 
-    📋 Fichas individuales
 
-  </button>
+          <button
+            class="btn-azul"
+            onclick="
+              abrirAlumno(
+                '${escaparJS(
+                  a.sheetId
+                )}',
+                ${a.fila}
+              )
+            ">
 
-</div>
+            Editar datos
+
+          </button>
+
+
+          <button
+            class="btn-naranja"
+            onclick="
+              abrirPrevias(
+                '${escaparJS(
+                  a.sheetId
+                )}',
+                ${a.fila}
+              )
+            ">
+
+            Previas / Equivalencias
+
+          </button>
+
+
+          <button
+            class="btn-verde"
+            onclick="abrirFichas()">
+
+            📋 Fichas
+
+          </button>
+
+
+        </div>
+
       `;
 
 
@@ -1055,17 +1610,27 @@ function mostrarResultados(lista) {
 }
 
 
+
 /*********************************************************
- * ABRIR ALUMNO
+ * OBTENER ALUMNO
  *********************************************************/
 
-async function obtenerAlumnoPorFila(fila) {
+async function obtenerAlumnoPorFila(
+  sheetId,
+  fila
+) {
 
   const datos =
     await apiGet({
 
-      accion: "alumno",
-      fila: fila
+      accion:
+        "alumno",
+
+      sheetId:
+        sheetId,
+
+      fila:
+        fila
 
     });
 
@@ -1084,12 +1649,21 @@ async function obtenerAlumnoPorFila(fila) {
 }
 
 
-async function abrirAlumno(fila) {
+
+/*********************************************************
+ * ABRIR ALUMNO
+ *********************************************************/
+
+async function abrirAlumno(
+  sheetId,
+  fila
+) {
 
   try {
 
     const datos =
       await obtenerAlumnoPorFila(
+        sheetId,
         fila
       );
 
@@ -1098,10 +1672,33 @@ async function abrirAlumno(fila) {
       datos.alumno;
 
 
+    ALUMNO_ACTUAL._sheetId =
+      datos.sheetId;
+
+
+    ALUMNO_ACTUAL._fila =
+      datos.fila;
+
+
+    ALUMNO_ACTUAL._preceptor =
+      datos.preceptor;
+
+
     llenarFormulario(
       datos.alumno,
-      datos.fila
+      datos.fila,
+      datos.sheetId
     );
+
+
+    document
+      .getElementById(
+        "panelFormulario"
+      )
+      .scrollIntoView({
+        behavior:
+          "smooth"
+      });
 
   }
 
@@ -1118,11 +1715,15 @@ async function abrirAlumno(fila) {
 }
 
 
+
 /*********************************************************
  * PREVIAS
  *********************************************************/
 
-async function abrirPrevias(filaAlumno) {
+async function abrirPrevias(
+  sheetId,
+  filaAlumno
+) {
 
   try {
 
@@ -1135,12 +1736,25 @@ async function abrirPrevias(filaAlumno) {
 
     const datosAlumno =
       await obtenerAlumnoPorFila(
+        sheetId,
         filaAlumno
       );
 
 
     ALUMNO_ACTUAL =
       datosAlumno.alumno;
+
+
+    ALUMNO_ACTUAL._sheetId =
+      datosAlumno.sheetId;
+
+
+    ALUMNO_ACTUAL._fila =
+      datosAlumno.fila;
+
+
+    ALUMNO_ACTUAL._preceptor =
+      datosAlumno.preceptor;
 
 
     const alumno =
@@ -1154,10 +1768,15 @@ async function abrirPrevias(filaAlumno) {
       .innerHTML = `
 
         <strong>
+
           ${escapar(
-            alumno.ApellidoNombreAlumno || ""
+            alumno
+              .ApellidoNombreAlumno ||
+            ""
           )}
+
         </strong>
+
 
         <br>
 
@@ -1165,6 +1784,7 @@ async function abrirPrevias(filaAlumno) {
         ${escapar(
           alumno.DNIAlumno || ""
         )}
+
 
         <br>
 
@@ -1175,6 +1795,16 @@ async function abrirPrevias(filaAlumno) {
 
         ${escapar(
           alumno.Division || ""
+        )}
+
+
+        <br>
+
+        Preceptor:
+        ${escapar(
+          ALUMNO_ACTUAL
+            ._preceptor ||
+          ""
         )}
 
       `;
@@ -1203,7 +1833,8 @@ async function abrirPrevias(filaAlumno) {
         "panelPrevias"
       )
       .scrollIntoView({
-        behavior: "smooth"
+        behavior:
+          "smooth"
       });
 
   }
@@ -1219,6 +1850,7 @@ async function abrirPrevias(filaAlumno) {
   }
 
 }
+
 
 
 async function cargarPrevias() {
@@ -1288,11 +1920,14 @@ async function cargarPrevias() {
 }
 
 
+
 /*********************************************************
  * MOSTRAR PREVIAS
  *********************************************************/
 
-function mostrarPrevias(lista) {
+function mostrarPrevias(
+  lista
+) {
 
   const cont =
     document.getElementById(
@@ -1300,7 +1935,8 @@ function mostrarPrevias(lista) {
     );
 
 
-  cont.innerHTML = "";
+  cont.innerHTML =
+    "";
 
 
   if (!lista.length) {
@@ -1331,47 +1967,71 @@ function mostrarPrevias(lista) {
 
 
       if (p.Nota) {
+
         detalle +=
           ` | Nota: ${p.Nota}`;
+
       }
 
 
       if (p.FechaAprobacion) {
+
         detalle +=
           ` | ${p.FechaAprobacion}`;
+
       }
 
 
       div.innerHTML = `
 
         <strong>
+
           ${escapar(
             p.Materia || ""
           )}
+
         </strong>
 
+
         <small>
-          ${escapar(detalle)}
+
+          ${escapar(
+            detalle
+          )}
+
         </small>
+
 
         <br>
 
+
         <small>
+
           Curso materia:
+
           ${escapar(
             p.CursoMateria || ""
           )}
+
         </small>
 
-        <div class="resultado-acciones">
+
+        <div
+          class="resultado-acciones">
+
 
           <button
             class="btn-azul"
-            onclick="editarPrevia(${p.fila})">
+            onclick="
+              editarPrevia(
+                ${p.fila}
+              )
+            ">
 
             Editar
 
           </button>
+
 
         </div>
 
@@ -1386,6 +2046,7 @@ function mostrarPrevias(lista) {
   );
 
 }
+
 
 
 /*********************************************************
@@ -1423,7 +2084,8 @@ function nuevaPrevia() {
     )
     .value =
       ALUMNO_ACTUAL
-        .ApellidoNombreAlumno || "";
+        .ApellidoNombreAlumno ||
+      "";
 
 
   document
@@ -1466,11 +2128,14 @@ function nuevaPrevia() {
 }
 
 
+
 /*********************************************************
  * EDITAR PREVIA
  *********************************************************/
 
-async function editarPrevia(fila) {
+async function editarPrevia(
+  fila
+) {
 
   mensaje(
     "mensajePrevias",
@@ -1638,9 +2303,7 @@ async function editarPrevia(fila) {
 
     actualizarEstadoPrevia();
 
-
     abrirFormularioPrevia();
-
 
     limpiarMensaje(
       "mensajePrevias"
@@ -1661,6 +2324,7 @@ async function editarPrevia(fila) {
 }
 
 
+
 /*********************************************************
  * GUARDAR PREVIA
  *********************************************************/
@@ -1669,75 +2333,90 @@ async function guardarPrevia() {
 
   const campos = {
 
+
     DNIAlumno:
       document.getElementById(
         "previaDni"
       ).value,
+
 
     Alumno:
       document.getElementById(
         "previaAlumno"
       ).value,
 
+
     CursoActual:
       document.getElementById(
         "previaCursoActual"
       ).value,
+
 
     DivisionActual:
       document.getElementById(
         "previaDivisionActual"
       ).value,
 
+
     OrientacionActual:
       document.getElementById(
         "previaOrientacionActual"
       ).value,
+
 
     Materia:
       document.getElementById(
         "previaMateria"
       ).value.trim(),
 
+
     CursoMateria:
       document.getElementById(
         "previaCursoMateria"
       ).value.trim(),
+
 
     "Condición":
       document.getElementById(
         "previaCondicion"
       ).value,
 
+
     Estado:
       document.getElementById(
         "previaEstado"
       ).value,
+
 
     FechaAprobacion:
       document.getElementById(
         "previaFecha"
       ).value,
 
+
     Nota:
       document.getElementById(
         "previaNota"
       ).value.trim(),
+
 
     Libro:
       document.getElementById(
         "previaLibro"
       ).value.trim(),
 
+
     Folio:
       document.getElementById(
         "previaFolio"
       ).value.trim(),
 
+
     Observaciones:
       document.getElementById(
         "previaObservaciones"
       ).value.trim()
+
 
   };
 
@@ -1800,8 +2479,10 @@ async function guardarPrevia() {
     const r =
       await apiPost({
 
+
         accion:
           "guardarPrevia",
+
 
         fila:
           document
@@ -1810,8 +2491,10 @@ async function guardarPrevia() {
             )
             .value,
 
+
         campos:
           campos
+
 
       });
 
@@ -1865,6 +2548,7 @@ async function guardarPrevia() {
 }
 
 
+
 /*********************************************************
  * ESTADO PREVIA
  *********************************************************/
@@ -1872,9 +2556,11 @@ async function guardarPrevia() {
 function actualizarEstadoPrevia() {
 
   const estado =
-    document.getElementById(
-      "previaEstado"
-    ).value;
+    document
+      .getElementById(
+        "previaEstado"
+      )
+      .value;
 
 
   const aprobada =
@@ -1892,7 +2578,9 @@ function actualizarEstadoPrevia() {
     id => {
 
       document
-        .getElementById(id)
+        .getElementById(
+          id
+        )
         .disabled =
           !aprobada;
 
@@ -1905,26 +2593,34 @@ function actualizarEstadoPrevia() {
     document
       .getElementById(
         "previaFecha"
-      ).value = "";
+      )
+      .value = "";
+
 
     document
       .getElementById(
         "previaNota"
-      ).value = "";
+      )
+      .value = "";
+
 
     document
       .getElementById(
         "previaLibro"
-      ).value = "";
+      )
+      .value = "";
+
 
     document
       .getElementById(
         "previaFolio"
-      ).value = "";
+      )
+      .value = "";
 
   }
 
 }
+
 
 
 /*********************************************************
@@ -1953,10 +2649,12 @@ function abrirFormularioPrevia() {
       "panelFormularioPrevia"
     )
     .scrollIntoView({
-      behavior: "smooth"
+      behavior:
+        "smooth"
     });
 
 }
+
 
 
 function cerrarFormularioPrevia() {
@@ -1971,6 +2669,7 @@ function cerrarFormularioPrevia() {
     );
 
 }
+
 
 
 function limpiarFormularioPrevia() {
@@ -2000,7 +2699,9 @@ function limpiarFormularioPrevia() {
     id => {
 
       document
-        .getElementById(id)
+        .getElementById(
+          id
+        )
         .value = "";
 
     }
@@ -2026,6 +2727,7 @@ function limpiarFormularioPrevia() {
 }
 
 
+
 /*********************************************************
  * CERRAR PREVIAS
  *********************************************************/
@@ -2047,8 +2749,9 @@ function cerrarPrevias() {
 }
 
 
+
 /*********************************************************
- * BASE_ALUMNOS - NUEVO
+ * NUEVO ALUMNO
  *********************************************************/
 
 function nuevoAlumno() {
@@ -2056,11 +2759,39 @@ function nuevoAlumno() {
   limpiarCampos();
 
 
+  ALUMNO_ACTUAL =
+    null;
+
+
   document
     .getElementById(
       "filaAlumno"
     )
     .value = "";
+
+
+  document
+    .getElementById(
+      "sheetIdAlumno"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "selectorPlanilla"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "bloquePlanillaDestino"
+    )
+    .classList
+    .remove(
+      "oculto"
+    );
 
 
   document
@@ -2085,11 +2816,22 @@ function nuevoAlumno() {
     "mensajeGuardar"
   );
 
+
+  document
+    .getElementById(
+      "panelFormulario"
+    )
+    .scrollIntoView({
+      behavior:
+        "smooth"
+    });
+
 }
 
 
+
 /*********************************************************
- * FORMULARIO BASE_ALUMNOS
+ * CONSTRUIR FORMULARIO
  *********************************************************/
 
 function construirFormulario() {
@@ -2100,7 +2842,8 @@ function construirFormulario() {
     );
 
 
-  cont.innerHTML = "";
+  cont.innerHTML =
+    "";
 
 
   GRUPOS.forEach(
@@ -2109,12 +2852,16 @@ function construirFormulario() {
       const disponibles =
         grupo.campos.filter(
           c =>
-            CAMPOS.includes(c)
+            CAMPOS.includes(
+              c
+            )
         );
 
 
       if (!disponibles.length) {
+
         return;
+
       }
 
 
@@ -2157,7 +2904,9 @@ function construirFormulario() {
         campo => {
 
           grid.appendChild(
-            crearCampo(campo)
+            crearCampo(
+              campo
+            )
           );
 
         }
@@ -2179,7 +2928,14 @@ function construirFormulario() {
 }
 
 
-function crearCampo(nombre) {
+
+/*********************************************************
+ * CREAR CAMPO
+ *********************************************************/
+
+function crearCampo(
+  nombre
+) {
 
   const div =
     document.createElement(
@@ -2202,9 +2958,11 @@ function crearCampo(nombre) {
 
 
   if (
-    nombre === "Observaciones"
+    nombre ===
+      "Observaciones"
     ||
-    nombre === "ObservacionesSalud"
+    nombre ===
+      "ObservacionesSalud"
   ) {
 
     control =
@@ -2232,7 +2990,8 @@ function crearCampo(nombre) {
 
 
   control.id =
-    "campo_" + nombre;
+    "campo_" +
+    nombre;
 
 
   control.dataset.campo =
@@ -2254,9 +3013,15 @@ function crearCampo(nombre) {
 }
 
 
+
+/*********************************************************
+ * LLENAR FORMULARIO
+ *********************************************************/
+
 function llenarFormulario(
   alumno,
-  fila
+  fila,
+  sheetId
 ) {
 
   limpiarCampos();
@@ -2270,16 +3035,39 @@ function llenarFormulario(
       fila || "";
 
 
+  document
+    .getElementById(
+      "sheetIdAlumno"
+    )
+    .value =
+      sheetId || "";
+
+
+  document
+    .getElementById(
+      "bloquePlanillaDestino"
+    )
+    .classList
+    .add(
+      "oculto"
+    );
+
+
   CAMPOS.forEach(
     campo => {
 
       const input =
         document.getElementById(
-          "campo_" + campo
+          "campo_" +
+          campo
         );
 
 
-      if (!input) return;
+      if (!input) {
+
+        return;
+
+      }
 
 
       let valor =
@@ -2289,11 +3077,13 @@ function llenarFormulario(
 
       if (
         campo ===
-        "FechaNacAlumno"
+          "FechaNacAlumno"
       ) {
 
         valor =
-          fechaHtml(valor);
+          fechaHtml(
+            valor
+          );
 
       }
 
@@ -2327,8 +3117,9 @@ function llenarFormulario(
 }
 
 
+
 /*********************************************************
- * GUARDAR BASE_ALUMNOS
+ * GUARDAR ALUMNO
  *********************************************************/
 
 async function guardar() {
@@ -2341,11 +3132,16 @@ async function guardar() {
 
       const input =
         document.getElementById(
-          "campo_" + nombre
+          "campo_" +
+          nombre
         );
 
 
-      if (!input) return;
+      if (!input) {
+
+        return;
+
+      }
 
 
       campos[nombre] =
@@ -2384,6 +3180,51 @@ async function guardar() {
   }
 
 
+  let sheetId =
+    document
+      .getElementById(
+        "sheetIdAlumno"
+      )
+      .value;
+
+
+  const fila =
+    document
+      .getElementById(
+        "filaAlumno"
+      )
+      .value;
+
+
+  /*
+   * ALUMNO NUEVO
+   */
+
+  if (!fila) {
+
+    sheetId =
+      document
+        .getElementById(
+          "selectorPlanilla"
+        )
+        .value;
+
+
+    if (!sheetId) {
+
+      mensaje(
+        "mensajeGuardar",
+        "Seleccioná la planilla / preceptor destino.",
+        "error"
+      );
+
+      return;
+
+    }
+
+  }
+
+
   bloquear(
     "btnGuardar",
     true,
@@ -2396,21 +3237,26 @@ async function guardar() {
     const r =
       await apiPost({
 
+
         accion:
           "guardar",
+
 
         usuario:
           "Panel Preceptoría",
 
+
+        sheetId:
+          sheetId,
+
+
         fila:
-          document
-            .getElementById(
-              "filaAlumno"
-            )
-            .value,
+          fila,
+
 
         campos:
           campos
+
 
       });
 
@@ -2432,9 +3278,35 @@ async function guardar() {
         r.fila;
 
 
+    document
+      .getElementById(
+        "sheetIdAlumno"
+      )
+      .value =
+        r.sheetId;
+
+
+    document
+      .getElementById(
+        "bloquePlanillaDestino"
+      )
+      .classList
+      .add(
+        "oculto"
+      );
+
+
     mensaje(
       "mensajeGuardar",
-      r.mensaje,
+
+      r.mensaje +
+      (
+        r.preceptor
+          ? " | " +
+            r.preceptor
+          : ""
+      ),
+
       "exito"
     );
 
@@ -2463,11 +3335,14 @@ async function guardar() {
 }
 
 
+
 /*********************************************************
- * API
+ * API GET
  *********************************************************/
 
-async function apiGet(params) {
+async function apiGet(
+  params
+) {
 
   const url =
     new URL(
@@ -2475,18 +3350,20 @@ async function apiGet(params) {
     );
 
 
-  Object.entries(params)
-    .forEach(
-      ([k,v]) => {
+  Object.entries(
+    params
+  )
+  .forEach(
+    ([k,v]) => {
 
-        url.searchParams
-          .set(
-            k,
-            v
-          );
+      url.searchParams
+        .set(
+          k,
+          v
+        );
 
-      }
-    );
+    }
+  );
 
 
   const r =
@@ -2510,7 +3387,14 @@ async function apiGet(params) {
 }
 
 
-async function apiPost(datos) {
+
+/*********************************************************
+ * API POST
+ *********************************************************/
+
+async function apiPost(
+  datos
+) {
 
   const r =
     await fetch(
@@ -2547,6 +3431,7 @@ async function apiPost(datos) {
 }
 
 
+
 /*********************************************************
  * UTILIDADES
  *********************************************************/
@@ -2565,6 +3450,7 @@ function cerrarFormulario() {
 }
 
 
+
 function limpiarCampos() {
 
   document
@@ -2579,6 +3465,7 @@ function limpiarCampos() {
 }
 
 
+
 function mensaje(
   id,
   texto,
@@ -2586,7 +3473,9 @@ function mensaje(
 ) {
 
   const el =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
 
   el.textContent =
@@ -2594,23 +3483,32 @@ function mensaje(
 
 
   el.className =
-    "mensaje " + tipo;
+    "mensaje " +
+    tipo;
 
 }
 
 
-function limpiarMensaje(id) {
+
+function limpiarMensaje(
+  id
+) {
 
   const el =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
 
-  el.textContent = "";
+  el.textContent =
+    "";
+
 
   el.className =
     "mensaje";
 
 }
+
 
 
 function bloquear(
@@ -2620,10 +3518,16 @@ function bloquear(
 ) {
 
   const boton =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
 
-  if (!boton) return;
+  if (!boton) {
+
+    return;
+
+  }
 
 
   boton.disabled =
@@ -2636,11 +3540,16 @@ function bloquear(
 }
 
 
-function fechaHtml(valor) {
+
+function fechaHtml(
+  valor
+) {
 
   const s =
-    String(valor || "")
-      .trim();
+    String(
+      valor || ""
+    )
+    .trim();
 
 
   let m =
@@ -2654,9 +3563,15 @@ function fechaHtml(valor) {
     return (
       m[3]
       + "-"
-      + m[2].padStart(2,"0")
+      + m[2].padStart(
+          2,
+          "0"
+        )
       + "-"
-      + m[1].padStart(2,"0")
+      + m[1].padStart(
+          2,
+          "0"
+        )
     );
 
   }
@@ -2664,7 +3579,9 @@ function fechaHtml(valor) {
 
   if (
     /^\d{4}-\d{2}-\d{2}$/
-      .test(s)
+      .test(
+        s
+      )
   ) {
 
     return s;
@@ -2677,31 +3594,61 @@ function fechaHtml(valor) {
 }
 
 
-function escapar(valor) {
+
+function escapar(
+  valor
+) {
 
   return String(
     valor || ""
   )
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;")
-  .replace(/'/g,"&#039;");
-
-}
-
-  function abrirFichas() {
-
-  const URL_FICHAS =
-    "https://syncroapp79-hub.github.io/fichas/";
-
-  window.open(
-    URL_FICHAS,
-    "_blank"
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
   );
 
 }
+
+
+
+function escaparJS(
+  valor
+) {
+
+  return String(
+    valor || ""
+  )
+  .replace(
+    /\\/g,
+    "\\\\"
+  )
+  .replace(
+    /'/g,
+    "\\'"
+  );
+
+}
+
+
 </script>
 
+
 </body>
+
 </html>
