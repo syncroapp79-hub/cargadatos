@@ -992,6 +992,17 @@ const API_URL =
   "https://plain-voice-2149.syncroapp79.workers.dev";
 
 
+/*
+ * Código de acceso del preceptor.
+ * Ejemplo:
+ * https://TU_PAGINA/?acceso=A7K29P
+ */
+const CODIGO_ACCESO =
+  new URLSearchParams(
+    window.location.search
+  ).get("acceso") || "";
+
+
 const URL_FICHAS =
   "https://syncroapp79-hub.github.io/fichas/";
 
@@ -3244,6 +3255,14 @@ async function apiGet(
     );
 
 
+  /*
+   * Todas las consultas GET envían
+   * automáticamente el código de acceso.
+   */
+  params.acceso =
+    CODIGO_ACCESO;
+
+
   Object.entries(
     params
   )
@@ -3281,6 +3300,14 @@ async function apiGet(
 async function apiPost(
   datos
 ) {
+
+  /*
+   * Todas las operaciones POST envían
+   * automáticamente el código de acceso.
+   */
+  datos.acceso =
+    CODIGO_ACCESO;
+
 
   const r =
     await fetch(
