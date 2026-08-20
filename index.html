@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
 
 <meta
@@ -124,6 +123,11 @@ button:disabled {
   color: white;
 }
 
+.btn-violeta {
+  background: #6b46c1;
+  color: white;
+}
+
 
 /* ======================================================
    MÓDULOS PRINCIPALES
@@ -137,7 +141,7 @@ button:disabled {
 }
 
 .accesos-principales button {
-  min-height: 62px;
+  min-height: 64px;
   font-size: 14px;
 }
 
@@ -285,6 +289,35 @@ button:disabled {
   color: #64748b;
 }
 
+.cabecera-previas-curso {
+  background: #f8fafc;
+  padding: 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.alumno-curso {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 4px;
+}
+
+.alumno-curso-info {
+  flex: 1;
+}
+
+.alumno-curso-info strong {
+  display: block;
+}
+
+.alumno-curso-info small {
+  color: #64748b;
+}
+
 
 /* ======================================================
    CELULAR
@@ -321,15 +354,22 @@ button:disabled {
     width: 100%;
   }
 
+  .alumno-curso {
+    display: block;
+  }
+
+  .alumno-curso button {
+    width: 100%;
+    margin-top: 8px;
+  }
+
 }
 
 </style>
-
 </head>
 
 
 <body>
-
 
 <header>
 
@@ -354,7 +394,6 @@ button:disabled {
   <h2>Módulos</h2>
 
   <div class="accesos-principales">
-
 
     <button
       class="btn-azul"
@@ -383,6 +422,32 @@ button:disabled {
     </button>
 
 
+    <button
+      class="btn-gris"
+      disabled>
+
+      📄 Boletín de inasistencia
+
+    </button>
+
+
+    <button
+      class="btn-gris"
+      disabled>
+
+      🧾 Boletín de calificaciones
+
+    </button>
+
+
+    <button
+      class="btn-gris"
+      disabled>
+
+      📊 Centralizadora
+
+    </button>
+
   </div>
 
 </section>
@@ -390,7 +455,7 @@ button:disabled {
 
 
 <!-- ======================================================
-     BUSCADOR DE ALUMNOS
+     ALUMNOS
 ====================================================== -->
 
 <section
@@ -399,9 +464,7 @@ button:disabled {
 
   <h2>Buscar alumno</h2>
 
-
   <div class="busqueda">
-
 
     <input
       id="textoBusqueda"
@@ -414,7 +477,6 @@ button:disabled {
       "
     >
 
-
     <button
       id="btnBuscar"
       class="btn-azul"
@@ -424,7 +486,6 @@ button:disabled {
 
     </button>
 
-
     <button
       class="btn-verde"
       onclick="nuevoAlumno()">
@@ -432,7 +493,6 @@ button:disabled {
       + Nuevo alumno
 
     </button>
-
 
   </div>
 
@@ -445,6 +505,76 @@ button:disabled {
 
   <div id="resultados"></div>
 
+</section>
+
+
+
+<!-- ======================================================
+     PREVIAS POR CURSO
+====================================================== -->
+
+<section
+  id="panelPreviasCurso"
+  class="tarjeta oculto">
+
+  <h2>
+    Previas / Equivalencias
+  </h2>
+
+
+  <div class="cabecera-previas-curso">
+
+    <label>
+      Curso / Planilla
+    </label>
+
+    <select id="selectorCursoPrevias">
+
+      <option value="">
+        Seleccionar...
+      </option>
+
+    </select>
+
+
+    <div
+      class="acciones"
+      style="margin-top:12px;">
+
+      <button
+        id="btnCargarCursoPrevias"
+        class="btn-naranja"
+        onclick="cargarAlumnosPreviasCurso()">
+
+        Cargar alumnos
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="mensajePreviasCurso"
+    class="mensaje">
+  </div>
+
+
+  <div id="listaAlumnosPrevias"></div>
+
+
+  <div class="acciones">
+
+    <button
+      class="btn-gris"
+      onclick="cerrarModuloPrevias()">
+
+      Cerrar
+
+    </button>
+
+  </div>
 
 </section>
 
@@ -457,7 +587,6 @@ button:disabled {
 <section
   id="panelFormulario"
   class="tarjeta oculto">
-
 
   <h2 id="tituloFormulario">
     Datos del alumno
@@ -478,11 +607,9 @@ button:disabled {
     id="bloquePlanillaDestino"
     class="planilla-destino oculto">
 
-
     <label>
       Planilla / Preceptor destino
     </label>
-
 
     <select id="selectorPlanilla">
 
@@ -491,7 +618,6 @@ button:disabled {
       </option>
 
     </select>
-
 
   </div>
 
@@ -506,7 +632,6 @@ button:disabled {
 
 
   <div class="acciones">
-
 
     <button
       id="btnGuardar"
@@ -535,25 +660,22 @@ button:disabled {
 
     </button>
 
-
   </div>
-
 
 </section>
 
 
 
 <!-- ======================================================
-     PREVIAS / EQUIVALENCIAS
+     PREVIAS DEL ALUMNO
 ====================================================== -->
 
 <section
   id="panelPrevias"
   class="tarjeta oculto">
 
-
   <h2>
-    Previas / Equivalencias
+    Previas / Equivalencias del alumno
   </h2>
 
 
@@ -593,7 +715,6 @@ button:disabled {
 
   </div>
 
-
 </section>
 
 
@@ -606,7 +727,6 @@ button:disabled {
   id="panelFormularioPrevia"
   class="tarjeta oculto">
 
-
   <h2 id="tituloPrevia">
     Nueva Previa / Equivalencia
   </h2>
@@ -618,7 +738,6 @@ button:disabled {
 
 
   <div class="grid">
-
 
     <div>
       <label>DNI alumno</label>
@@ -726,45 +845,38 @@ button:disabled {
 
 
     <div>
-
       <label>Nota</label>
 
       <input
         id="previaNota"
         type="text"
         inputmode="decimal">
-
     </div>
 
 
     <div>
-
       <label>Libro</label>
-
       <input id="previaLibro">
-
     </div>
 
 
     <div>
-
       <label>Folio</label>
-
       <input id="previaFolio">
-
     </div>
 
 
     <div style="grid-column:1/-1;">
 
-      <label>Observaciones</label>
+      <label>
+        Observaciones
+      </label>
 
       <textarea
         id="previaObservaciones">
       </textarea>
 
     </div>
-
 
   </div>
 
@@ -776,7 +888,6 @@ button:disabled {
 
 
   <div class="acciones">
-
 
     <button
       id="btnGuardarPrevia"
@@ -796,9 +907,7 @@ button:disabled {
 
     </button>
 
-
   </div>
-
 
 </section>
 
@@ -830,7 +939,7 @@ let ALUMNO_ACTUAL = null;
 
 
 /*********************************************************
- * CAMPOS BASE_ALUMNOS
+ * BASE_ALUMNOS
  *********************************************************/
 
 const GRUPOS = [
@@ -1014,7 +1123,7 @@ async function iniciar() {
 
     construirFormulario();
 
-    cargarSelectorPlanillas();
+    cargarSelectoresPlanillas();
 
   }
 
@@ -1032,8 +1141,18 @@ async function iniciar() {
 
 
 /*********************************************************
- * SELECTOR PLANILLAS
+ * SELECTORES
  *********************************************************/
+
+function cargarSelectoresPlanillas() {
+
+  cargarSelectorPlanillas();
+
+  cargarSelectorPreviasCurso();
+
+}
+
+
 
 function cargarSelectorPlanillas() {
 
@@ -1066,9 +1185,64 @@ function cargarSelectorPlanillas() {
         p.id;
 
 
-      sel.appendChild(
-        op
-      );
+      sel.appendChild(op);
+
+    }
+  );
+
+}
+
+
+
+function cargarSelectorPreviasCurso() {
+
+  const sel =
+    document.getElementById(
+      "selectorCursoPrevias"
+    );
+
+
+  sel.innerHTML =
+    '<option value="">Seleccionar...</option>';
+
+
+  PLANILLAS.forEach(
+    p => {
+
+      const op =
+        document.createElement(
+          "option"
+        );
+
+
+      op.value =
+        p.id;
+
+
+      let texto =
+        p.preceptor ||
+        p.nombre ||
+        p.id;
+
+
+      if (
+        p.nombre &&
+        p.preceptor &&
+        p.nombre !== p.preceptor
+      ) {
+
+        texto +=
+          " — " +
+          p.nombre;
+
+      }
+
+
+      op.textContent =
+        texto;
+
+
+      sel.appendChild(op);
 
     }
   );
@@ -1078,7 +1252,7 @@ function cargarSelectorPlanillas() {
 
 
 /*********************************************************
- * BOTONES PRINCIPALES
+ * MÓDULOS
  *********************************************************/
 
 function irAlumnos() {
@@ -1112,14 +1286,42 @@ function irAlumnos() {
 
 function abrirModuloPrevias() {
 
-  mensaje(
-    "mensajeBusqueda",
-    "Buscá el alumno para consultar, agregar o editar sus Previas / Equivalencias.",
-    "cargando"
-  );
+  document
+    .getElementById(
+      "panelPreviasCurso"
+    )
+    .classList
+    .remove(
+      "oculto"
+    );
 
 
-  irAlumnos();
+  document
+    .getElementById(
+      "panelPreviasCurso"
+    )
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+}
+
+
+
+function cerrarModuloPrevias() {
+
+  document
+    .getElementById(
+      "panelPreviasCurso"
+    )
+    .classList
+    .add(
+      "oculto"
+    );
+
+
+  cerrarPrevias();
 
 }
 
@@ -1137,7 +1339,203 @@ function abrirFichas() {
 
 
 /*********************************************************
- * BUSCAR
+ * PREVIAS - LISTAR ALUMNOS POR PLANILLA
+ *********************************************************/
+
+async function cargarAlumnosPreviasCurso() {
+
+  const sheetId =
+    document
+      .getElementById(
+        "selectorCursoPrevias"
+      )
+      .value;
+
+
+  if (!sheetId) {
+
+    mensaje(
+      "mensajePreviasCurso",
+      "Seleccioná un curso / planilla.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  bloquear(
+    "btnCargarCursoPrevias",
+    true,
+    "Cargando..."
+  );
+
+
+  mensaje(
+    "mensajePreviasCurso",
+    "Cargando alumnos...",
+    "cargando"
+  );
+
+
+  try {
+
+    const r =
+      await apiGet({
+
+        accion:
+          "listarAlumnosPlanilla",
+
+        sheetId:
+          sheetId
+
+      });
+
+
+    if (!r.ok) {
+
+      throw new Error(
+        r.mensaje
+      );
+
+    }
+
+
+    limpiarMensaje(
+      "mensajePreviasCurso"
+    );
+
+
+    mostrarAlumnosPreviasCurso(
+      r.alumnos || []
+    );
+
+  }
+
+  catch(error) {
+
+    mensaje(
+      "mensajePreviasCurso",
+      error.message,
+      "error"
+    );
+
+  }
+
+  finally {
+
+    bloquear(
+      "btnCargarCursoPrevias",
+      false,
+      "Cargar alumnos"
+    );
+
+  }
+
+}
+
+
+
+function mostrarAlumnosPreviasCurso(
+  alumnos
+) {
+
+  const cont =
+    document.getElementById(
+      "listaAlumnosPrevias"
+    );
+
+
+  cont.innerHTML = "";
+
+
+  if (!alumnos.length) {
+
+    cont.innerHTML =
+      "<p>No se encontraron alumnos en esta planilla.</p>";
+
+    return;
+
+  }
+
+
+  alumnos.forEach(
+    a => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "alumno-curso";
+
+
+      div.innerHTML = `
+
+        <div class="alumno-curso-info">
+
+          <strong>
+            ${escapar(
+              a.alumno || ""
+            )}
+          </strong>
+
+          <small>
+
+            DNI:
+            ${escapar(
+              a.dni || ""
+            )}
+
+            |
+
+            ${escapar(
+              a.curso || ""
+            )}
+
+            ${escapar(
+              a.division || ""
+            )}
+
+          </small>
+
+        </div>
+
+
+        <button
+          class="btn-naranja"
+          onclick="
+            abrirPrevias(
+              '${escaparJS(
+                a.sheetId
+              )}',
+              ${a.fila}
+            )
+          ">
+
+          Previas
+
+        </button>
+
+      `;
+
+
+      cont.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
+
+
+
+/*********************************************************
+ * BUSCAR ALUMNO
  *********************************************************/
 
 async function buscar() {
@@ -1234,7 +1632,7 @@ async function buscar() {
 
 
 /*********************************************************
- * RESULTADOS
+ * RESULTADOS DE BÚSQUEDA
  *********************************************************/
 
 function mostrarResultados(lista) {
@@ -1274,19 +1672,27 @@ function mostrarResultados(lista) {
       div.innerHTML = `
 
         <strong>
-          ${escapar(a.alumno || "")}
+          ${escapar(
+            a.alumno || ""
+          )}
         </strong>
 
         <small>
 
           DNI:
-          ${escapar(a.dni || "")}
+          ${escapar(
+            a.dni || ""
+          )}
 
           |
 
-          ${escapar(a.curso || "")}
+          ${escapar(
+            a.curso || ""
+          )}
 
-          ${escapar(a.division || "")}
+          ${escapar(
+            a.division || ""
+          )}
 
         </small>
 
@@ -1328,7 +1734,7 @@ function mostrarResultados(lista) {
               )
             ">
 
-            Previas / Equivalencias
+            Previas
 
           </button>
 
@@ -1370,8 +1776,12 @@ async function obtenerAlumnoPorFila(
     await apiGet({
 
       accion: "alumno",
-      sheetId: sheetId,
-      fila: fila
+
+      sheetId:
+        sheetId,
+
+      fila:
+        fila
 
     });
 
@@ -1457,7 +1867,7 @@ async function abrirAlumno(
 
 
 /*********************************************************
- * PREVIAS
+ * ABRIR PREVIAS DE UN ALUMNO
  *********************************************************/
 
 async function abrirPrevias(
@@ -1466,13 +1876,6 @@ async function abrirPrevias(
 ) {
 
   try {
-
-    mensaje(
-      "mensajeBusqueda",
-      "Cargando previas...",
-      "cargando"
-    );
-
 
     const datosAlumno =
       await obtenerAlumnoPorFila(
@@ -1556,11 +1959,6 @@ async function abrirPrevias(
     await cargarPrevias();
 
 
-    limpiarMensaje(
-      "mensajeBusqueda"
-    );
-
-
     document
       .getElementById(
         "panelPrevias"
@@ -1574,7 +1972,7 @@ async function abrirPrevias(
   catch(error) {
 
     mensaje(
-      "mensajeBusqueda",
+      "mensajePreviasCurso",
       error.message,
       "error"
     );
@@ -1584,6 +1982,10 @@ async function abrirPrevias(
 }
 
 
+
+/*********************************************************
+ * CARGAR PREVIAS
+ *********************************************************/
 
 async function cargarPrevias() {
 
@@ -1609,10 +2011,12 @@ async function cargarPrevias() {
     const r =
       await apiGet({
 
-        accion: "listarPrevias",
+        accion:
+          "listarPrevias",
 
         dni:
-          ALUMNO_ACTUAL.DNIAlumno
+          ALUMNO_ACTUAL
+            .DNIAlumno
 
       });
 
@@ -1718,7 +2122,9 @@ function mostrarPrevias(lista) {
         </strong>
 
         <small>
-          ${escapar(detalle)}
+          ${escapar(
+            detalle
+          )}
         </small>
 
         <br>
@@ -1734,7 +2140,11 @@ function mostrarPrevias(lista) {
 
           <button
             class="btn-azul"
-            onclick="editarPrevia(${p.fila})">
+            onclick="
+              editarPrevia(
+                ${p.fila}
+              )
+            ">
 
             Editar
 
@@ -1781,7 +2191,8 @@ function nuevaPrevia() {
       "previaDni"
     )
     .value =
-      ALUMNO_ACTUAL.DNIAlumno || "";
+      ALUMNO_ACTUAL
+        .DNIAlumno || "";
 
 
   document
@@ -1789,7 +2200,8 @@ function nuevaPrevia() {
       "previaAlumno"
     )
     .value =
-      ALUMNO_ACTUAL.ApellidoNombreAlumno ||
+      ALUMNO_ACTUAL
+        .ApellidoNombreAlumno ||
       "";
 
 
@@ -1798,7 +2210,8 @@ function nuevaPrevia() {
       "previaCursoActual"
     )
     .value =
-      ALUMNO_ACTUAL.CursoActual || "";
+      ALUMNO_ACTUAL
+        .CursoActual || "";
 
 
   document
@@ -1806,7 +2219,8 @@ function nuevaPrevia() {
       "previaDivisionActual"
     )
     .value =
-      ALUMNO_ACTUAL.Division || "";
+      ALUMNO_ACTUAL
+        .Division || "";
 
 
   document
@@ -1814,7 +2228,8 @@ function nuevaPrevia() {
       "previaOrientacionActual"
     )
     .value =
-      ALUMNO_ACTUAL.Orientacion || "";
+      ALUMNO_ACTUAL
+        .Orientacion || "";
 
 
   document
@@ -1835,7 +2250,9 @@ function nuevaPrevia() {
  * EDITAR PREVIA
  *********************************************************/
 
-async function editarPrevia(fila) {
+async function editarPrevia(
+  fila
+) {
 
   mensaje(
     "mensajePrevias",
@@ -1849,8 +2266,11 @@ async function editarPrevia(fila) {
     const r =
       await apiGet({
 
-        accion: "obtenerPrevia",
-        fila: fila
+        accion:
+          "obtenerPrevia",
+
+        fila:
+          fila
 
       });
 
@@ -2161,7 +2581,8 @@ async function guardarPrevia() {
     const r =
       await apiPost({
 
-        accion: "guardarPrevia",
+        accion:
+          "guardarPrevia",
 
         fila:
           document
@@ -2170,7 +2591,8 @@ async function guardarPrevia() {
             )
             .value,
 
-        campos: campos
+        campos:
+          campos
 
       });
 
@@ -2392,7 +2814,7 @@ function limpiarFormularioPrevia() {
 
 
 /*********************************************************
- * CERRAR PREVIAS
+ * CERRAR PREVIAS ALUMNO
  *********************************************************/
 
 function cerrarPrevias() {
@@ -2493,7 +2915,7 @@ function nuevoAlumno() {
 
 
 /*********************************************************
- * CONSTRUIR FORMULARIO
+ * FORMULARIO BASE_ALUMNOS
  *********************************************************/
 
 function construirFormulario() {
@@ -2586,10 +3008,6 @@ function construirFormulario() {
 
 
 
-/*********************************************************
- * CREAR CAMPO
- *********************************************************/
-
 function crearCampo(nombre) {
 
   const div =
@@ -2642,7 +3060,8 @@ function crearCampo(nombre) {
 
 
   control.id =
-    "campo_" + nombre;
+    "campo_" +
+    nombre;
 
 
   control.dataset.campo =
@@ -2709,7 +3128,8 @@ function llenarFormulario(
 
       const input =
         document.getElementById(
-          "campo_" + campo
+          "campo_" +
+          campo
         );
 
 
@@ -2725,7 +3145,8 @@ function llenarFormulario(
 
 
       if (
-        campo === "FechaNacAlumno"
+        campo ===
+        "FechaNacAlumno"
       ) {
 
         valor =
@@ -2746,7 +3167,8 @@ function llenarFormulario(
       "tituloFormulario"
     )
     .textContent =
-      alumno.ApellidoNombreAlumno ||
+      alumno
+        .ApellidoNombreAlumno ||
       "Datos del alumno";
 
 
@@ -2777,7 +3199,8 @@ async function guardar() {
 
       const input =
         document.getElementById(
-          "campo_" + nombre
+          "campo_" +
+          nombre
         );
 
 
@@ -2809,7 +3232,8 @@ async function guardar() {
 
 
   if (
-    !campos.ApellidoNombreAlumno
+    !campos
+      .ApellidoNombreAlumno
   ) {
 
     mensaje(
@@ -2876,7 +3300,8 @@ async function guardar() {
     const r =
       await apiPost({
 
-        accion: "guardar",
+        accion:
+          "guardar",
 
         usuario:
           "Panel Preceptoría",
@@ -2934,7 +3359,8 @@ async function guardar() {
       r.mensaje +
       (
         r.preceptor
-          ? " | " + r.preceptor
+          ? " | " +
+            r.preceptor
           : ""
       ),
 
@@ -2968,24 +3394,31 @@ async function guardar() {
 
 
 /*********************************************************
- * API GET
+ * API
  *********************************************************/
 
 async function apiGet(params) {
 
   const url =
-    new URL(API_URL);
-
-
-  Object.entries(params)
-    .forEach(
-      ([k,v]) => {
-
-        url.searchParams
-          .set(k, v);
-
-      }
+    new URL(
+      API_URL
     );
+
+
+  Object.entries(
+    params
+  )
+  .forEach(
+    ([k,v]) => {
+
+      url.searchParams
+        .set(
+          k,
+          v
+        );
+
+    }
+  );
 
 
   const r =
@@ -3009,10 +3442,6 @@ async function apiGet(params) {
 
 
 
-/*********************************************************
- * API POST
- *********************************************************/
-
 async function apiPost(datos) {
 
   const r =
@@ -3030,7 +3459,9 @@ async function apiPost(datos) {
         },
 
         body:
-          JSON.stringify(datos)
+          JSON.stringify(
+            datos
+          )
 
       }
     );
@@ -3089,7 +3520,9 @@ function mensaje(
 ) {
 
   const el =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
 
   el.textContent =
@@ -3097,7 +3530,8 @@ function mensaje(
 
 
   el.className =
-    "mensaje " + tipo;
+    "mensaje " +
+    tipo;
 
 }
 
@@ -3106,7 +3540,9 @@ function mensaje(
 function limpiarMensaje(id) {
 
   const el =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
 
   el.textContent = "";
@@ -3125,7 +3561,9 @@ function bloquear(
 ) {
 
   const boton =
-    document.getElementById(id);
+    document.getElementById(
+      id
+    );
 
 
   if (!boton) {
@@ -3215,9 +3653,7 @@ function escaparJS(valor) {
 
 }
 
-
 </script>
-
 
 </body>
 
