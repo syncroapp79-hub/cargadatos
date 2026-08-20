@@ -401,7 +401,7 @@ button:disabled {
   </h1>
 
   <p>
-    Carga y actualización de datos
+    Sistema Integral Digital de Preceptoría 2026
   </p>
 
 </header>
@@ -491,8 +491,49 @@ button:disabled {
 
 
   <h2>
-    Buscar alumno
+    Alumnos
   </h2>
+
+
+  <div class="selector-curso">
+
+    <label>
+      Curso y división
+    </label>
+
+    <select
+      id="selectorCursoAlumnos"
+      onchange="cargarAlumnosCursoEdicion()">
+
+      <option value="">
+        Seleccionar...
+      </option>
+
+    </select>
+
+    <div
+      id="resumenCursoAlumnos"
+      class="resumen-curso">
+    </div>
+
+  </div>
+
+
+  <div
+    id="mensajeCursoAlumnos"
+    class="mensaje">
+  </div>
+
+
+  <div
+    id="listaAlumnosEdicion"
+    class="lista-alumnos-scroll">
+  </div>
+
+
+  <div style="margin-top:18px;">
+    <h3>Buscar por DNI, apellido o nombre</h3>
+  </div>
 
 
   <div class="busqueda">
@@ -1013,6 +1054,8 @@ let PLANILLAS = [];
 
 let CURSOS_PREVIAS = [];
 
+let CURSOS_ALUMNOS = [];
+
 let ALUMNO_ACTUAL = null;
 
 
@@ -1204,6 +1247,8 @@ async function iniciar() {
 
     cargarSelectorPlanillas();
 
+    await irAlumnos();
+
   }
 
   catch(error) {
@@ -1223,7 +1268,7 @@ async function iniciar() {
  * MÓDULOS
  *********************************************************/
 
-function irAlumnos() {
+async function irAlumnos() {
 
   document
     .getElementById(
@@ -1233,19 +1278,331 @@ function irAlumnos() {
       behavior: "smooth"
     });
 
+
+  if (
+    CURSOS_ALUMNOS.length
+  ) {
+    return;
+  }
+
+
+  mensaje(
+    "mensajeCursoAlumnos",
+    "Cargando cursos...",
+    "cargando"
+  );
+
+
+  try {
+
+    const r =
+      await apiGet({
+        accion:
+          "obtenerCursosPrevias"
+      });
+
+
+    if (!r.ok) {
+      throw new Error(
+        r.mensaje
+      );
+    }
+
+
+    CURSOS_ALUMNOS =
+      r.cursos || [];
+
+
+    cargarSelectorCursosAlumnos();
+
+
+    limpiarMensaje(
+      "mensajeCursoAlumnos"
+    );
+
+  }
+
+  catch(error) {
+
+    mensaje(
+      "mensajeCursoAlumnos",
+      error.message,
+      "error"
+    );
+
+  }
+
 }
 
 
 
 function abrirFichas() {
 
+  if (!CODIGO_ACCESO) {
+
+    alert(
+      "No hay código de acceso."
+    );
+
+    return;
+  }
+
+
+  const url =
+    new URL(
+      URL_FICHAS
+    );
+
+
+  url.searchParams.set(
+    "acceso",
+    CODIGO_ACCESO
+  );
+
+
   window.open(
-    URL_FICHAS,
+    url.toString(),
     "_blank"
   );
 
 }
 
+
+
+/*********************************************************
+ * ALUMNOS POR CURSO
+ *********************************************************/
+
+function cargarSelectorCursosAlumnos() {
+
+  const sel =
+    document.getElementById(
+      "selectorCursoAlumnos"
+    );
+
+
+  sel.innerHTML =
+    '<option value="">Seleccionar...</option>';
+
+
+  CURSOS_ALUMNOS.forEach(
+    (c, index) => {
+
+      const op =
+        document.createElement(
+          "option"
+        );
+
+
+      op.value =
+        index;
+
+
+      op.textContent =
+        c.etiqueta;
+
+
+      sel.appendChild(
+        op
+      );
+
+    }
+  );
+
+}
+
+
+async function cargarAlumnosCursoEdicion() {
+
+  const valorCurso =
+    document
+      .getElementById(
+        "selectorCursoAlumnos"
+      )
+      .value;
+
+
+  const cont =
+    document.getElementById(
+      "listaAlumnosEdicion"
+    );
+
+
+  cont.innerHTML = "";
+
+
+  document
+    .getElementById(
+      "resumenCursoAlumnos"
+    )
+    .textContent = "";
+
+
+  if (valorCurso === "") {
+    return;
+  }
+
+
+  const curso =
+    CURSOS_ALUMNOS[
+      Number(valorCurso)
+    ];
+
+
+  mensaje(
+    "mensajeCursoAlumnos",
+    "Cargando alumnos...",
+    "cargando"
+  );
+
+
+  try {
+
+    const r =
+      await apiGet({
+
+        accion:
+          "listarAlumnosCursoPrevias",
+
+        curso:
+          curso.curso,
+
+        division:
+          curso.division
+
+      });
+
+
+    if (!r.ok) {
+      throw new Error(
+        r.mensaje
+      );
+    }
+
+
+    limpiarMensaje(
+      "mensajeCursoAlumnos"
+    );
+
+
+    document
+      .getElementById(
+        "resumenCursoAlumnos"
+      )
+      .textContent =
+        curso.etiqueta +
+        " · " +
+        (r.cantidad || 0) +
+        " alumnos";
+
+
+    mostrarAlumnosCursoEdicion(
+      r.alumnos || []
+    );
+
+  }
+
+  catch(error) {
+
+    mensaje(
+      "mensajeCursoAlumnos",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+function mostrarAlumnosCursoEdicion(
+  alumnos
+) {
+
+  const cont =
+    document.getElementById(
+      "listaAlumnosEdicion"
+    );
+
+
+  cont.innerHTML = "";
+
+
+  if (!alumnos.length) {
+
+    cont.innerHTML =
+      "<p style='padding:12px;'>No se encontraron alumnos.</p>";
+
+    return;
+  }
+
+
+  alumnos.forEach(
+    a => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.className =
+        "alumno-previas";
+
+
+      div.innerHTML = `
+
+        <div class="alumno-previas-info">
+
+          <strong>
+            ${escapar(
+              a.alumno || ""
+            )}
+          </strong>
+
+          <small>
+            DNI:
+            ${escapar(
+              a.dni || ""
+            )}
+          </small>
+
+          <small>
+            Preceptor:
+            ${escapar(
+              a.preceptor || ""
+            )}
+          </small>
+
+        </div>
+
+
+        <button
+          class="btn-azul"
+          onclick="
+            abrirAlumno(
+              '${escaparJS(
+                a.sheetId
+              )}',
+              ${a.fila}
+            )
+          ">
+
+          Editar
+
+        </button>
+
+      `;
+
+
+      cont.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
 
 
 /*********************************************************
