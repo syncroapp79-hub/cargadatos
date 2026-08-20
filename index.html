@@ -2579,23 +2579,27 @@ async function guardarPrevia() {
   try {
 
     const r =
-      await apiPost({
+  await apiPost({
 
-        accion:
-          "guardarPrevia",
+    accion:
+      "guardarPrevia",
 
-        fila:
-          document
-            .getElementById(
-              "filaPrevia"
-            )
-            .value,
+    sheetId:
+      ALUMNO_ACTUAL
+        ? ALUMNO_ACTUAL._sheetId
+        : "",
 
-        campos:
-          campos
+    fila:
+      document
+        .getElementById(
+          "filaPrevia"
+        )
+        .value,
 
-      });
+    campos:
+      campos
 
+  });
 
     if (!r.ok) {
 
