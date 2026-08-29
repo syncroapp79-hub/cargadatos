@@ -150,6 +150,27 @@ button:disabled{opacity:.45;cursor:not-allowed}
   gap:6px;
 }
 
+
+/* EDICIÓN: CAMPOS DE CARGA MÁS VISIBLES */
+#panelFormulario input,
+#panelFormulario textarea,
+#panelFormulario select{
+  background:#eef2f6;
+  border-color:#b8c2cc;
+}
+#panelFormulario input:focus,
+#panelFormulario textarea:focus,
+#panelFormulario select:focus{
+  background:#ffffff;
+  border-color:#1f4e79;
+  outline:2px solid rgba(31,78,121,.12);
+}
+#panelFormulario .grupo{
+  background:#f8fafc;
+  padding:14px;
+  border-radius:10px;
+}
+
 </style>
 </head>
 
@@ -554,9 +575,13 @@ function abrirWhatsAppTutor(){
     alert("El alumno no tiene teléfono de tutor cargado.");
     return;
   }
+
   const nombre=alumno.ApellidoNombreAlumno||"";
   const texto=encodeURIComponent("Hola. Me comunico desde Preceptoría por "+nombre+".");
-  window.open("https://web.whatsapp.com/send?phone="+tel+"&text="+texto,"_blank");
+
+  // wa.me abre la app de WhatsApp en celular y WhatsApp Web/escritorio en PC.
+  const url="https://wa.me/"+tel+"?text="+texto;
+  window.location.href=url;
 }
 
 function generarPDFConsulta(){
