@@ -240,6 +240,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
       <button class="btn-azul" onclick="editarDesdeConsulta()">✏️ Editar datos</button>
       <button class="btn-naranja" onclick="previasDesdeConsulta()">📚 Previas / Equivalencias</button>
       <button class="btn-verde" onclick="fichasDesdeConsulta()">📋 Fichas individuales</button>
+      <button class="btn-azul" onclick="generarPDFConsulta()">📄 Generar PDF</button>
       <button class="btn-gris" onclick="cerrarConsulta()">✖ Cerrar</button>
     </div>
   </div>
@@ -532,8 +533,18 @@ async function editarResultado(sheetId,fila){
 function normalizarTelefonoWhatsApp(tel){
   let n=String(tel||"").replace(/\D/g,"");
   if(!n)return "";
-  // Si ya tiene 54, lo dejamos. Si no, agregamos Argentina.
+
+  // Quita 0 inicial de característica y 15 si vinieran cargados en formato local.
+  if(n.startsWith("0"))n=n.substring(1);
+
+  // Formato internacional Argentina.
   if(!n.startsWith("54"))n="54"+n;
+
+  // Para celulares argentinos, WhatsApp suele requerir 9 después del 54.
+  if(n.startsWith("54") && !n.startsWith("549")){
+    n="549"+n.substring(2);
+  }
+
   return n;
 }
 
@@ -607,28 +618,6 @@ function generarPDFConsulta(){
 }
 
 
-function agregarBotonWhatsAppEnConsulta(){
-  const panel=document.getElementById("panelConsulta");
-  if(!panel||!CONSULTA_ACTUAL)return;
-  const tel=CONSULTA_ACTUAL.alumno?.TutorPrincipal_Tel||"";
-  if(!tel)return;
-
-  const nodos=[...panel.querySelectorAll("*")];
-  const etiqueta=nodos.find(n=>n.children.length===0 && n.textContent.trim()==="TutorPrincipal_Tel");
-  if(!etiqueta)return;
-
-  let cont=etiqueta.parentElement;
-  if(!cont)return;
-  if(cont.querySelector(".btn-whatsapp"))return;
-
-  const btn=document.createElement("button");
-  btn.type="button";
-  btn.className="btn-whatsapp";
-  btn.textContent="WhatsApp";
-  btn.onclick=abrirWhatsAppTutor;
-  cont.appendChild(btn);
-}
-
 /* ======================================================
    CONSULTA DEL ALUMNO
 ====================================================== */
@@ -685,9 +674,23 @@ function renderizarConsulta(datos){
       if(campo==="FechaNacAlumno")v=fechaMostrar(v);
       v=(v===null||v===undefined||String(v).trim()==="")?"":String(v);
 
+      let accionWhatsApp="";
+      if(campo==="TutorPrincipal_Tel" && v){
+        accionWhatsApp=`
+          <button type="button"
+                  class="btn-whatsapp"
+                  onclick="abrirWhatsAppTutor()"
+                  title="Abrir WhatsApp Web">
+            💬 WhatsApp
+          </button>`;
+      }
+
       dato.innerHTML=`
         <div class="etiqueta">${escapar(ETIQUETAS[campo]||campo)}</div>
-        <div class="valor ${v?"":"consulta-vacio"}">${v?escapar(v):"Sin dato"}</div>`;
+        <div class="valor-con-accion">
+          <div class="valor ${v?"":"consulta-vacio"}">${v?escapar(v):"Sin dato"}</div>
+          ${accionWhatsApp}
+        </div>`;
       grid.appendChild(dato);
     });
 
