@@ -224,7 +224,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 <script>
 const API_URL="https://plain-voice-2149.syncroapp79.workers.dev";
 const URL_FICHAS="https://syncroapp79-hub.github.io/fichas/";
-const ARCHIVO_PREVIAS="previas.html";
+const URL_PREVIAS="https://syncroapp79-hub.github.io/previas/";
 const CODIGO_ACCESO=new URLSearchParams(window.location.search).get("acceso")||"";
 
 let CAMPOS=[];
@@ -309,7 +309,7 @@ function abrirFichas(){
 }
 
 function urlPrevias(extra={}){
-  const u=new URL(ARCHIVO_PREVIAS,window.location.href);
+  const u=new URL(URL_PREVIAS);
   if(CODIGO_ACCESO)u.searchParams.set("acceso",CODIGO_ACCESO);
   Object.entries(extra).forEach(([k,v])=>{
     if(v!==undefined&&v!==null&&String(v)!=="")u.searchParams.set(k,String(v));
