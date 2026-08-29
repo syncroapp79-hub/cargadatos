@@ -126,6 +126,30 @@ button:disabled{opacity:.45;cursor:not-allowed}
   .busqueda button{width:100%;margin-top:8px}
   .consulta-toolbar button{flex:1;min-width:145px}
 }
+
+.btn-whatsapp{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  margin-left:8px;
+  padding:6px 10px;
+  border-radius:7px;
+  background:#16a34a;
+  color:#fff;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+  vertical-align:middle;
+}
+.btn-whatsapp:hover{filter:brightness(1.05)}
+.valor-con-accion{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
 </style>
 </head>
 
@@ -502,6 +526,107 @@ async function editarResultado(sheetId,fila){
   }catch(error){
     mensaje("mensajeBusqueda",error.message,"error");
   }
+}
+
+
+function normalizarTelefonoWhatsApp(tel){
+  let n=String(tel||"").replace(/\D/g,"");
+  if(!n)return "";
+  // Si ya tiene 54, lo dejamos. Si no, agregamos Argentina.
+  if(!n.startsWith("54"))n="54"+n;
+  return n;
+}
+
+function abrirWhatsAppTutor(){
+  if(!CONSULTA_ACTUAL)return;
+  const alumno=CONSULTA_ACTUAL.alumno||{};
+  const tel=normalizarTelefonoWhatsApp(alumno.TutorPrincipal_Tel||"");
+  if(!tel){
+    alert("El alumno no tiene teléfono de tutor cargado.");
+    return;
+  }
+  const nombre=alumno.ApellidoNombreAlumno||"";
+  const texto=encodeURIComponent("Hola. Me comunico desde Preceptoría por "+nombre+".");
+  window.open("https://web.whatsapp.com/send?phone="+tel+"&text="+texto,"_blank");
+}
+
+function generarPDFConsulta(){
+  if(!CONSULTA_ACTUAL)return;
+  const alumno=CONSULTA_ACTUAL.alumno||{};
+  const gruposHTML=GRUPOS.map(grupo=>{
+    const filas=grupo.campos
+      .filter(c=>CAMPOS.includes(c))
+      .map(c=>{
+        const valor=alumno[c]??"";
+        return `<tr>
+          <td style="width:38%;font-weight:700;padding:6px 8px;border:1px solid #bbb;">${escapar(c)}</td>
+          <td style="padding:6px 8px;border:1px solid #bbb;">${escapar(String(valor))}</td>
+        </tr>`;
+      }).join("");
+    if(!filas)return "";
+    return `<h3 style="margin:18px 0 6px;font-size:15px;">${escapar(grupo.titulo)}</h3>
+      <table style="border-collapse:collapse;width:100%;font-size:12px;">${filas}</table>`;
+  }).join("");
+
+  const w=window.open("","_blank");
+  if(!w){
+    alert("El navegador bloqueó la ventana para generar el PDF.");
+    return;
+  }
+
+  const nombre=alumno.ApellidoNombreAlumno||"Alumno";
+  w.document.write(`<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Consulta - ${escapar(nombre)}</title>
+<style>
+  body{font-family:Arial,sans-serif;color:#111;margin:28px;}
+  h1{font-size:20px;margin:0 0 4px;}
+  .sub{font-size:12px;color:#555;margin-bottom:16px;}
+  @media print{
+    body{margin:12mm;}
+    .no-print{display:none!important;}
+  }
+</style>
+</head>
+<body>
+  <h1>Ficha de consulta del alumno</h1>
+  <div class="sub">${escapar(nombre)} · DNI ${escapar(String(alumno.DNIAlumno||""))}</div>
+  ${gruposHTML}
+  <div class="no-print" style="margin-top:20px;">
+    <button onclick="window.print()" style="padding:10px 14px;font-size:14px;cursor:pointer;">
+      Guardar / Imprimir PDF
+    </button>
+  </div>
+</body>
+</html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(()=>w.print(),300);
+}
+
+
+function agregarBotonWhatsAppEnConsulta(){
+  const panel=document.getElementById("panelConsulta");
+  if(!panel||!CONSULTA_ACTUAL)return;
+  const tel=CONSULTA_ACTUAL.alumno?.TutorPrincipal_Tel||"";
+  if(!tel)return;
+
+  const nodos=[...panel.querySelectorAll("*")];
+  const etiqueta=nodos.find(n=>n.children.length===0 && n.textContent.trim()==="TutorPrincipal_Tel");
+  if(!etiqueta)return;
+
+  let cont=etiqueta.parentElement;
+  if(!cont)return;
+  if(cont.querySelector(".btn-whatsapp"))return;
+
+  const btn=document.createElement("button");
+  btn.type="button";
+  btn.className="btn-whatsapp";
+  btn.textContent="WhatsApp";
+  btn.onclick=abrirWhatsAppTutor;
+  cont.appendChild(btn);
 }
 
 /* ======================================================
