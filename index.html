@@ -1,3919 +1,617 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preceptoría Digital</title>
 
 <style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#1f2937}
+header{background:#1f4e79;color:white;padding:17px}
+header h1{margin:0;font-size:22px}
+header p{margin:5px 0 0;font-size:13px;opacity:.9}
+.contenedor{max-width:1050px;margin:auto;padding:14px}
+.tarjeta{background:white;padding:18px;border-radius:12px;margin-bottom:15px;box-shadow:0 4px 15px rgba(0,0,0,.07)}
+h2{margin-top:0;font-size:19px}
+h3{margin-top:0;font-size:16px;color:#334155}
 
-* {
-  box-sizing: border-box;
+input,textarea,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:7px;font-size:16px;background:white}
+textarea{min-height:80px}
+label{display:block;font-weight:bold;font-size:13px;margin-bottom:5px}
+
+/* BOTONES + EFECTO DE PRESIÓN */
+button{
+  padding:11px 16px;border:0;border-radius:7px;font-size:15px;font-weight:600;cursor:pointer;
+  transition:transform .08s ease,box-shadow .08s ease,filter .08s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+button:hover:not(:disabled){filter:brightness(1.06);box-shadow:0 3px 8px rgba(0,0,0,.18)}
+button:active:not(:disabled),button.presionado:not(:disabled){
+  transform:translateY(2px) scale(.97);
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.28);
+  filter:brightness(.88);
+}
+button:focus-visible{outline:3px solid rgba(59,130,246,.35);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.btn-azul{background:#1f4e79;color:white}
+.btn-verde{background:#2e7d32;color:white}
+.btn-naranja{background:#c46a00;color:white}
+.btn-gris{background:#64748b;color:white}
+
+.modulos{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.modulos button{min-height:64px}
+.busqueda{display:flex;gap:8px}
+.busqueda input{flex:1}
+
+.resultado{padding:12px 4px;border-bottom:1px solid #e5e7eb}
+.resultado strong{display:block}
+.resultado small{color:#64748b}
+.resultado-acciones,.acciones{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+.resultado-acciones button{padding:8px 11px;font-size:13px}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.grupo{margin-top:22px;padding-top:15px;border-top:1px solid #e5e7eb}
+.planilla-destino{padding:12px;border:1px solid #e2e8f0;background:#f8fafc;border-radius:8px}
+
+.mensaje{display:none;margin-top:12px;padding:10px;border-radius:7px;text-align:center}
+.exito{display:block;background:#dcfce7;color:#166534}
+.error{display:block;background:#fee2e2;color:#991b1b}
+.cargando{display:block;background:#dbeafe;color:#1e3a8a}
+.oculto{display:none!important}
+
+/* VISTA DE CONSULTA */
+#panelConsulta{
+  position:fixed;inset:0;z-index:1000;background:#f4f7fb;overflow-y:auto;padding:14px;
+}
+.consulta-wrap{max-width:1050px;margin:auto}
+.consulta-cabecera{
+  background:#1f4e79;color:white;border-radius:12px;padding:16px;margin-bottom:14px;
+}
+.consulta-cabecera h2{margin:0 0 6px;font-size:21px}
+.consulta-cabecera small{opacity:.9}
+.consulta-grupo{
+  background:white;border-radius:12px;padding:16px;margin-bottom:12px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06)
+}
+.consulta-grupo h3{margin-bottom:12px;border-bottom:1px solid #e5e7eb;padding-bottom:8px}
+.consulta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+.consulta-dato{min-width:0}
+.consulta-dato .etiqueta{font-size:12px;font-weight:bold;color:#64748b;margin-bottom:3px}
+.consulta-dato .valor{font-size:15px;word-break:break-word;white-space:pre-wrap}
+.consulta-vacio{color:#94a3b8;font-style:italic}
+.consulta-toolbar{
+  position:sticky;bottom:0;background:rgba(244,247,251,.96);padding:10px 0;
+  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f7fb;
-  color: #1f2937;
+@media(max-width:650px){
+  .contenedor{padding:7px}
+  .tarjeta{padding:13px}
+  .grid,.consulta-grid{grid-template-columns:1fr}
+  .busqueda{display:block}
+  .busqueda button{width:100%;margin-top:8px}
+  .consulta-toolbar button{flex:1;min-width:145px}
 }
-
-header {
-  background: #1f4e79;
-  color: white;
-  padding: 17px;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 22px;
-}
-
-header p {
-  margin: 5px 0 0;
-  font-size: 13px;
-  opacity: .9;
-}
-
-.contenedor {
-  max-width: 1050px;
-  margin: auto;
-  padding: 14px;
-}
-
-.tarjeta {
-  background: white;
-  padding: 18px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,.07);
-}
-
-h2 {
-  margin-top: 0;
-  font-size: 19px;
-}
-
-h3 {
-  margin-top: 0;
-  font-size: 16px;
-  color: #334155;
-}
-
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 11px;
-  border: 1px solid #cbd5e1;
-  border-radius: 7px;
-  font-size: 16px;
-  background: white;
-}
-
-textarea {
-  min-height: 80px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  font-size: 13px;
-  margin-bottom: 5px;
-}
-
-button {
-  padding: 11px 16px;
-  border: 0;
-  border-radius: 7px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
-
-.btn-azul {
-  background: #1f4e79;
-  color: white;
-}
-
-.btn-verde {
-  background: #2e7d32;
-  color: white;
-}
-
-.btn-naranja {
-  background: #c46a00;
-  color: white;
-}
-
-.btn-gris {
-  background: #64748b;
-  color: white;
-}
-
-
-/* ======================================================
-   MÓDULOS
-====================================================== */
-
-.modulos {
-  display: grid;
-  grid-template-columns:
-    repeat(auto-fit, minmax(170px,1fr));
-  gap: 10px;
-}
-
-.modulos button {
-  min-height: 64px;
-}
-
-
-/* ======================================================
-   BUSCADOR
-====================================================== */
-
-.busqueda {
-  display: flex;
-  gap: 8px;
-}
-
-.busqueda input {
-  flex: 1;
-}
-
-
-/* ======================================================
-   RESULTADOS
-====================================================== */
-
-.resultado {
-  padding: 12px 4px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.resultado strong {
-  display: block;
-}
-
-.resultado small {
-  color: #64748b;
-}
-
-.resultado-acciones {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.resultado-acciones button {
-  padding: 7px 10px;
-  font-size: 13px;
-}
-
-
-/* ======================================================
-   PREVIAS POR CURSO
-====================================================== */
-
-.selector-curso {
-  background: #f8fafc;
-  padding: 13px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-}
-
-.resumen-curso {
-  margin-top: 12px;
-  font-size: 14px;
-  color: #475569;
-}
-
-
-/*
- * MISMA LÓGICA QUE FICHAS:
- * altura fija + barra vertical.
- */
-
-.lista-alumnos-scroll {
-  max-height: 470px;
-  overflow-y: auto;
-  margin-top: 15px;
-  border: 1px solid #e5e7eb;
-  border-radius: 9px;
-  background: white;
-}
-
-.alumno-previas {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.alumno-previas:last-child {
-  border-bottom: none;
-}
-
-.alumno-previas-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.alumno-previas-info strong {
-  display: block;
-}
-
-.alumno-previas-info small {
-  display: block;
-  color: #64748b;
-  margin-top: 3px;
-}
-
-
-/* ======================================================
-   PREVIAS DE UN ALUMNO
-====================================================== */
-
-.alumno-seleccionado {
-  background: #eff6ff;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-.lista-previas-scroll {
-  max-height: 350px;
-  overflow-y: auto;
-  margin-top: 12px;
-}
-
-.previa-card {
-  border: 1px solid #e5e7eb;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-
-.previa-card strong {
-  display: block;
-}
-
-.previa-card small {
-  color: #64748b;
-}
-
-
-/* ======================================================
-   FORMULARIOS
-====================================================== */
-
-.grid {
-  display: grid;
-  grid-template-columns:
-    repeat(2,minmax(0,1fr));
-  gap: 13px;
-}
-
-.grupo {
-  margin-top: 22px;
-  padding-top: 15px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.acciones {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.planilla-destino {
-  padding: 12px;
-  border: 1px solid #e2e8f0;
-  background: #f8fafc;
-  border-radius: 8px;
-}
-
-
-/* ======================================================
-   MENSAJES
-====================================================== */
-
-.mensaje {
-  display: none;
-  margin-top: 12px;
-  padding: 10px;
-  border-radius: 7px;
-  text-align: center;
-}
-
-.exito {
-  display: block;
-  background: #dcfce7;
-  color: #166534;
-}
-
-.error {
-  display: block;
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.cargando {
-  display: block;
-  background: #dbeafe;
-  color: #1e3a8a;
-}
-
-.oculto {
-  display: none !important;
-}
-
-
-/* ======================================================
-   CELULAR
-====================================================== */
-
-@media(max-width:650px) {
-
-  .contenedor {
-    padding: 7px;
-  }
-
-  .tarjeta {
-    padding: 13px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .busqueda {
-    display: block;
-  }
-
-  .busqueda button {
-    width: 100%;
-    margin-top: 8px;
-  }
-
-  .alumno-previas {
-    align-items: center;
-  }
-
-  .alumno-previas button {
-    flex-shrink: 0;
-  }
-
-  .lista-alumnos-scroll {
-    max-height: 430px;
-  }
-
-}
-
 </style>
-
 </head>
 
-
 <body>
-
-
 <header>
-
-  <h1>
-    Preceptoría Digital
-  </h1>
-
-  <p>
-    Carga y actualización de datos
-  </p>
-
+  <h1>Preceptoría Digital</h1>
+  <p>Sistema Integral Digital de Preceptoría 2026</p>
 </header>
-
 
 <div class="contenedor">
 
-
-<!-- ======================================================
-     MÓDULOS
-====================================================== -->
-
 <section class="tarjeta">
-
   <h2>Módulos</h2>
-
   <div class="modulos">
-
-
-    <button
-      class="btn-azul"
-      onclick="irAlumnos()">
-
-      👤 Alumnos
-
-    </button>
-
-
-    <button
-      class="btn-naranja"
-      onclick="abrirModuloPrevias()">
-
-      📚 Previas / Equivalencias
-
-    </button>
-
-
-    <button
-      class="btn-verde"
-      onclick="abrirFichas()">
-
-      📋 Fichas individuales
-
-    </button>
-
-
-    <button
-      class="btn-gris"
-      disabled>
-
-      📄 Boletín de inasistencia
-
-    </button>
-
-
-    <button
-      class="btn-gris"
-      disabled>
-
-      🧾 Boletín de calificaciones
-
-    </button>
-
-
-    <button
-      class="btn-gris"
-      disabled>
-
-      📊 Centralizadora
-
-    </button>
-
-
+    <button class="btn-azul" onclick="irAlumnos()">👤 Alumnos</button>
+    <button class="btn-naranja" onclick="abrirModuloPrevias()">📚 Previas / Equivalencias</button>
+    <button class="btn-verde" onclick="abrirFichas()">📋 Fichas individuales</button>
+    <button class="btn-gris" disabled>📄 Boletín de inasistencia</button>
+    <button class="btn-gris" disabled>🧾 Boletín de calificaciones</button>
+    <button class="btn-gris" disabled>📊 Centralizadora</button>
   </div>
-
 </section>
 
-
-
-<!-- ======================================================
-     ALUMNOS
-====================================================== -->
-
-<section
-  id="seccionAlumnos"
-  class="tarjeta">
-
-
-  <h2>
-    Alumnos
-  </h2>
-
-
-  <div class="selector-curso">
-
-    <label>
-      Curso y división
-    </label>
-
-    <select
-      id="selectorCursoAlumnos"
-      onchange="cargarAlumnosCursoEdicion()">
-
-      <option value="">
-        Seleccionar...
-      </option>
-
-    </select>
-
-    <div
-      id="resumenCursoAlumnos"
-      class="resumen-curso">
-    </div>
-
-  </div>
-
-
-  <div
-    id="mensajeCursoAlumnos"
-    class="mensaje">
-  </div>
-
-
-  <div
-    id="listaAlumnosEdicion"
-    class="lista-alumnos-scroll">
-  </div>
-
-
-  <div style="margin-top:18px;">
-    <h3>Buscar por DNI, apellido o nombre</h3>
-  </div>
-
-
+<section id="seccionAlumnos" class="tarjeta">
+  <h2>Buscar alumno</h2>
   <div class="busqueda">
-
-    <input
-      id="textoBusqueda"
-      placeholder="DNI, apellido o nombre"
-      onkeydown="
-        if(event.key==='Enter'){
-          buscar();
-        }
-      "
-    >
-
-
-    <button
-      id="btnBuscar"
-      class="btn-azul"
-      onclick="buscar()">
-
-      Buscar
-
-    </button>
-
-
-    <button
-      class="btn-verde"
-      onclick="nuevoAlumno()">
-
-      + Nuevo alumno
-
-    </button>
-
+    <input id="textoBusqueda" placeholder="DNI, apellido o nombre"
+      onkeydown="if(event.key==='Enter'){buscar();}">
+    <button id="btnBuscar" class="btn-azul" onclick="buscar()">🔎 Buscar</button>
+    <button class="btn-verde" onclick="nuevoAlumno()">+ Nuevo alumno</button>
   </div>
-
-
-  <div
-    id="mensajeBusqueda"
-    class="mensaje">
-  </div>
-
-
+  <div id="mensajeBusqueda" class="mensaje"></div>
   <div id="resultados"></div>
-
-
 </section>
 
-
-
-<!-- ======================================================
-     PREVIAS POR CURSO
-====================================================== -->
-
-<section
-  id="panelPreviasCurso"
-  class="tarjeta oculto">
-
-
-  <h2>
-    Previas / Equivalencias
-  </h2>
-
-
-  <div class="selector-curso">
-
-
-    <label>
-      Curso y división
-    </label>
-
-
-    <select
-      id="selectorCursoPrevias"
-      onchange="cargarAlumnosCursoPrevias()">
-
-      <option value="">
-        Seleccionar...
-      </option>
-
-    </select>
-
-
-    <div
-      id="resumenCursoPrevias"
-      class="resumen-curso">
-    </div>
-
-
-  </div>
-
-
-  <div
-    id="mensajePreviasCurso"
-    class="mensaje">
-  </div>
-
-
-  <div
-    id="listaAlumnosPrevias"
-    class="lista-alumnos-scroll">
-  </div>
-
-
-  <div class="acciones">
-
-    <button
-      class="btn-gris"
-      onclick="cerrarModuloPrevias()">
-
-      Cerrar
-
-    </button>
-
-  </div>
-
-
-</section>
-
-
-
-<!-- ======================================================
-     PREVIAS DEL ALUMNO
-====================================================== -->
-
-<section
-  id="panelPrevias"
-  class="tarjeta oculto">
-
-
-  <h2>
-    Previas / Equivalencias del alumno
-  </h2>
-
-
-  <div
-    id="datosAlumnoPrevias"
-    class="alumno-seleccionado">
-  </div>
-
-
-  <button
-    class="btn-verde"
-    onclick="nuevaPrevia()">
-
-    + Agregar materia
-
-  </button>
-
-
-  <div
-    id="mensajePrevias"
-    class="mensaje">
-  </div>
-
-
-  <div
-    id="listaPrevias"
-    class="lista-previas-scroll">
-  </div>
-
-
-  <div class="acciones">
-
-    <button
-      class="btn-gris"
-      onclick="cerrarPrevias()">
-
-      Volver al curso
-
-    </button>
-
-  </div>
-
-
-</section>
-
-
-
-<!-- ======================================================
-     FORMULARIO PREVIA
-====================================================== -->
-
-<section
-  id="panelFormularioPrevia"
-  class="tarjeta oculto">
-
-
-  <h2 id="tituloPrevia">
-    Nueva Previa / Equivalencia
-  </h2>
-
-
-  <input
-    id="filaPrevia"
-    type="hidden">
-
-
-  <div class="grid">
-
-
-    <div>
-      <label>DNI</label>
-      <input
-        id="previaDni"
-        readonly>
-    </div>
-
-
-    <div>
-      <label>Alumno</label>
-      <input
-        id="previaAlumno"
-        readonly>
-    </div>
-
-
-    <div>
-      <label>Curso actual</label>
-      <input
-        id="previaCursoActual"
-        readonly>
-    </div>
-
-
-    <div>
-      <label>División actual</label>
-      <input
-        id="previaDivisionActual"
-        readonly>
-    </div>
-
-
-    <div>
-      <label>Orientación</label>
-      <input
-        id="previaOrientacionActual"
-        readonly>
-    </div>
-
-
-    <div>
-      <label>Materia *</label>
-      <input id="previaMateria">
-    </div>
-
-
-    <div>
-
-      <label>
-        Curso de la materia
-      </label>
-
-      <input
-        id="previaCursoMateria"
-        placeholder="Ej.: 3ero">
-
-    </div>
-
-
-    <div>
-
-      <label>
-        Condición *
-      </label>
-
-      <select id="previaCondicion">
-
-        <option value="">
-          Seleccionar
-        </option>
-
-        <option value="Previa">
-          Previa
-        </option>
-
-        <option value="Equivalencia">
-          Equivalencia
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <div>
-
-      <label>
-        Estado *
-      </label>
-
-      <select
-        id="previaEstado"
-        onchange="actualizarEstadoPrevia()">
-
-        <option value="">
-          Seleccionar
-        </option>
-
-        <option value="Pendiente">
-          Pendiente
-        </option>
-
-        <option value="Aprobada">
-          Aprobada
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <div>
-
-      <label>
-        Fecha de aprobación
-      </label>
-
-      <input
-        id="previaFecha"
-        type="date">
-
-    </div>
-
-
-    <div>
-      <label>Nota</label>
-      <input id="previaNota">
-    </div>
-
-
-    <div>
-      <label>Libro</label>
-      <input id="previaLibro">
-    </div>
-
-
-    <div>
-      <label>Folio</label>
-      <input id="previaFolio">
-    </div>
-
-
-    <div style="grid-column:1/-1;">
-
-      <label>
-        Observaciones
-      </label>
-
-      <textarea
-        id="previaObservaciones">
-      </textarea>
-
-    </div>
-
-
-  </div>
-
-
-  <div
-    id="mensajeGuardarPrevia"
-    class="mensaje">
-  </div>
-
-
-  <div class="acciones">
-
-
-    <button
-      id="btnGuardarPrevia"
-      class="btn-verde"
-      onclick="guardarPrevia()">
-
-      Guardar
-
-    </button>
-
-
-    <button
-      class="btn-gris"
-      onclick="cerrarFormularioPrevia()">
-
-      Cancelar
-
-    </button>
-
-
-  </div>
-
-
-</section>
-
-
-
-<!-- ======================================================
-     FORMULARIO ALUMNO
-====================================================== -->
-
-<section
-  id="panelFormulario"
-  class="tarjeta oculto">
-
-
-  <h2 id="tituloFormulario">
-    Datos del alumno
-  </h2>
-
-
-  <input
-    id="filaAlumno"
-    type="hidden">
-
-
-  <input
-    id="sheetIdAlumno"
-    type="hidden">
-
-
-  <div
-    id="bloquePlanillaDestino"
-    class="planilla-destino oculto">
-
-
-    <label>
-      Planilla / Preceptor destino
-    </label>
-
-
+<section id="panelFormulario" class="tarjeta oculto">
+  <h2 id="tituloFormulario">Datos del alumno</h2>
+  <input id="filaAlumno" type="hidden">
+  <input id="sheetIdAlumno" type="hidden">
+
+  <div id="bloquePlanillaDestino" class="planilla-destino oculto">
+    <label>Planilla / Preceptor destino</label>
     <select id="selectorPlanilla">
-
-      <option value="">
-        Seleccionar...
-      </option>
-
+      <option value="">Seleccionar...</option>
     </select>
-
-
   </div>
-
 
   <div id="formulario"></div>
-
-
-  <div
-    id="mensajeGuardar"
-    class="mensaje">
-  </div>
-
+  <div id="mensajeGuardar" class="mensaje"></div>
 
   <div class="acciones">
-
-
-    <button
-      id="btnGuardar"
-      class="btn-verde"
-      onclick="guardar()">
-
-      Guardar
-
-    </button>
-
-
-    <button
-      class="btn-gris"
-      onclick="nuevoAlumno()">
-
-      Limpiar / Nuevo
-
-    </button>
-
-
-    <button
-      class="btn-gris"
-      onclick="cerrarFormulario()">
-
-      Cerrar
-
-    </button>
-
-
+    <button id="btnGuardar" class="btn-verde" onclick="guardar()">Guardar</button>
+    <button class="btn-gris" onclick="nuevoAlumno()">Limpiar / Nuevo</button>
+    <button class="btn-gris" onclick="cerrarFormulario()">Cerrar</button>
   </div>
-
-
 </section>
-
 
 </div>
 
+<!-- CONSULTA: SOLO LECTURA -->
+<section id="panelConsulta" class="oculto">
+  <div class="consulta-wrap">
+    <div class="consulta-cabecera">
+      <h2 id="consultaNombre">Consulta de alumno</h2>
+      <small id="consultaResumen"></small>
+    </div>
+
+    <div id="consultaContenido"></div>
+
+    <div class="consulta-toolbar">
+      <button class="btn-azul" onclick="editarDesdeConsulta()">✏️ Editar datos</button>
+      <button class="btn-naranja" onclick="previasDesdeConsulta()">📚 Previas / Equivalencias</button>
+      <button class="btn-verde" onclick="fichasDesdeConsulta()">📋 Fichas individuales</button>
+      <button class="btn-gris" onclick="cerrarConsulta()">✖ Cerrar</button>
+    </div>
+  </div>
+</section>
 
 <script>
+const API_URL="https://plain-voice-2149.syncroapp79.workers.dev";
+const URL_FICHAS="https://syncroapp79-hub.github.io/fichas/";
+const URL_PREVIAS="https://syncroapp79-hub.github.io/previas/";
+const CODIGO_ACCESO=new URLSearchParams(window.location.search).get("acceso")||"";
 
+let CAMPOS=[];
+let PLANILLAS=[];
+let ALUMNO_ACTUAL=null;
+let CONSULTA_ACTUAL=null;
 
-/*********************************************************
- * CONFIG
- *********************************************************/
-
-const API_URL =
-  "https://plain-voice-2149.syncroapp79.workers.dev";
-
-
-/*
- * Código de acceso del preceptor.
- * Ejemplo:
- * https://TU_PAGINA/?acceso=A7K29P
- */
-const CODIGO_ACCESO =
-  new URLSearchParams(
-    window.location.search
-  ).get("acceso") || "";
-
-
-const URL_FICHAS =
-  "https://syncroapp79-hub.github.io/fichas/";
-
-
-let CAMPOS = [];
-
-let PLANILLAS = [];
-
-let CURSOS_PREVIAS = [];
-
-let CURSOS_ALUMNOS = [];
-
-let ALUMNO_ACTUAL = null;
-
-
-
-/*********************************************************
- * CAMPOS
- *********************************************************/
-
-const GRUPOS = [
-
-{
-  titulo: "Identificación",
-
-  campos: [
-    "MatriculaNro",
-    "NroLegajo",
-    "AñoLectivo",
-    "DNIAlumno",
-    "ApellidoNombreAlumno",
-    "Sexo",
-    "FechaNacAlumno",
-    "LugarNacAlumno",
-    "NacionalidadAlumno",
-    "CUILAlumno"
-  ]
-},
-
-{
-  titulo: "Situación escolar",
-
-  campos: [
-    "LibroMatriz",
-    "FolioMatriz",
-    "CursoActual",
-    "Division",
-    "Orientacion",
-    "TurnoActual",
-    "EstadoAlumno",
-    "Año_Inicio_Nivel_Sec",
-    "Año_Finaliz_Nivel_Sec"
-  ]
-},
-
-{
-  titulo: "Domicilio",
-
-  campos: [
-    "DomicilioAlumno",
-    "BarrioAlumno",
-    "LocalidadAlumno"
-  ]
-},
-
-{
-  titulo: "Tutor principal",
-
-  campos: [
-    "TutorPrincipal_Nombre",
-    "TutorPrincipal_DNI",
-    "TutorPrincipal_Tel",
-    "VínculoAlumno"
-  ]
-},
-
-{
-  titulo: "Familia",
-
-  campos: [
-    "Madre_ApellidoNombre",
-    "Madre_Tel",
-    "Padre_ApellidoNombre",
-    "Padre_Tel"
-  ]
-},
-
-{
-  titulo: "Salud",
-
-  campos: [
-    "Discapacidad",
-    "TipoDiscapacidad",
-    "Alergias",
-    "ObservacionesSalud"
-  ]
-},
-
-{
-  titulo: "Documentación",
-
-  campos: [
-    "Doc_EstadoGeneral",
-    "Doc_FaltantesCriticos"
-  ]
-},
-
-{
-  titulo: "Observaciones",
-
-  campos: [
-    "Observaciones"
-  ]
-}
-
+const GRUPOS=[
+ {titulo:"Identificación",campos:["MatriculaNro","NroLegajo","AñoLectivo","DNIAlumno","ApellidoNombreAlumno","Sexo","FechaNacAlumno","LugarNacAlumno","NacionalidadAlumno","CUILAlumno"]},
+ {titulo:"Situación escolar",campos:["LibroMatriz","FolioMatriz","CursoActual","Division","Orientacion","TurnoActual","EstadoAlumno","Año_Inicio_Nivel_Sec","Año_Finaliz_Nivel_Sec"]},
+ {titulo:"Domicilio",campos:["DomicilioAlumno","BarrioAlumno","LocalidadAlumno"]},
+ {titulo:"Tutor principal",campos:["TutorPrincipal_Nombre","TutorPrincipal_DNI","TutorPrincipal_Tel","VínculoAlumno"]},
+ {titulo:"Familia",campos:["Madre_ApellidoNombre","Madre_Tel","Padre_ApellidoNombre","Padre_Tel"]},
+ {titulo:"Salud",campos:["Discapacidad","TipoDiscapacidad","Alergias","ObservacionesSalud"]},
+ {titulo:"Documentación",campos:["Doc_EstadoGeneral","Doc_FaltantesCriticos"]},
+ {titulo:"Observaciones",campos:["Observaciones"]}
 ];
 
-
-const ETIQUETAS = {
-
-MatriculaNro: "N.º matrícula",
-NroLegajo: "N.º legajo",
-AñoLectivo: "Año lectivo",
-DNIAlumno: "DNI",
-ApellidoNombreAlumno: "Apellido y nombre",
-Sexo: "Sexo",
-FechaNacAlumno: "Fecha de nacimiento",
-LugarNacAlumno: "Lugar de nacimiento",
-NacionalidadAlumno: "Nacionalidad",
-LibroMatriz: "Libro matriz",
-FolioMatriz: "Folio matriz",
-CUILAlumno: "CUIL",
-CursoActual: "Curso actual",
-Division: "División",
-Orientacion: "Orientación",
-TurnoActual: "Turno",
-EstadoAlumno: "Estado alumno",
-DomicilioAlumno: "Domicilio",
-BarrioAlumno: "Barrio",
-LocalidadAlumno: "Localidad",
-TutorPrincipal_Nombre: "Tutor principal",
-TutorPrincipal_DNI: "DNI tutor",
-TutorPrincipal_Tel: "Teléfono tutor",
-"VínculoAlumno": "Vínculo",
-Madre_ApellidoNombre: "Madre",
-Madre_Tel: "Teléfono madre",
-Padre_ApellidoNombre: "Padre",
-Padre_Tel: "Teléfono padre",
-Discapacidad: "Discapacidad",
-TipoDiscapacidad: "Tipo discapacidad",
-Alergias: "Alergias",
-ObservacionesSalud: "Observaciones salud",
-Doc_EstadoGeneral: "Estado documentación",
-Doc_FaltantesCriticos: "Faltantes críticos",
-Año_Inicio_Nivel_Sec: "Año inicio secundario",
-Año_Finaliz_Nivel_Sec: "Año finalización secundario",
-Observaciones: "Observaciones"
-
+const ETIQUETAS={
+ MatriculaNro:"N.º matrícula",NroLegajo:"N.º legajo",AñoLectivo:"Año lectivo",
+ DNIAlumno:"DNI",ApellidoNombreAlumno:"Apellido y nombre",Sexo:"Sexo",
+ FechaNacAlumno:"Fecha de nacimiento",LugarNacAlumno:"Lugar de nacimiento",
+ NacionalidadAlumno:"Nacionalidad",LibroMatriz:"Libro matriz",FolioMatriz:"Folio matriz",
+ CUILAlumno:"CUIL",CursoActual:"Curso actual",Division:"División",Orientacion:"Orientación",
+ TurnoActual:"Turno",EstadoAlumno:"Estado alumno",DomicilioAlumno:"Domicilio",
+ BarrioAlumno:"Barrio",LocalidadAlumno:"Localidad",TutorPrincipal_Nombre:"Tutor principal",
+ TutorPrincipal_DNI:"DNI tutor",TutorPrincipal_Tel:"Teléfono tutor","VínculoAlumno":"Vínculo",
+ Madre_ApellidoNombre:"Madre",Madre_Tel:"Teléfono madre",Padre_ApellidoNombre:"Padre",
+ Padre_Tel:"Teléfono padre",Discapacidad:"Discapacidad",TipoDiscapacidad:"Tipo discapacidad",
+ Alergias:"Alergias",ObservacionesSalud:"Observaciones salud",
+ Doc_EstadoGeneral:"Estado documentación",Doc_FaltantesCriticos:"Faltantes críticos",
+ Año_Inicio_Nivel_Sec:"Año inicio secundario",Año_Finaliz_Nivel_Sec:"Año finalización secundario",
+ Observaciones:"Observaciones"
 };
 
+window.addEventListener("load",iniciar);
+instalarEfectoTactil();
 
-
-/*********************************************************
- * INICIO
- *********************************************************/
-
-window.addEventListener(
-  "load",
-  iniciar
-);
-
-
-async function iniciar() {
-
-  try {
-
-    const r =
-      await apiGet({
-        accion: "config"
-      });
-
-
-    if (!r.ok) {
-
-      throw new Error(
-        r.mensaje
-      );
-
-    }
-
-
-    CAMPOS =
-      r.campos || [];
-
-
-    PLANILLAS =
-      r.planillas || [];
-
-
+async function iniciar(){
+  try{
+    const r=await apiGet({accion:"config"});
+    if(!r.ok)throw new Error(r.mensaje);
+    CAMPOS=r.campos||[];
+    PLANILLAS=r.planillas||[];
     construirFormulario();
-
     cargarSelectorPlanillas();
-
-    await irAlumnos();
-
+  }catch(error){
+    alert("No se pudo cargar el sistema: "+error.message);
   }
-
-  catch(error) {
-
-    alert(
-      "No se pudo cargar el sistema: " +
-      error.message
-    );
-
-  }
-
 }
 
+function instalarEfectoTactil(){
+  document.addEventListener("pointerdown",e=>{
+    const b=e.target.closest("button");
+    if(b&&!b.disabled)b.classList.add("presionado");
+  });
+  ["pointerup","pointercancel","pointerleave"].forEach(ev=>{
+    document.addEventListener(ev,e=>{
+      const b=e.target.closest&&e.target.closest("button");
+      if(b)b.classList.remove("presionado");
+    },true);
+  });
+}
 
+function irAlumnos(){
+  document.getElementById("seccionAlumnos").scrollIntoView({behavior:"smooth"});
+}
 
-/*********************************************************
- * MÓDULOS
- *********************************************************/
+function urlConAcceso(base,extra={}){
+  const u=new URL(base,window.location.href);
+  if(CODIGO_ACCESO)u.searchParams.set("acceso",CODIGO_ACCESO);
+  Object.entries(extra).forEach(([k,v])=>{
+    if(v!==undefined&&v!==null&&String(v)!=="")u.searchParams.set(k,String(v));
+  });
+  return u.toString();
+}
 
-async function irAlumnos() {
+function abrirFichas(){
+  window.open(urlConAcceso(URL_FICHAS),"_blank");
+}
 
-  document
-    .getElementById(
-      "seccionAlumnos"
-    )
-    .scrollIntoView({
-      behavior: "smooth"
-    });
+function abrirModuloPrevias(){
+  window.open(urlConAcceso(URL_PREVIAS),"_blank");
+}
 
-
-  if (
-    CURSOS_ALUMNOS.length
-  ) {
+async function buscar(){
+  const texto=valor("textoBusqueda");
+  if(!texto){
+    mensaje("mensajeBusqueda","Ingresá DNI, apellido o nombre.","error");
     return;
   }
 
+  bloquear("btnBuscar",true,"Buscando...");
+  mensaje("mensajeBusqueda","Buscando...","cargando");
 
-  mensaje(
-    "mensajeCursoAlumnos",
-    "Cargando cursos...",
-    "cargando"
-  );
+  try{
+    const r=await apiGet({accion:"buscar",q:texto});
+    if(!r.ok)throw new Error(r.mensaje);
 
+    const lista=r.resultados||[];
+    limpiarMensaje("mensajeBusqueda");
 
-  try {
+    const soloNumeros=texto.replace(/\D/g,"");
+    const esDni=/^\d{6,9}$/.test(soloNumeros);
 
-    const r =
-      await apiGet({
-        accion:
-          "obtenerCursosPrevias"
-      });
-
-
-    if (!r.ok) {
-      throw new Error(
-        r.mensaje
-      );
+    if(esDni&&lista.length===1){
+      await abrirConsulta(lista[0].sheetId,lista[0].fila);
+      document.getElementById("resultados").innerHTML="";
+      return;
     }
 
-
-    CURSOS_ALUMNOS =
-      r.cursos || [];
-
-
-    cargarSelectorCursosAlumnos();
-
-
-    limpiarMensaje(
-      "mensajeCursoAlumnos"
-    );
-
+    mostrarResultados(lista);
+  }catch(error){
+    mensaje("mensajeBusqueda",error.message,"error");
+  }finally{
+    bloquear("btnBuscar",false,"🔎 Buscar");
   }
-
-  catch(error) {
-
-    mensaje(
-      "mensajeCursoAlumnos",
-      error.message,
-      "error"
-    );
-
-  }
-
 }
 
+function mostrarResultados(lista){
+  const cont=document.getElementById("resultados");
+  cont.innerHTML="";
 
-
-function abrirFichas() {
-
-  if (!CODIGO_ACCESO) {
-
-    alert(
-      "No hay código de acceso."
-    );
-
+  if(!lista.length){
+    cont.innerHTML="<p>No se encontraron alumnos.</p>";
     return;
   }
 
-
-  const url =
-    new URL(
-      URL_FICHAS
-    );
-
-
-  url.searchParams.set(
-    "acceso",
-    CODIGO_ACCESO
-  );
-
-
-  window.open(
-    url.toString(),
-    "_blank"
-  );
-
-}
-
-
-
-/*********************************************************
- * ALUMNOS POR CURSO
- *********************************************************/
-
-function cargarSelectorCursosAlumnos() {
-
-  const sel =
-    document.getElementById(
-      "selectorCursoAlumnos"
-    );
-
-
-  sel.innerHTML =
-    '<option value="">Seleccionar...</option>';
-
-
-  CURSOS_ALUMNOS.forEach(
-    (c, index) => {
-
-      const op =
-        document.createElement(
-          "option"
-        );
-
-
-      op.value =
-        index;
-
-
-      op.textContent =
-        c.etiqueta;
-
-
-      sel.appendChild(
-        op
-      );
-
-    }
-  );
-
-}
-
-
-async function cargarAlumnosCursoEdicion() {
-
-  const valorCurso =
-    document
-      .getElementById(
-        "selectorCursoAlumnos"
-      )
-      .value;
-
-
-  const cont =
-    document.getElementById(
-      "listaAlumnosEdicion"
-    );
-
-
-  cont.innerHTML = "";
-
-
-  document
-    .getElementById(
-      "resumenCursoAlumnos"
-    )
-    .textContent = "";
-
-
-  if (valorCurso === "") {
-    return;
-  }
-
-
-  const curso =
-    CURSOS_ALUMNOS[
-      Number(valorCurso)
-    ];
-
-
-  mensaje(
-    "mensajeCursoAlumnos",
-    "Cargando alumnos...",
-    "cargando"
-  );
-
-
-  try {
-
-    const r =
-      await apiGet({
-
-        accion:
-          "listarAlumnosCursoPrevias",
-
-        curso:
-          curso.curso,
-
-        division:
-          curso.division
-
-      });
-
-
-    if (!r.ok) {
-      throw new Error(
-        r.mensaje
-      );
-    }
-
-
-    limpiarMensaje(
-      "mensajeCursoAlumnos"
-    );
-
-
-    document
-      .getElementById(
-        "resumenCursoAlumnos"
-      )
-      .textContent =
-        curso.etiqueta +
-        " · " +
-        (r.cantidad || 0) +
-        " alumnos";
-
-
-    mostrarAlumnosCursoEdicion(
-      r.alumnos || []
-    );
-
-  }
-
-  catch(error) {
-
-    mensaje(
-      "mensajeCursoAlumnos",
-      error.message,
-      "error"
-    );
-
-  }
-
-}
-
-
-function mostrarAlumnosCursoEdicion(
-  alumnos
-) {
-
-  const cont =
-    document.getElementById(
-      "listaAlumnosEdicion"
-    );
-
-
-  cont.innerHTML = "";
-
-
-  if (!alumnos.length) {
-
-    cont.innerHTML =
-      "<p style='padding:12px;'>No se encontraron alumnos.</p>";
-
-    return;
-  }
-
-
-  alumnos.forEach(
-    a => {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        "alumno-previas";
-
-
-      div.innerHTML = `
-
-        <div class="alumno-previas-info">
-
-          <strong>
-            ${escapar(
-              a.alumno || ""
-            )}
-          </strong>
-
-          <small>
-            DNI:
-            ${escapar(
-              a.dni || ""
-            )}
-          </small>
-
-          <small>
-            Preceptor:
-            ${escapar(
-              a.preceptor || ""
-            )}
-          </small>
-
-        </div>
-
-
-        <button
-          class="btn-azul"
-          onclick="
-            abrirAlumno(
-              '${escaparJS(
-                a.sheetId
-              )}',
-              ${a.fila}
-            )
-          ">
-
-          Editar
-
+  lista.forEach(a=>{
+    const div=document.createElement("div");
+    div.className="resultado";
+    div.innerHTML=`
+      <strong>${escapar(a.alumno||"")}</strong>
+      <small>
+        DNI: ${escapar(a.dni||"")} ·
+        ${escapar(a.curso||"")} ${escapar(a.division||"")} ·
+        Preceptor: ${escapar(a.preceptor||"")}
+      </small>
+      <div class="resultado-acciones">
+        <button class="btn-azul"
+          onclick="abrirConsulta('${escaparJS(a.sheetId)}',${Number(a.fila)||0})">
+          👁 Consultar
         </button>
-
-      `;
-
-
-      cont.appendChild(
-        div
-      );
-
-    }
-  );
-
+      </div>`;
+    cont.appendChild(div);
+  });
 }
 
-
-/*********************************************************
- * MÓDULO PREVIAS
- *********************************************************/
-
-async function abrirModuloPrevias() {
-
-  document
-    .getElementById(
-      "panelPreviasCurso"
-    )
-    .classList
-    .remove(
-      "oculto"
-    );
-
-
-  document
-    .getElementById(
-      "panelPreviasCurso"
-    )
-    .scrollIntoView({
-      behavior: "smooth"
-    });
-
-
-  if (
-    CURSOS_PREVIAS.length
-  ) {
-
-    return;
-
-  }
-
-
-  mensaje(
-    "mensajePreviasCurso",
-    "Cargando cursos...",
-    "cargando"
-  );
-
-
-  try {
-
-    const r =
-      await apiGet({
-
-        accion:
-          "obtenerCursosPrevias"
-
-      });
-
-
-    if (!r.ok) {
-
-      throw new Error(
-        r.mensaje
-      );
-
-    }
-
-
-    CURSOS_PREVIAS =
-      r.cursos || [];
-
-
-    cargarSelectorCursosPrevias();
-
-
-    limpiarMensaje(
-      "mensajePreviasCurso"
-    );
-
-  }
-
-  catch(error) {
-
-    mensaje(
-      "mensajePreviasCurso",
-      error.message,
-      "error"
-    );
-
-  }
-
-}
-
-
-
-/*********************************************************
- * SELECTOR CURSO PREVIAS
- *********************************************************/
-
-function cargarSelectorCursosPrevias() {
-
-  const sel =
-    document.getElementById(
-      "selectorCursoPrevias"
-    );
-
-
-  sel.innerHTML =
-    '<option value="">Seleccionar...</option>';
-
-
-  CURSOS_PREVIAS.forEach(
-    (c, index) => {
-
-      const op =
-        document.createElement(
-          "option"
-        );
-
-
-      op.value =
-        index;
-
-
-      op.textContent =
-        c.etiqueta;
-
-
-      sel.appendChild(
-        op
-      );
-
-    }
-  );
-
-}
-
-
-
-/*********************************************************
- * CARGAR ALUMNOS CURSO PREVIAS
- *********************************************************/
-
-async function cargarAlumnosCursoPrevias() {
-
-  const valor =
-    document
-      .getElementById(
-        "selectorCursoPrevias"
-      )
-      .value;
-
-
-  const cont =
-    document.getElementById(
-      "listaAlumnosPrevias"
-    );
-
-
-  cont.innerHTML = "";
-
-
-  document
-    .getElementById(
-      "resumenCursoPrevias"
-    )
-    .textContent = "";
-
-
-  if (valor === "") {
-
-    return;
-
-  }
-
-
-  const curso =
-    CURSOS_PREVIAS[
-      Number(valor)
-    ];
-
-
-  mensaje(
-    "mensajePreviasCurso",
-    "Cargando alumnos...",
-    "cargando"
-  );
-
-
-  try {
-
-    const r =
-      await apiGet({
-
-        accion:
-          "listarAlumnosCursoPrevias",
-
-        curso:
-          curso.curso,
-
-        division:
-          curso.division
-
-      });
-
-
-    if (!r.ok) {
-
-      throw new Error(
-        r.mensaje
-      );
-
-    }
-
-
-    limpiarMensaje(
-      "mensajePreviasCurso"
-    );
-
-
-    document
-      .getElementById(
-        "resumenCursoPrevias"
-      )
-      .textContent =
-        curso.etiqueta +
-        " · " +
-        (
-          r.cantidad || 0
-        ) +
-        " alumnos";
-
-
-    mostrarAlumnosCursoPrevias(
-      r.alumnos || []
-    );
-
-  }
-
-  catch(error) {
-
-    mensaje(
-      "mensajePreviasCurso",
-      error.message,
-      "error"
-    );
-
-  }
-
-}
-
-
-
-/*********************************************************
- * MOSTRAR ALUMNOS CURSO
- *********************************************************/
-
-function mostrarAlumnosCursoPrevias(
-  alumnos
-) {
-
-  const cont =
-    document.getElementById(
-      "listaAlumnosPrevias"
-    );
-
-
-  cont.innerHTML = "";
-
-
-  if (!alumnos.length) {
-
-    cont.innerHTML =
-      "<p style='padding:12px;'>No se encontraron alumnos.</p>";
-
-    return;
-
-  }
-
-
-  alumnos.forEach(
-    a => {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        "alumno-previas";
-
-
-      div.innerHTML = `
-
-        <div class="alumno-previas-info">
-
-          <strong>
-            ${escapar(
-              a.alumno || ""
-            )}
-          </strong>
-
-          <small>
-            DNI:
-            ${escapar(
-              a.dni || ""
-            )}
-          </small>
-
-          <small>
-            Preceptor:
-            ${escapar(
-              a.preceptor || ""
-            )}
-          </small>
-
-        </div>
-
-
-        <button
-          class="btn-naranja"
-          onclick="
-            abrirPrevias(
-              '${escaparJS(
-                a.sheetId
-              )}',
-              ${a.fila}
-            )
-          ">
-
-          Previas
-
-        </button>
-
-      `;
-
-
-      cont.appendChild(
-        div
-      );
-
-    }
-  );
-
-}
-
-
-
-/*********************************************************
- * CERRAR MÓDULO PREVIAS
- *********************************************************/
-
-function cerrarModuloPrevias() {
-
-  document
-    .getElementById(
-      "panelPreviasCurso"
-    )
-    .classList
-    .add(
-      "oculto"
-    );
-
-
-  cerrarPrevias();
-
-}
-
-
-
-/*********************************************************
- * PREVIAS DE UN ALUMNO
- *********************************************************/
-
-async function abrirPrevias(
-  sheetId,
-  fila
-) {
-
-  try {
-
-    const datos =
-      await obtenerAlumnoPorFila(
-        sheetId,
-        fila
-      );
-
-
-    ALUMNO_ACTUAL =
-      datos.alumno;
-
-
-    ALUMNO_ACTUAL._sheetId =
-      sheetId;
-
-
-    ALUMNO_ACTUAL._fila =
-      fila;
-
-
-    ALUMNO_ACTUAL._preceptor =
-      datos.preceptor;
-
-
-    document
-      .getElementById(
-        "datosAlumnoPrevias"
-      )
-      .innerHTML = `
-
-        <strong>
-          ${escapar(
-            ALUMNO_ACTUAL
-              .ApellidoNombreAlumno ||
-            ""
-          )}
-        </strong>
-
-        <br>
-
-        DNI:
-        ${escapar(
-          ALUMNO_ACTUAL
-            .DNIAlumno ||
-          ""
-        )}
-
-        <br>
-
-        Curso:
-        ${escapar(
-          ALUMNO_ACTUAL
-            .CursoActual ||
-          ""
-        )}
-
-        ${escapar(
-          ALUMNO_ACTUAL
-            .Division ||
-          ""
-        )}
-
-        <br>
-
-        Preceptor:
-        ${escapar(
-          datos.preceptor ||
-          ""
-        )}
-
-      `;
-
-
-    document
-      .getElementById(
-        "panelPrevias"
-      )
-      .classList
-      .remove(
-        "oculto"
-      );
-
-
-    await cargarPrevias();
-
-
-    document
-      .getElementById(
-        "panelPrevias"
-      )
-      .scrollIntoView({
-        behavior: "smooth"
-      });
-
-  }
-
-  catch(error) {
-
-    mensaje(
-      "mensajePreviasCurso",
-      error.message,
-      "error"
-    );
-
-  }
-
-}
-
-
-
-async function cargarPrevias() {
-
-  if (
-    !ALUMNO_ACTUAL
-  ) {
-
-    return;
-
-  }
-
-
-  mensaje(
-    "mensajePrevias",
-    "Cargando...",
-    "cargando"
-  );
-
-
-  try {
-
-    const r =
-      await apiGet({
-
-        accion:
-          "listarPrevias",
-
-        dni:
-          ALUMNO_ACTUAL
-            .DNIAlumno
-
-      });
-
-
-    if (!r.ok) {
-
-      throw new Error(
-        r.mensaje
-      );
-
-    }
-
-
-    limpiarMensaje(
-      "mensajePrevias"
-    );
-
-
-    mostrarPrevias(
-      r.resultados || []
-    );
-
-  }
-
-  catch(error) {
-
-    mensaje(
-      "mensajePrevias",
-      error.message,
-      "error"
-    );
-
-  }
-
-}
-
-
-
-function mostrarPrevias(
-  lista
-) {
-
-  const cont =
-    document.getElementById(
-      "listaPrevias"
-    );
-
-
-  cont.innerHTML = "";
-
-
-  if (!lista.length) {
-
-    cont.innerHTML =
-      "<p>No tiene previas o equivalencias registradas.</p>";
-
-    return;
-
-  }
-
-
-  lista.forEach(
-    p => {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        "previa-card";
-
-
-      let texto =
-        (
-          p["Condición"] ||
-          ""
-        ) +
-        " · " +
-        (
-          p.Estado ||
-          ""
-        );
-
-
-      if (p.Nota) {
-
-        texto +=
-          " · Nota " +
-          p.Nota;
-
-      }
-
-
-      div.innerHTML = `
-
-        <strong>
-          ${escapar(
-            p.Materia || ""
-          )}
-        </strong>
-
-        <small>
-          ${escapar(
-            texto
-          )}
-        </small>
-
-        <div class="resultado-acciones">
-
-          <button
-            class="btn-azul"
-            onclick="
-              editarPrevia(
-                ${p.fila}
-              )
-            ">
-
-            Editar
-
-          </button>
-
-        </div>
-
-      `;
-
-
-      cont.appendChild(
-        div
-      );
-
-    }
-  );
-
-}
-
-
-
-/*********************************************************
- * NUEVA PREVIA
- *********************************************************/
-
-function nuevaPrevia() {
-
-  limpiarFormularioPrevia();
-
-
-  document
-    .getElementById(
-      "previaDni"
-    )
-    .value =
-      ALUMNO_ACTUAL
-        .DNIAlumno || "";
-
-
-  document
-    .getElementById(
-      "previaAlumno"
-    )
-    .value =
-      ALUMNO_ACTUAL
-        .ApellidoNombreAlumno ||
-      "";
-
-
-  document
-    .getElementById(
-      "previaCursoActual"
-    )
-    .value =
-      ALUMNO_ACTUAL
-        .CursoActual || "";
-
-
-  document
-    .getElementById(
-      "previaDivisionActual"
-    )
-    .value =
-      ALUMNO_ACTUAL
-        .Division || "";
-
-
-  document
-    .getElementById(
-      "previaOrientacionActual"
-    )
-    .value =
-      ALUMNO_ACTUAL
-        .Orientacion || "";
-
-
-  document
-    .getElementById(
-      "tituloPrevia"
-    )
-    .textContent =
-      "Nueva Previa / Equivalencia";
-
-
-  abrirFormularioPrevia();
-
-}
-
-
-
-/*********************************************************
- * EDITAR PREVIA
- *********************************************************/
-
-async function editarPrevia(
-  fila
-) {
-
-  const r =
-    await apiGet({
-
-      accion:
-        "obtenerPrevia",
-
-      fila:
-        fila
-
-    });
-
-
-  if (!r.ok) {
-
-    mensaje(
-      "mensajePrevias",
-      r.mensaje,
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const p =
-    r.previa;
-
-
-  document
-    .getElementById(
-      "filaPrevia"
-    )
-    .value =
-      r.fila;
-
-
-  document
-    .getElementById(
-      "previaDni"
-    )
-    .value =
-      p.DNIAlumno || "";
-
-
-  document
-    .getElementById(
-      "previaAlumno"
-    )
-    .value =
-      p.Alumno || "";
-
-
-  document
-    .getElementById(
-      "previaCursoActual"
-    )
-    .value =
-      p.CursoActual || "";
-
-
-  document
-    .getElementById(
-      "previaDivisionActual"
-    )
-    .value =
-      p.DivisionActual || "";
-
-
-  document
-    .getElementById(
-      "previaOrientacionActual"
-    )
-    .value =
-      p.OrientacionActual || "";
-
-
-  document
-    .getElementById(
-      "previaMateria"
-    )
-    .value =
-      p.Materia || "";
-
-
-  document
-    .getElementById(
-      "previaCursoMateria"
-    )
-    .value =
-      p.CursoMateria || "";
-
-
-  document
-    .getElementById(
-      "previaCondicion"
-    )
-    .value =
-      p["Condición"] || "";
-
-
-  document
-    .getElementById(
-      "previaEstado"
-    )
-    .value =
-      p.Estado || "";
-
-
-  document
-    .getElementById(
-      "previaFecha"
-    )
-    .value =
-      fechaHtml(
-        p.FechaAprobacion
-      );
-
-
-  document
-    .getElementById(
-      "previaNota"
-    )
-    .value =
-      p.Nota || "";
-
-
-  document
-    .getElementById(
-      "previaLibro"
-    )
-    .value =
-      p.Libro || "";
-
-
-  document
-    .getElementById(
-      "previaFolio"
-    )
-    .value =
-      p.Folio || "";
-
-
-  document
-    .getElementById(
-      "previaObservaciones"
-    )
-    .value =
-      p.Observaciones || "";
-
-
-  document
-    .getElementById(
-      "tituloPrevia"
-    )
-    .textContent =
-      "Editar Previa / Equivalencia";
-
-
-  actualizarEstadoPrevia();
-
-  abrirFormularioPrevia();
-
-}
-
-
-
-/*********************************************************
- * GUARDAR PREVIA
- *********************************************************/
-
-async function guardarPrevia() {
-
-  const campos = {
-
-    DNIAlumno:
-      valor("previaDni"),
-
-    Alumno:
-      valor("previaAlumno"),
-
-    CursoActual:
-      valor("previaCursoActual"),
-
-    DivisionActual:
-      valor("previaDivisionActual"),
-
-    OrientacionActual:
-      valor(
-        "previaOrientacionActual"
-      ),
-
-    Materia:
-      valor("previaMateria"),
-
-    CursoMateria:
-      valor("previaCursoMateria"),
-
-    "Condición":
-      valor("previaCondicion"),
-
-    Estado:
-      valor("previaEstado"),
-
-    FechaAprobacion:
-      valor("previaFecha"),
-
-    Nota:
-      valor("previaNota"),
-
-    Libro:
-      valor("previaLibro"),
-
-    Folio:
-      valor("previaFolio"),
-
-    Observaciones:
-      valor(
-        "previaObservaciones"
-      )
-
-  };
-
-
-  if (
-    !campos.Materia ||
-    !campos["Condición"] ||
-    !campos.Estado
-  ) {
-
-    mensaje(
-      "mensajeGuardarPrevia",
-      "Completá Materia, Condición y Estado.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  bloquear(
-    "btnGuardarPrevia",
-    true,
-    "Guardando..."
-  );
-
-
-  try {
-
-    const r =
-      await apiPost({
-
-        accion:
-          "guardarPrevia",
-
-        sheetId:
-          ALUMNO_ACTUAL
-            ._sheetId,
-
-        fila:
-          valor(
-            "filaPrevia"
-          ),
-
-        campos:
-          campos
-
-      });
-
-
-    if (!r.ok) {
-
-      throw new Error(
-        r.mensaje
-      );
-
-    }
-
-
-    mensaje(
-      "mensajeGuardarPrevia",
-      r.mensaje,
-      "exito"
-    );
-
-
-    await cargarPrevias();
-
-
-    setTimeout(
-      cerrarFormularioPrevia,
-      700
-    );
-
-  }
-
-  catch(error) {
-
-    mensaje(
-      "mensajeGuardarPrevia",
-      error.message,
-      "error"
-    );
-
-  }
-
-  finally {
-
-    bloquear(
-      "btnGuardarPrevia",
-      false,
-      "Guardar"
-    );
-
-  }
-
-}
-
-
-
-/*********************************************************
- * ESTADO PREVIA
- *********************************************************/
-
-function actualizarEstadoPrevia() {
-
-  const aprobada =
-    valor(
-      "previaEstado"
-    ) ===
-    "Aprobada";
-
-
-  [
-    "previaFecha",
-    "previaNota",
-    "previaLibro",
-    "previaFolio"
-
-  ].forEach(
-    id => {
-
-      document
-        .getElementById(id)
-        .disabled =
-          !aprobada;
-
-    }
-  );
-
-
-  if (!aprobada) {
-
-    [
-      "previaFecha",
-      "previaNota",
-      "previaLibro",
-      "previaFolio"
-
-    ].forEach(
-      id => {
-
-        document
-          .getElementById(id)
-          .value = "";
-
-      }
-    );
-
-  }
-
-}
-
-
-
-/*********************************************************
- * FORMULARIO PREVIA
- *********************************************************/
-
-function abrirFormularioPrevia() {
-
-  document
-    .getElementById(
-      "panelFormularioPrevia"
-    )
-    .classList
-    .remove(
-      "oculto"
-    );
-
-
-  limpiarMensaje(
-    "mensajeGuardarPrevia"
-  );
-
-
-  document
-    .getElementById(
-      "panelFormularioPrevia"
-    )
-    .scrollIntoView({
-      behavior: "smooth"
-    });
-
-}
-
-
-
-function cerrarFormularioPrevia() {
-
-  document
-    .getElementById(
-      "panelFormularioPrevia"
-    )
-    .classList
-    .add(
-      "oculto"
-    );
-
-}
-
-
-
-function limpiarFormularioPrevia() {
-
-  [
-    "filaPrevia",
-    "previaDni",
-    "previaAlumno",
-    "previaCursoActual",
-    "previaDivisionActual",
-    "previaOrientacionActual",
-    "previaMateria",
-    "previaCursoMateria",
-    "previaCondicion",
-    "previaEstado",
-    "previaFecha",
-    "previaNota",
-    "previaLibro",
-    "previaFolio",
-    "previaObservaciones"
-
-  ].forEach(
-    id => {
-
-      document
-        .getElementById(id)
-        .value = "";
-
-    }
-  );
-
-
-  actualizarEstadoPrevia();
-
-}
-
-
-
-function cerrarPrevias() {
-
-  document
-    .getElementById(
-      "panelPrevias"
-    )
-    .classList
-    .add(
-      "oculto"
-    );
-
-
-  cerrarFormularioPrevia();
-
-}
-
-
-
-/*********************************************************
- * BUSCAR ALUMNO GENERAL
- *********************************************************/
-
-async function buscar() {
-
-  const texto =
-    valor(
-      "textoBusqueda"
-    );
-
-
-  if (!texto) {
-
-    mensaje(
-      "mensajeBusqueda",
-      "Ingresá DNI, apellido o nombre.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  bloquear(
-    "btnBuscar",
-    true,
-    "Buscando..."
-  );
-
-
-  try {
-
-    const r =
-      await apiGet({
-
-        accion: "buscar",
-        q: texto
-
-      });
-
-
-    if (!r.ok) {
-
-      throw new Error(
-        r.mensaje
-      );
-
-    }
-
-
-    mostrarResultados(
-      r.resultados || []
-    );
-
-
-    limpiarMensaje(
-      "mensajeBusqueda"
-    );
-
-  }
-
-  catch(error) {
-
-    mensaje(
-      "mensajeBusqueda",
-      error.message,
-      "error"
-    );
-
-  }
-
-  finally {
-
-    bloquear(
-      "btnBuscar",
-      false,
-      "Buscar"
-    );
-
-  }
-
-}
-
-
-
-function mostrarResultados(
-  lista
-) {
-
-  const cont =
-    document.getElementById(
-      "resultados"
-    );
-
-
-  cont.innerHTML = "";
-
-
-  lista.forEach(
-    a => {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        "resultado";
-
-
-      div.innerHTML = `
-
-        <strong>
-          ${escapar(
-            a.alumno || ""
-          )}
-        </strong>
-
-        <small>
-          DNI:
-          ${escapar(
-            a.dni || ""
-          )}
-
-          ·
-
-          ${escapar(
-            a.curso || ""
-          )}
-
-          ${escapar(
-            a.division || ""
-          )}
-
-          · Preceptor:
-          ${escapar(
-            a.preceptor || ""
-          )}
-
-        </small>
-
-
-        <div class="resultado-acciones">
-
-          <button
-            class="btn-azul"
-            onclick="
-              abrirAlumno(
-                '${escaparJS(
-                  a.sheetId
-                )}',
-                ${a.fila}
-              )
-            ">
-
-            Editar datos
-
-          </button>
-
-
-          <button
-            class="btn-naranja"
-            onclick="
-              abrirPrevias(
-                '${escaparJS(
-                  a.sheetId
-                )}',
-                ${a.fila}
-              )
-            ">
-
-            Previas
-
-          </button>
-
-        </div>
-
-      `;
-
-
-      cont.appendChild(
-        div
-      );
-
-    }
-  );
-
-
-  if (!lista.length) {
-
-    cont.innerHTML =
-      "<p>No se encontraron alumnos.</p>";
-
-  }
-
-}
-
-
-
-/*********************************************************
- * OBTENER ALUMNO
- *********************************************************/
-
-async function obtenerAlumnoPorFila(
-  sheetId,
-  fila
-) {
-
-  const r =
-    await apiGet({
-
-      accion:
-        "alumno",
-
-      sheetId:
-        sheetId,
-
-      fila:
-        fila
-
-    });
-
-
-  if (!r.ok) {
-
-    throw new Error(
-      r.mensaje
-    );
-
-  }
-
-
+async function obtenerAlumnoPorFila(sheetId,fila){
+  const r=await apiGet({accion:"alumno",sheetId:sheetId,fila:fila});
+  if(!r.ok)throw new Error(r.mensaje);
   return r;
-
 }
 
+/* ======================================================
+   CONSULTA DEL ALUMNO
+====================================================== */
+async function abrirConsulta(sheetId,fila){
+  try{
+    mensaje("mensajeBusqueda","Cargando ficha de consulta...","cargando");
+    const r=await obtenerAlumnoPorFila(sheetId,fila);
 
+    CONSULTA_ACTUAL={
+      alumno:r.alumno||{},
+      fila:r.fila||fila,
+      sheetId:sheetId,
+      preceptor:r.preceptor||""
+    };
 
-/*********************************************************
- * EDITAR ALUMNO
- *********************************************************/
-
-async function abrirAlumno(
-  sheetId,
-  fila
-) {
-
-  try {
-
-    const r =
-      await obtenerAlumnoPorFila(
-        sheetId,
-        fila
-      );
-
-
-    ALUMNO_ACTUAL =
-      r.alumno;
-
-
-    llenarFormulario(
-      r.alumno,
-      fila,
-      sheetId
-    );
-
-
-    document
-      .getElementById(
-        "panelFormulario"
-      )
-      .scrollIntoView({
-        behavior: "smooth"
-      });
-
+    renderizarConsulta(CONSULTA_ACTUAL);
+    document.getElementById("panelConsulta").classList.remove("oculto");
+    document.body.style.overflow="hidden";
+    limpiarMensaje("mensajeBusqueda");
+  }catch(error){
+    mensaje("mensajeBusqueda",error.message,"error");
   }
-
-  catch(error) {
-
-    mensaje(
-      "mensajeBusqueda",
-      error.message,
-      "error"
-    );
-
-  }
-
 }
 
+function renderizarConsulta(datos){
+  const alumno=datos.alumno||{};
+  document.getElementById("consultaNombre").textContent=
+    alumno.ApellidoNombreAlumno||"Consulta de alumno";
 
+  document.getElementById("consultaResumen").textContent=
+    "DNI: "+(alumno.DNIAlumno||"—")+
+    " · Curso: "+(alumno.CursoActual||"—")+" "+(alumno.Division||"")+
+    (datos.preceptor?" · Preceptor: "+datos.preceptor:"");
 
-/*********************************************************
- * NUEVO ALUMNO
- *********************************************************/
+  const cont=document.getElementById("consultaContenido");
+  cont.innerHTML="";
 
-function nuevoAlumno() {
+  GRUPOS.forEach(grupo=>{
+    const disponibles=grupo.campos.filter(c=>CAMPOS.includes(c));
+    if(!disponibles.length)return;
 
+    const sec=document.createElement("section");
+    sec.className="consulta-grupo";
+    sec.innerHTML=`<h3>${escapar(grupo.titulo)}</h3>`;
+
+    const grid=document.createElement("div");
+    grid.className="consulta-grid";
+
+    disponibles.forEach(campo=>{
+      const dato=document.createElement("div");
+      dato.className="consulta-dato";
+
+      let v=alumno[campo];
+      if(campo==="FechaNacAlumno")v=fechaMostrar(v);
+      v=(v===null||v===undefined||String(v).trim()==="")?"":String(v);
+
+      dato.innerHTML=`
+        <div class="etiqueta">${escapar(ETIQUETAS[campo]||campo)}</div>
+        <div class="valor ${v?"":"consulta-vacio"}">${v?escapar(v):"Sin dato"}</div>`;
+      grid.appendChild(dato);
+    });
+
+    sec.appendChild(grid);
+    cont.appendChild(sec);
+  });
+}
+
+function cerrarConsulta(){
+  document.getElementById("panelConsulta").classList.add("oculto");
+  document.body.style.overflow="";
+}
+
+function editarDesdeConsulta(){
+  if(!CONSULTA_ACTUAL)return;
+  const d=CONSULTA_ACTUAL;
+  cerrarConsulta();
+  ALUMNO_ACTUAL=d.alumno;
+  llenarFormulario(d.alumno,d.fila,d.sheetId);
+  document.getElementById("panelFormulario").scrollIntoView({behavior:"smooth"});
+}
+
+function previasDesdeConsulta(){
+  if(!CONSULTA_ACTUAL)return;
+  const d=CONSULTA_ACTUAL;
+  window.open(urlConAcceso(URL_PREVIAS,{
+    sheetId:d.sheetId,
+    fila:d.fila,
+    dni:d.alumno.DNIAlumno||""
+  }),"_blank");
+}
+
+function fichasDesdeConsulta(){
+  if(!CONSULTA_ACTUAL)return;
+  const dni=CONSULTA_ACTUAL.alumno.DNIAlumno||"";
+  window.open(urlConAcceso(URL_FICHAS,{dni:dni}),"_blank");
+}
+
+/* ======================================================
+   NUEVO / EDICIÓN
+====================================================== */
+function nuevoAlumno(){
   limpiarCampos();
-
-
-  document
-    .getElementById(
-      "filaAlumno"
-    )
-    .value = "";
-
-
-  document
-    .getElementById(
-      "sheetIdAlumno"
-    )
-    .value = "";
-
-
-  document
-    .getElementById(
-      "bloquePlanillaDestino"
-    )
-    .classList
-    .remove(
-      "oculto"
-    );
-
-
-  document
-    .getElementById(
-      "tituloFormulario"
-    )
-    .textContent =
-      "Nuevo alumno";
-
-
-  document
-    .getElementById(
-      "panelFormulario"
-    )
-    .classList
-    .remove(
-      "oculto"
-    );
-
+  document.getElementById("filaAlumno").value="";
+  document.getElementById("sheetIdAlumno").value="";
+  document.getElementById("bloquePlanillaDestino").classList.remove("oculto");
+  document.getElementById("tituloFormulario").textContent="Nuevo alumno";
+  document.getElementById("panelFormulario").classList.remove("oculto");
+  document.getElementById("panelFormulario").scrollIntoView({behavior:"smooth"});
 }
 
+function construirFormulario(){
+  const cont=document.getElementById("formulario");
+  cont.innerHTML="";
 
+  GRUPOS.forEach(grupo=>{
+    const disponibles=grupo.campos.filter(c=>CAMPOS.includes(c));
+    if(!disponibles.length)return;
 
-/*********************************************************
- * FORMULARIO ALUMNOS
- *********************************************************/
+    const bloque=document.createElement("div");
+    bloque.className="grupo";
 
-function construirFormulario() {
+    const h=document.createElement("h3");
+    h.textContent=grupo.titulo;
+    bloque.appendChild(h);
 
-  const cont =
-    document.getElementById(
-      "formulario"
-    );
+    const grid=document.createElement("div");
+    grid.className="grid";
 
+    disponibles.forEach(campo=>{
+      const d=document.createElement("div");
+      const l=document.createElement("label");
+      l.textContent=ETIQUETAS[campo]||campo;
 
-  cont.innerHTML = "";
-
-
-  GRUPOS.forEach(
-    grupo => {
-
-      const disponibles =
-        grupo.campos.filter(
-          c =>
-            CAMPOS.includes(c)
-        );
-
-
-      if (!disponibles.length) {
-
-        return;
-
+      let c;
+      if(campo==="Observaciones"||campo==="ObservacionesSalud"){
+        c=document.createElement("textarea");
+      }else{
+        c=document.createElement("input");
+        c.type=campo==="FechaNacAlumno"?"date":"text";
       }
 
+      c.id="campo_"+campo;
+      c.dataset.campo=campo;
 
-      const bloque =
-        document.createElement(
-          "div"
-        );
+      d.appendChild(l);
+      d.appendChild(c);
+      grid.appendChild(d);
+    });
 
-
-      bloque.className =
-        "grupo";
-
-
-      const h =
-        document.createElement(
-          "h3"
-        );
-
-
-      h.textContent =
-        grupo.titulo;
-
-
-      bloque.appendChild(h);
-
-
-      const grid =
-        document.createElement(
-          "div"
-        );
-
-
-      grid.className =
-        "grid";
-
-
-      disponibles.forEach(
-        campo => {
-
-          const d =
-            document.createElement(
-              "div"
-            );
-
-
-          const l =
-            document.createElement(
-              "label"
-            );
-
-
-          l.textContent =
-            ETIQUETAS[campo] ||
-            campo;
-
-
-          let c;
-
-
-          if (
-            campo ===
-              "Observaciones" ||
-            campo ===
-              "ObservacionesSalud"
-          ) {
-
-            c =
-              document.createElement(
-                "textarea"
-              );
-
-          }
-
-          else {
-
-            c =
-              document.createElement(
-                "input"
-              );
-
-
-            c.type =
-              campo ===
-                "FechaNacAlumno"
-                ? "date"
-                : "text";
-
-          }
-
-
-          c.id =
-            "campo_" +
-            campo;
-
-
-          c.dataset.campo =
-            campo;
-
-
-          d.appendChild(l);
-
-          d.appendChild(c);
-
-          grid.appendChild(d);
-
-        }
-      );
-
-
-      bloque.appendChild(
-        grid
-      );
-
-
-      cont.appendChild(
-        bloque
-      );
-
-    }
-  );
-
+    bloque.appendChild(grid);
+    cont.appendChild(bloque);
+  });
 }
 
-
-
-function llenarFormulario(
-  alumno,
-  fila,
-  sheetId
-) {
-
+function llenarFormulario(alumno,fila,sheetId){
   limpiarCampos();
+  document.getElementById("filaAlumno").value=fila;
+  document.getElementById("sheetIdAlumno").value=sheetId;
+  document.getElementById("bloquePlanillaDestino").classList.add("oculto");
 
+  CAMPOS.forEach(campo=>{
+    const input=document.getElementById("campo_"+campo);
+    if(!input)return;
+    input.value=campo==="FechaNacAlumno"?fechaHtml(alumno[campo]):(alumno[campo]||"");
+  });
 
-  document
-    .getElementById(
-      "filaAlumno"
-    )
-    .value =
-      fila;
-
-
-  document
-    .getElementById(
-      "sheetIdAlumno"
-    )
-    .value =
-      sheetId;
-
-
-  document
-    .getElementById(
-      "bloquePlanillaDestino"
-    )
-    .classList
-    .add(
-      "oculto"
-    );
-
-
-  CAMPOS.forEach(
-    campo => {
-
-      const input =
-        document.getElementById(
-          "campo_" +
-          campo
-        );
-
-
-      if (!input) {
-
-        return;
-
-      }
-
-
-      input.value =
-        campo ===
-          "FechaNacAlumno"
-          ? fechaHtml(
-              alumno[campo]
-            )
-          : alumno[campo] ||
-            "";
-
-    }
-  );
-
-
-  document
-    .getElementById(
-      "tituloFormulario"
-    )
-    .textContent =
-      alumno
-        .ApellidoNombreAlumno ||
-      "Datos del alumno";
-
-
-  document
-    .getElementById(
-      "panelFormulario"
-    )
-    .classList
-    .remove(
-      "oculto"
-    );
-
+  document.getElementById("tituloFormulario").textContent=
+    alumno.ApellidoNombreAlumno||"Datos del alumno";
+  document.getElementById("panelFormulario").classList.remove("oculto");
 }
 
-
-
-/*********************************************************
- * SELECTOR PRECEPTOR NUEVO ALUMNO
- *********************************************************/
-
-function cargarSelectorPlanillas() {
-
-  const sel =
-    document.getElementById(
-      "selectorPlanilla"
-    );
-
-
-  PLANILLAS.forEach(
-    p => {
-
-      const op =
-        document.createElement(
-          "option"
-        );
-
-
-      op.value =
-        p.id;
-
-
-      op.textContent =
-        p.preceptor ||
-        p.nombre;
-
-
-      sel.appendChild(op);
-
-    }
-  );
-
+function cargarSelectorPlanillas(){
+  const sel=document.getElementById("selectorPlanilla");
+  PLANILLAS.forEach(p=>{
+    const op=document.createElement("option");
+    op.value=p.id;
+    op.textContent=p.preceptor||p.nombre;
+    sel.appendChild(op);
+  });
 }
 
+async function guardar(){
+  const campos={};
+  document.querySelectorAll("[data-campo]").forEach(el=>{
+    campos[el.dataset.campo]=el.value.trim();
+  });
 
+  let sheetId=valor("sheetIdAlumno");
+  const fila=valor("filaAlumno");
+  if(!fila)sheetId=valor("selectorPlanilla");
 
-/*********************************************************
- * GUARDAR ALUMNO
- *********************************************************/
-
-async function guardar() {
-
-  const campos = {};
-
-
-  document
-    .querySelectorAll(
-      "[data-campo]"
-    )
-    .forEach(
-      el => {
-
-        campos[
-          el.dataset.campo
-        ] =
-          el.value.trim();
-
-      }
-    );
-
-
-  let sheetId =
-    valor(
-      "sheetIdAlumno"
-    );
-
-
-  const fila =
-    valor(
-      "filaAlumno"
-    );
-
-
-  if (!fila) {
-
-    sheetId =
-      valor(
-        "selectorPlanilla"
-      );
-
-  }
-
-
-  if (!sheetId) {
-
-    mensaje(
-      "mensajeGuardar",
-      "Seleccioná el preceptor / planilla destino.",
-      "error"
-    );
-
+  if(!sheetId){
+    mensaje("mensajeGuardar","Seleccioná el preceptor / planilla destino.","error");
     return;
-
   }
 
+  bloquear("btnGuardar",true,"Guardando...");
 
-  bloquear(
-    "btnGuardar",
-    true,
-    "Guardando..."
-  );
+  try{
+    const r=await apiPost({
+      accion:"guardar",
+      sheetId:sheetId,
+      fila:fila,
+      usuario:"Panel Preceptoría",
+      campos:campos
+    });
 
+    if(!r.ok)throw new Error(r.mensaje);
 
-  try {
-
-    const r =
-      await apiPost({
-
-        accion:
-          "guardar",
-
-        sheetId:
-          sheetId,
-
-        fila:
-          fila,
-
-        usuario:
-          "Panel Preceptoría",
-
-        campos:
-          campos
-
-      });
-
-
-    if (!r.ok) {
-
-      throw new Error(
-        r.mensaje
-      );
-
-    }
-
-
-    mensaje(
-      "mensajeGuardar",
-      r.mensaje,
-      "exito"
-    );
-
-
-    document
-      .getElementById(
-        "filaAlumno"
-      )
-      .value =
-        r.fila;
-
-
-    document
-      .getElementById(
-        "sheetIdAlumno"
-      )
-      .value =
-        r.sheetId;
-
-
-    document
-      .getElementById(
-        "bloquePlanillaDestino"
-      )
-      .classList
-      .add(
-        "oculto"
-      );
-
+    mensaje("mensajeGuardar",r.mensaje,"exito");
+    document.getElementById("filaAlumno").value=r.fila;
+    document.getElementById("sheetIdAlumno").value=r.sheetId;
+    document.getElementById("bloquePlanillaDestino").classList.add("oculto");
+  }catch(error){
+    mensaje("mensajeGuardar",error.message,"error");
+  }finally{
+    bloquear("btnGuardar",false,"Guardar");
   }
-
-  catch(error) {
-
-    mensaje(
-      "mensajeGuardar",
-      error.message,
-      "error"
-    );
-
-  }
-
-  finally {
-
-    bloquear(
-      "btnGuardar",
-      false,
-      "Guardar"
-    );
-
-  }
-
 }
 
-
-
-/*********************************************************
- * API
- *********************************************************/
-
-async function apiGet(
-  params
-) {
-
-  const url =
-    new URL(
-      API_URL
-    );
-
-
-  /*
-   * Todas las consultas GET envían
-   * automáticamente el código de acceso.
-   */
-  params.acceso =
-    CODIGO_ACCESO;
-
-
-  Object.entries(
-    params
-  )
-  .forEach(
-    ([k,v]) => {
-
-      url.searchParams
-        .set(
-          k,
-          v
-        );
-
-    }
-  );
-
-
-  const r =
-    await fetch(
-      url.toString(),
-      {
-        cache:
-          "no-store"
-      }
-    );
-
-
-  return JSON.parse(
-    await r.text()
-  );
-
+async function apiGet(params){
+  const url=new URL(API_URL);
+  Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+  const r=await fetch(url.toString(),{cache:"no-store"});
+  return JSON.parse(await r.text());
 }
 
-
-
-async function apiPost(
-  datos
-) {
-
-  /*
-   * Todas las operaciones POST envían
-   * automáticamente el código de acceso.
-   */
-  datos.acceso =
-    CODIGO_ACCESO;
-
-
-  const r =
-    await fetch(
-      API_URL,
-      {
-
-        method:
-          "POST",
-
-        headers: {
-
-          "Content-Type":
-            "application/json"
-
-        },
-
-        body:
-          JSON.stringify(
-            datos
-          )
-
-      }
-    );
-
-
-  return JSON.parse(
-    await r.text()
-  );
-
+async function apiPost(datos){
+  const r=await fetch(API_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(datos)
+  });
+  return JSON.parse(await r.text());
 }
 
-
-
-/*********************************************************
- * UTILIDADES
- *********************************************************/
-
-function valor(id) {
-
-  return String(
-    document
-      .getElementById(id)
-      .value ||
-    ""
-  ).trim();
-
+function valor(id){
+  return String(document.getElementById(id).value||"").trim();
 }
-
-
-
-function limpiarCampos() {
-
-  document
-    .querySelectorAll(
-      "[data-campo]"
-    )
-    .forEach(
-      el =>
-        el.value = ""
-    );
-
+function limpiarCampos(){
+  document.querySelectorAll("[data-campo]").forEach(el=>el.value="");
 }
-
-
-
-function cerrarFormulario() {
-
-  document
-    .getElementById(
-      "panelFormulario"
-    )
-    .classList
-    .add(
-      "oculto"
-    );
-
+function cerrarFormulario(){
+  document.getElementById("panelFormulario").classList.add("oculto");
 }
-
-
-
-function mensaje(
-  id,
-  texto,
-  tipo
-) {
-
-  const el =
-    document.getElementById(
-      id
-    );
-
-
-  el.textContent =
-    texto;
-
-
-  el.className =
-    "mensaje " +
-    tipo;
-
+function mensaje(id,texto,tipo){
+  const el=document.getElementById(id);
+  el.textContent=texto;
+  el.className="mensaje "+tipo;
 }
-
-
-
-function limpiarMensaje(id) {
-
-  const el =
-    document.getElementById(
-      id
-    );
-
-
-  el.textContent = "";
-
-  el.className =
-    "mensaje";
-
+function limpiarMensaje(id){
+  const el=document.getElementById(id);
+  el.textContent="";
+  el.className="mensaje";
 }
-
-
-
-function bloquear(
-  id,
-  estado,
-  texto
-) {
-
-  const boton =
-    document.getElementById(
-      id
-    );
-
-
-  if (!boton) {
-
-    return;
-
-  }
-
-
-  boton.disabled =
-    estado;
-
-
-  boton.textContent =
-    texto;
-
+function bloquear(id,estado,texto){
+  const boton=document.getElementById(id);
+  if(!boton)return;
+  boton.disabled=estado;
+  boton.textContent=texto;
 }
-
-
-
-function fechaHtml(
-  valorFecha
-) {
-
-  const s =
-    String(
-      valorFecha || ""
-    ).trim();
-
-
-  let m =
-    s.match(
-      /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
-    );
-
-
-  if (m) {
-
-    return (
-      m[3] +
-      "-" +
-      m[2].padStart(
-        2,
-        "0"
-      ) +
-      "-" +
-      m[1].padStart(
-        2,
-        "0"
-      )
-    );
-
-  }
-
-
-  if (
-    /^\d{4}-\d{2}-\d{2}$/
-      .test(s)
-  ) {
-
-    return s;
-
-  }
-
-
+function fechaHtml(valorFecha){
+  const s=String(valorFecha||"").trim();
+  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m)return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
   return "";
-
 }
-
-
-
-function escapar(valor) {
-
-  return String(
-    valor || ""
-  )
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-  .replace(
-    /</g,
-    "&lt;"
-  )
-  .replace(
-    />/g,
-    "&gt;"
-  )
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-  .replace(
-    /'/g,
-    "&#039;"
-  );
-
+function fechaMostrar(valorFecha){
+  const s=String(valorFecha||"").trim();
+  if(!s)return "";
+  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m)return m[3]+"/"+m[2]+"/"+m[1];
+  return s;
 }
-
-
-
-function escaparJS(valor) {
-
-  return String(
-    valor || ""
-  )
-  .replace(
-    /\\/g,
-    "\\\\"
-  )
-  .replace(
-    /'/g,
-    "\\'"
-  );
-
+function escapar(valor){
+  return String(valor||"")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
-
+function escaparJS(valor){
+  return String(valor||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+}
 </script>
-
 </body>
 </html>
