@@ -44,6 +44,39 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .busqueda{display:flex;gap:8px}
 .busqueda input{flex:1}
 
+
+.selector-curso-alumnos{
+  display:grid;
+  grid-template-columns:minmax(220px,1fr) auto;
+  gap:8px;
+  align-items:end;
+}
+.lista-curso{
+  margin-top:12px;
+  border:1px solid #e5e7eb;
+  border-radius:9px;
+  overflow:hidden;
+}
+.fila-curso-alumno{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:11px 12px;
+  border-bottom:1px solid #e5e7eb;
+}
+.fila-curso-alumno:last-child{border-bottom:0}
+.fila-curso-info{flex:1;min-width:0}
+.fila-curso-info strong,.fila-curso-info small{display:block}
+.fila-curso-info small{color:#64748b;margin-top:3px}
+@media(max-width:650px){
+  .selector-curso-alumnos{grid-template-columns:1fr}
+  .selector-curso-alumnos button{width:100%}
+  .fila-curso-alumno{align-items:flex-start;flex-direction:column}
+  .fila-curso-alumno .resultado-acciones{width:100%}
+  .fila-curso-alumno .resultado-acciones button{flex:1}
+}
+
 .resultado{padding:12px 4px;border-bottom:1px solid #e5e7eb}
 .resultado strong{display:block}
 .resultado small{color:#64748b}
@@ -117,15 +150,32 @@ button:disabled{opacity:.45;cursor:not-allowed}
 </section>
 
 <section id="seccionAlumnos" class="tarjeta">
-  <h2>Buscar alumno</h2>
-  <div class="busqueda">
-    <input id="textoBusqueda" placeholder="DNI, apellido o nombre"
-      onkeydown="if(event.key==='Enter'){buscar();}">
-    <button id="btnBuscar" class="btn-azul" onclick="buscar()">🔎 Buscar</button>
+  <h2>Alumnos por curso y división</h2>
+
+  <div class="selector-curso-alumnos">
+    <div>
+      <label>Curso y división</label>
+      <select id="selectorCursoAlumnos" onchange="cargarListadoCurso()">
+        <option value="">Cargando cursos...</option>
+      </select>
+    </div>
     <button class="btn-verde" onclick="nuevoAlumno()">+ Nuevo alumno</button>
   </div>
-  <div id="mensajeBusqueda" class="mensaje"></div>
-  <div id="resultados"></div>
+
+  <div id="mensajeCursoAlumnos" class="mensaje"></div>
+  <div id="resumenCursoAlumnos" style="margin-top:10px;color:#64748b;font-size:13px;"></div>
+  <div id="listaCursoAlumnos" class="lista-curso"></div>
+
+  <div class="grupo">
+    <h3>Búsqueda rápida</h3>
+    <div class="busqueda">
+      <input id="textoBusqueda" placeholder="DNI, apellido o nombre"
+        onkeydown="if(event.key==='Enter'){buscar();}">
+      <button id="btnBuscar" class="btn-azul" onclick="buscar()">🔎 Buscar</button>
+    </div>
+    <div id="mensajeBusqueda" class="mensaje"></div>
+    <div id="resultados"></div>
+  </div>
 </section>
 
 <section id="panelFormulario" class="tarjeta oculto">
@@ -174,13 +224,14 @@ button:disabled{opacity:.45;cursor:not-allowed}
 <script>
 const API_URL="https://plain-voice-2149.syncroapp79.workers.dev";
 const URL_FICHAS="https://syncroapp79-hub.github.io/fichas/";
-const URL_PREVIAS="https://syncroapp79-hub.github.io/previas/";
+const ARCHIVO_PREVIAS="previas.html";
 const CODIGO_ACCESO=new URLSearchParams(window.location.search).get("acceso")||"";
 
 let CAMPOS=[];
 let PLANILLAS=[];
 let ALUMNO_ACTUAL=null;
 let CONSULTA_ACTUAL=null;
+let CURSOS_ALUMNOS=[];
 
 const GRUPOS=[
  {titulo:"Identificación",campos:["MatriculaNro","NroLegajo","AñoLectivo","DNIAlumno","ApellidoNombreAlumno","Sexo","FechaNacAlumno","LugarNacAlumno","NacionalidadAlumno","CUILAlumno"]},
@@ -221,6 +272,7 @@ async function iniciar(){
     PLANILLAS=r.planillas||[];
     construirFormulario();
     cargarSelectorPlanillas();
+    await cargarCursosAlumnos();
   }catch(error){
     alert("No se pudo cargar el sistema: "+error.message);
   }
@@ -256,8 +308,114 @@ function abrirFichas(){
   window.open(urlConAcceso(URL_FICHAS),"_blank");
 }
 
+function urlPrevias(extra={}){
+  const u=new URL(ARCHIVO_PREVIAS,window.location.href);
+  if(CODIGO_ACCESO)u.searchParams.set("acceso",CODIGO_ACCESO);
+  Object.entries(extra).forEach(([k,v])=>{
+    if(v!==undefined&&v!==null&&String(v)!=="")u.searchParams.set(k,String(v));
+  });
+  return u.toString();
+}
+
 function abrirModuloPrevias(){
-  window.open(urlConAcceso(URL_PREVIAS),"_blank");
+  window.open(urlPrevias(),"_blank");
+}
+
+
+async function cargarCursosAlumnos(){
+  const sel=document.getElementById("selectorCursoAlumnos");
+  try{
+    const r=await apiGet({accion:"obtenerCursosPrevias"});
+    if(!r.ok)throw new Error(r.mensaje);
+
+    CURSOS_ALUMNOS=r.cursos||[];
+    sel.innerHTML='<option value="">Seleccionar curso y división...</option>';
+
+    CURSOS_ALUMNOS.forEach((c,index)=>{
+      const op=document.createElement("option");
+      op.value=String(index);
+      op.textContent=c.etiqueta || ((c.curso||"")+" "+(c.division||"")).trim();
+      sel.appendChild(op);
+    });
+
+    if(!CURSOS_ALUMNOS.length){
+      sel.innerHTML='<option value="">No hay cursos disponibles</option>';
+    }
+  }catch(error){
+    sel.innerHTML='<option value="">Error al cargar cursos</option>';
+    mensaje("mensajeCursoAlumnos",error.message,"error");
+  }
+}
+
+async function cargarListadoCurso(){
+  const indice=document.getElementById("selectorCursoAlumnos").value;
+  const cont=document.getElementById("listaCursoAlumnos");
+  const resumen=document.getElementById("resumenCursoAlumnos");
+
+  cont.innerHTML="";
+  resumen.textContent="";
+  limpiarMensaje("mensajeCursoAlumnos");
+
+  if(indice==="")return;
+
+  const curso=CURSOS_ALUMNOS[Number(indice)];
+  if(!curso)return;
+
+  mensaje("mensajeCursoAlumnos","Cargando alumnos...","cargando");
+
+  try{
+    const r=await apiGet({
+      accion:"listarAlumnosCursoPrevias",
+      curso:curso.curso,
+      division:curso.division
+    });
+
+    if(!r.ok)throw new Error(r.mensaje);
+
+    limpiarMensaje("mensajeCursoAlumnos");
+    resumen.textContent=
+      (curso.etiqueta || ((curso.curso||"")+" "+(curso.division||"")).trim())+
+      " · "+(r.cantidad ?? (r.alumnos||[]).length)+" alumnos";
+
+    mostrarListadoCurso(r.alumnos||[]);
+  }catch(error){
+    mensaje("mensajeCursoAlumnos",error.message,"error");
+  }
+}
+
+function mostrarListadoCurso(alumnos){
+  const cont=document.getElementById("listaCursoAlumnos");
+  cont.innerHTML="";
+
+  if(!alumnos.length){
+    cont.innerHTML='<div style="padding:12px;color:#64748b;">No se encontraron alumnos.</div>';
+    return;
+  }
+
+  alumnos.forEach(a=>{
+    const div=document.createElement("div");
+    div.className="fila-curso-alumno";
+
+    const sheetId=escaparJS(a.sheetId||"");
+    const fila=Number(a.fila)||0;
+
+    div.innerHTML=`
+      <div class="fila-curso-info">
+        <strong>${escapar(a.alumno||"")}</strong>
+        <small>DNI: ${escapar(a.dni||"")} ${a.preceptor ? " · Preceptor: "+escapar(a.preceptor) : ""}</small>
+      </div>
+      <div class="resultado-acciones">
+        <button class="btn-azul"
+          onclick="abrirConsulta('${sheetId}',${fila})">
+          👁 Consultar
+        </button>
+        <button class="btn-verde"
+          onclick="editarResultado('${sheetId}',${fila})">
+          ✏️ Editar
+        </button>
+      </div>`;
+    cont.appendChild(div);
+  });
 }
 
 async function buscar(){
@@ -280,13 +438,13 @@ async function buscar(){
     const soloNumeros=texto.replace(/\D/g,"");
     const esDni=/^\d{6,9}$/.test(soloNumeros);
 
+    // Siempre conservamos el listado de resultados.
+    // Si es un DNI exacto y hay un único alumno, además abrimos su consulta.
+    mostrarResultados(lista);
+
     if(esDni&&lista.length===1){
       await abrirConsulta(lista[0].sheetId,lista[0].fila);
-      document.getElementById("resultados").innerHTML="";
-      return;
     }
-
-    mostrarResultados(lista);
   }catch(error){
     mensaje("mensajeBusqueda",error.message,"error");
   }finally{
@@ -318,6 +476,10 @@ function mostrarResultados(lista){
           onclick="abrirConsulta('${escaparJS(a.sheetId)}',${Number(a.fila)||0})">
           👁 Consultar
         </button>
+        <button class="btn-verde"
+          onclick="editarResultado('${escaparJS(a.sheetId)}',${Number(a.fila)||0})">
+          ✏️ Editar
+        </button>
       </div>`;
     cont.appendChild(div);
   });
@@ -327,6 +489,19 @@ async function obtenerAlumnoPorFila(sheetId,fila){
   const r=await apiGet({accion:"alumno",sheetId:sheetId,fila:fila});
   if(!r.ok)throw new Error(r.mensaje);
   return r;
+}
+
+async function editarResultado(sheetId,fila){
+  try{
+    mensaje("mensajeBusqueda","Cargando datos del alumno...","cargando");
+    const r=await obtenerAlumnoPorFila(sheetId,fila);
+    ALUMNO_ACTUAL=r.alumno||{};
+    llenarFormulario(r.alumno||{},r.fila||fila,sheetId);
+    limpiarMensaje("mensajeBusqueda");
+    document.getElementById("panelFormulario").scrollIntoView({behavior:"smooth"});
+  }catch(error){
+    mensaje("mensajeBusqueda",error.message,"error");
+  }
 }
 
 /* ======================================================
@@ -413,7 +588,7 @@ function editarDesdeConsulta(){
 function previasDesdeConsulta(){
   if(!CONSULTA_ACTUAL)return;
   const d=CONSULTA_ACTUAL;
-  window.open(urlConAcceso(URL_PREVIAS,{
+  window.open(urlPrevias({
     sheetId:d.sheetId,
     fila:d.fila,
     dni:d.alumno.DNIAlumno||""
@@ -550,17 +725,20 @@ async function guardar(){
 }
 
 async function apiGet(params){
+  if(!CODIGO_ACCESO)throw new Error("Falta el código de acceso del preceptor.");
   const url=new URL(API_URL);
   Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+  url.searchParams.set("acceso",CODIGO_ACCESO);
   const r=await fetch(url.toString(),{cache:"no-store"});
   return JSON.parse(await r.text());
 }
 
 async function apiPost(datos){
+  if(!CODIGO_ACCESO)throw new Error("Falta el código de acceso del preceptor.");
   const r=await fetch(API_URL,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(datos)
+    body:JSON.stringify({...datos,acceso:CODIGO_ACCESO})
   });
   return JSON.parse(await r.text());
 }
