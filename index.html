@@ -274,6 +274,8 @@ const CODIGO_ACCESO=new URLSearchParams(window.location.search).get("acceso")||"
 let CAMPOS=[];
 let PLANILLAS=[];
 let ALUMNO_ACTUAL=null;
+let VALORES_ORIGINALES=null;
+let DNI_ORIGINAL="";
 let CONSULTA_ACTUAL=null;
 let CURSOS_ALUMNOS=[];
 
@@ -756,6 +758,8 @@ function fichasDesdeConsulta(){
    NUEVO / EDICIÓN
 ====================================================== */
 function nuevoAlumno(){
+  VALORES_ORIGINALES=null;
+  DNI_ORIGINAL="";
   limpiarCampos();
   document.getElementById("filaAlumno").value="";
   document.getElementById("sheetIdAlumno").value="";
@@ -811,6 +815,8 @@ function construirFormulario(){
 
 function llenarFormulario(alumno,fila,sheetId){
   limpiarCampos();
+  VALORES_ORIGINALES={};
+  DNI_ORIGINAL=String(alumno.DNIAlumno||"");
   document.getElementById("filaAlumno").value=fila;
   document.getElementById("sheetIdAlumno").value=sheetId;
   document.getElementById("bloquePlanillaDestino").classList.add("oculto");
@@ -819,6 +825,7 @@ function llenarFormulario(alumno,fila,sheetId){
     const input=document.getElementById("campo_"+campo);
     if(!input)return;
     input.value=campo==="FechaNacAlumno"?fechaHtml(alumno[campo]):(alumno[campo]||"");
+    VALORES_ORIGINALES[campo]=input.value;
   });
 
   document.getElementById("tituloFormulario").textContent=
@@ -838,9 +845,18 @@ function cargarSelectorPlanillas(){
 
 async function guardar(){
   const campos={};
+  const esEdicion=!!valor("filaAlumno");
   document.querySelectorAll("[data-campo]").forEach(el=>{
-    campos[el.dataset.campo]=el.value.trim();
+    const campo=el.dataset.campo;
+    const actual=el.value.trim();
+    const original=VALORES_ORIGINALES ? String(VALORES_ORIGINALES[campo]??"").trim() : "";
+    if(esEdicion && actual===original)return;
+    campos[campo]=campo==="FechaNacAlumno"?normalizarFechaEntrada(actual):actual;
   });
+  if(esEdicion && !Object.keys(campos).length){
+    mensaje("mensajeGuardar","No hay cambios para guardar.","exito");
+    return;
+  }
 
   let sheetId=valor("sheetIdAlumno");
   const fila=valor("filaAlumno");
@@ -859,12 +875,41 @@ async function guardar(){
       sheetId:sheetId,
       fila:fila,
       usuario:"Panel Preceptoría",
+      dniOriginal:DNI_ORIGINAL,
       campos:campos
     });
 
     if(!r.ok)throw new Error(r.mensaje);
 
-    mensaje("mensajeGuardar",r.mensaje,"exito");
+    // Confirmar la fecha realmente almacenada, no solo la respuesta de guardado.
+    if(fila && Object.prototype.hasOwnProperty.call(campos,"FechaNacAlumno") && campos.FechaNacAlumno){
+      const verificacion=await obtenerAlumnoPorFila(r.sheetId||sheetId,r.fila||fila);
+      const guardada=normalizarFechaEntrada(verificacion.alumno?.FechaNacAlumno||"");
+      if(guardada!==campos.FechaNacAlumno){
+        throw new Error("La fecha de nacimiento no quedó actualizada en la planilla. Fecha solicitada: "+
+          fechaMostrar(campos.FechaNacAlumno)+". Fecha leída: "+
+          (fechaMostrar(verificacion.alumno?.FechaNacAlumno)||"sin dato")+
+          ". Es necesario corregir la función guardar del backend de Apps Script.");
+      }
+      ALUMNO_ACTUAL=verificacion.alumno;
+      if(CONSULTA_ACTUAL && CONSULTA_ACTUAL.sheetId===(r.sheetId||sheetId) &&
+         Number(CONSULTA_ACTUAL.fila)===Number(r.fila||fila)){
+        CONSULTA_ACTUAL.alumno=verificacion.alumno;
+        renderizarConsulta(CONSULTA_ACTUAL);
+      }
+    }
+    // Actualizar la referencia para que el próximo guardado no reenvíe campos viejos.
+    const actualizado=await obtenerAlumnoPorFila(r.sheetId||sheetId,r.fila||fila);
+    if(actualizado && actualizado.alumno){
+      DNI_ORIGINAL=String(actualizado.alumno.DNIAlumno||"");
+      VALORES_ORIGINALES={};
+      document.querySelectorAll("[data-campo]").forEach(el=>{
+        const campo=el.dataset.campo;
+        const valor=actualizado.alumno[campo]||"";
+        VALORES_ORIGINALES[campo]=campo==="FechaNacAlumno"?fechaHtml(valor):String(valor);
+      });
+    }
+    mensaje("mensajeGuardar",r.mensaje||"Datos guardados correctamente.","exito");
     document.getElementById("filaAlumno").value=r.fila;
     document.getElementById("sheetIdAlumno").value=r.sheetId;
     document.getElementById("bloquePlanillaDestino").classList.add("oculto");
@@ -919,19 +964,22 @@ function bloquear(id,estado,texto){
   boton.disabled=estado;
   boton.textContent=texto;
 }
-function fechaHtml(valorFecha){
-  const s=String(valorFecha||"").trim();
-  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+function normalizarFechaEntrada(valorFecha){
+  const s=String(valorFecha??"").trim();
+  if(!s)return "";
+  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})(?:T.*)?$/);
+  if(m)return m[1]+"-"+m[2]+"-"+m[3];
+  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if(m)return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
   return "";
 }
+function fechaHtml(valorFecha){
+  return normalizarFechaEntrada(valorFecha);
+}
 function fechaMostrar(valorFecha){
-  const s=String(valorFecha||"").trim();
-  if(!s)return "";
-  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if(m)return m[3]+"/"+m[2]+"/"+m[1];
-  return s;
+  const iso=normalizarFechaEntrada(valorFecha);
+  if(!iso)return String(valorFecha??"").trim();
+  return iso.slice(8,10)+"/"+iso.slice(5,7)+"/"+iso.slice(0,4);
 }
 function escapar(valor){
   return String(valor||"")
